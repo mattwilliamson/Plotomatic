@@ -1,0 +1,4 @@
+define enforce_story_response as {
+    guardrail: "schema_validation",
+    retry_prompt: "The previous JSON response was invalid. Please regenerate JSON according to the Story schema (retry {{retry_count}})."
+}

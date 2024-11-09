@@ -1,0 +1,91 @@
+{
+  "$defs": {
+    "ActDialog": {
+      "description": "Represents dialogues for an act, containing dialogues for multiple scenes.",
+      "properties": {
+        "act_id": {
+          "description": "Unique identifier of the act this dialogue belongs to",
+          "title": "Act Id",
+          "type": "string"
+        },
+        "scene_dialogs": {
+          "description": "List of SceneDialog objects for the act",
+          "items": {
+            "$ref": "#/$defs/SceneDialog"
+          },
+          "title": "Scene Dialogs",
+          "type": "array"
+        }
+      },
+      "required": [
+        "act_id"
+      ],
+      "title": "ActDialog",
+      "type": "object"
+    },
+    "DialogueLine": {
+      "description": "Represents a line of dialogue spoken by a character in a scene.",
+      "properties": {
+        "character_nickname": {
+          "description": "Nickname of the character speaking the line",
+          "title": "Character Nickname",
+          "type": "string"
+        },
+        "line": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The line of dialogue",
+          "title": "Line"
+        }
+      },
+      "required": [
+        "character_nickname"
+      ],
+      "title": "DialogueLine",
+      "type": "object"
+    },
+    "SceneDialog": {
+      "description": "Represents the dialogues for a specific scene.",
+      "properties": {
+        "scene_id": {
+          "description": "Unique identifier of the scene this dialogue belongs to",
+          "title": "Scene Id",
+          "type": "string"
+        },
+        "dialogues": {
+          "description": "List of dialogue lines in the scene",
+          "items": {
+            "$ref": "#/$defs/DialogueLine"
+          },
+          "title": "Dialogues",
+          "type": "array"
+        }
+      },
+      "required": [
+        "scene_id"
+      ],
+      "title": "SceneDialog",
+      "type": "object"
+    }
+  },
+  "description": "Represents the dialogues for the entire story, organized by acts and scenes.",
+  "properties": {
+    "act_dialogs": {
+      "description": "List of ActDialog objects for the story",
+      "items": {
+        "$ref": "#/$defs/ActDialog"
+      },
+      "title": "Act Dialogs",
+      "type": "array"
+    }
+  },
+  "title": "StoryDialog",
+  "type": "object"
+}

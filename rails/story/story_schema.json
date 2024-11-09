@@ -1,0 +1,1132 @@
+{
+  "$defs": {
+    "Act": {
+      "description": "Represents an act or chapter within the story, containing multiple scenes and props.",
+      "properties": {
+        "act_id": {
+          "description": "Unique identifier for the act",
+          "title": "Act Id",
+          "type": "string"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Title of the act or chapter",
+          "title": "Title"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Description of the act",
+          "title": "Description"
+        },
+        "scenes": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/Scene"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "List of scenes in this act",
+          "title": "Scenes"
+        },
+        "props": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "List of prop names used in this act",
+          "title": "Props"
+        }
+      },
+      "required": [
+        "act_id"
+      ],
+      "title": "Act",
+      "type": "object"
+    },
+    "Character": {
+      "description": "Represents a character in the story, including their attributes, relationships, and development.",
+      "properties": {
+        "nickname": {
+          "default": "",
+          "description": "Unique nickname used as an identifier for the character",
+          "title": "Nickname",
+          "type": "string"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Full name of the character",
+          "title": "Name"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Description of the character",
+          "title": "Description"
+        },
+        "personality": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Personality traits of the character",
+          "title": "Personality"
+        },
+        "physical_appearance": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Physical appearance of the character",
+          "title": "Physical Appearance"
+        },
+        "role": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Role of the character in the story",
+          "title": "Role"
+        },
+        "gender": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Gender of the character",
+          "title": "Gender"
+        },
+        "race": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Race or species of the character, e.g., human, elf, android, cat",
+          "title": "Race"
+        },
+        "age": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Age of the character",
+          "title": "Age"
+        },
+        "catch_phrase": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Catchphrase of the character",
+          "title": "Catch Phrase"
+        },
+        "animation_description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Description of character animation",
+          "title": "Animation Description"
+        },
+        "voice_description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Description of character's voice",
+          "title": "Voice Description"
+        },
+        "voice_sample": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Path to the character's voice audio file",
+          "title": "Voice Sample"
+        },
+        "props": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "List of props associated with the character",
+          "title": "Props"
+        },
+        "relationships": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/CharacterRelationship"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Relationships with other characters",
+          "title": "Relationships"
+        },
+        "internal_conflict": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Internal conflict or struggle of the character",
+          "title": "Internal Conflict"
+        },
+        "character_arc": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CharacterArc"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Character development arc"
+        },
+        "image_prompt": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Prompt for generating an image of the character",
+          "title": "Image Prompt"
+        },
+        "image_prompt_short": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Short prompt for generating an image of the character",
+          "title": "Image Prompt Short"
+        }
+      },
+      "title": "Character",
+      "type": "object"
+    },
+    "CharacterArc": {
+      "description": "Represents the development arc of a character over the course of the story.",
+      "properties": {
+        "initial_state": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The character's initial state at the beginning of the story",
+          "title": "Initial State"
+        },
+        "final_state": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The character's final state at the end of the story",
+          "title": "Final State"
+        },
+        "key_moments": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Key moments that define this arc",
+          "title": "Key Moments"
+        }
+      },
+      "title": "CharacterArc",
+      "type": "object"
+    },
+    "CharacterRelationship": {
+      "description": "Represents a relationship between two characters in the story.",
+      "properties": {
+        "character_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The related character",
+          "title": "Character Name"
+        },
+        "relationship_type": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Type of relationship, e.g., \"friend\", \"enemy\", \"mentor\"",
+          "title": "Relationship Type"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Further details about the relationship",
+          "title": "Description"
+        }
+      },
+      "title": "CharacterRelationship",
+      "type": "object"
+    },
+    "DialogueLine": {
+      "description": "Represents a line of dialogue spoken by a character in a scene.",
+      "properties": {
+        "character_nickname": {
+          "description": "Nickname of the character speaking the line",
+          "title": "Character Nickname",
+          "type": "string"
+        },
+        "line": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The line of dialogue",
+          "title": "Line"
+        }
+      },
+      "required": [
+        "character_nickname"
+      ],
+      "title": "DialogueLine",
+      "type": "object"
+    },
+    "EmotionalArc": {
+      "description": "Represents an emotional stage or shift within the story.",
+      "properties": {
+        "stage": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The emotional stage, e.g., \"Hopeful\", \"Despair\", \"Triumphant\"",
+          "title": "Stage"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Further explanation of this emotional stage",
+          "title": "Description"
+        }
+      },
+      "title": "EmotionalArc",
+      "type": "object"
+    },
+    "Prop": {
+      "description": "Represents a prop in the story, including its description and purpose.",
+      "properties": {
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Name of the prop",
+          "title": "Name"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Description of the prop",
+          "title": "Description"
+        },
+        "purpose": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Purpose of the prop in the story",
+          "title": "Purpose"
+        },
+        "physical_appearance": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Physical appearance of the prop",
+          "title": "Physical Appearance"
+        },
+        "animation_description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Description of prop animation",
+          "title": "Animation Description"
+        }
+      },
+      "title": "Prop",
+      "type": "object"
+    },
+    "Scene": {
+      "description": "Represents a scene in the story, including setting, characters, and dialogue.",
+      "properties": {
+        "scene_id": {
+          "description": "Unique identifier for the scene",
+          "title": "Scene Id",
+          "type": "string"
+        },
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Title of the scene",
+          "title": "Title"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Description of the scene",
+          "title": "Description"
+        },
+        "characters_involved": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "List of character names involved in the scene",
+          "title": "Characters Involved"
+        },
+        "setting": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Setting of the scene",
+          "title": "Setting"
+        },
+        "time_of_day": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Time of day when the scene takes place",
+          "title": "Time Of Day"
+        },
+        "location": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Location of the scene",
+          "title": "Location"
+        },
+        "lighting": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Lighting description for the scene",
+          "title": "Lighting"
+        },
+        "mood": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Mood of the scene",
+          "title": "Mood"
+        },
+        "props": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "List of props used in the scene",
+          "title": "Props"
+        },
+        "key_actions": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Key actions that take place in the scene",
+          "title": "Key Actions"
+        },
+        "dialogue": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/DialogueLine"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "List of dialogue lines in the scene",
+          "title": "Dialogue"
+        },
+        "background_image_prompt": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Prompt for generating an image of the character",
+          "title": "Background Image Prompt"
+        },
+        "background_animation": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Description of scene animation of background",
+          "title": "Background Animation"
+        },
+        "scene_image_prompt": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Prompt for generating an image of the scene",
+          "title": "Scene Image Prompt"
+        },
+        "scene_image_prompt_short": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Short prompt for generating an image of the scene",
+          "title": "Scene Image Prompt Short"
+        }
+      },
+      "required": [
+        "scene_id"
+      ],
+      "title": "Scene",
+      "type": "object"
+    },
+    "StoryBeat": {
+      "description": "Represents a significant moment or turning point in the story.",
+      "properties": {
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Name of the story beat, e.g., \"Inciting Incident\", \"Climax\"",
+          "title": "Name"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Explanation of the beat's importance in the story",
+          "title": "Description"
+        },
+        "scene": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Link to a scene if applicable",
+          "title": "Scene"
+        }
+      },
+      "title": "StoryBeat",
+      "type": "object"
+    },
+    "Subplot": {
+      "description": "Represents a subplot that runs alongside the main plot of the story.",
+      "properties": {
+        "title": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Title of the subplot",
+          "title": "Title"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "",
+          "description": "Description of the subplot",
+          "title": "Description"
+        },
+        "related_characters": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Characters involved in this subplot",
+          "title": "Related Characters"
+        }
+      },
+      "title": "Subplot",
+      "type": "object"
+    }
+  },
+  "description": "Represents the overall story, including its structure, characters, plot, and acts.",
+  "properties": {
+    "prompt": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": "",
+      "description": "Prompt or inspiration for the story",
+      "title": "Prompt"
+    },
+    "title": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": "",
+      "description": "Title of the story",
+      "title": "Title"
+    },
+    "video": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": false,
+      "description": "Whether the story is animated",
+      "title": "Video"
+    },
+    "visual_style": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": "",
+      "description": "Visual style of the story, e.g., 'Anime', 'Realistic'",
+      "title": "Visual Style"
+    },
+    "time_period": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": "",
+      "description": "Time period in which the story is set",
+      "title": "Time Period"
+    },
+    "location": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": "",
+      "description": "Location where the story takes place",
+      "title": "Location"
+    },
+    "genre": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": "",
+      "description": "Genre of the story, e.g., 'Fantasy', 'Sci-fi'",
+      "title": "Genre"
+    },
+    "medium": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": "",
+      "description": "Medium of the story, e.g., 'Book', 'Film'",
+      "title": "Medium"
+    },
+    "plot_overview": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": "",
+      "description": "Overview of the plot",
+      "title": "Plot Overview"
+    },
+    "narrative_perspective": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": "",
+      "description": "Narrative perspective, e.g., 'First-person', 'Third-person'",
+      "title": "Narrative Perspective"
+    },
+    "conflict_type": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": "",
+      "description": "Type of conflict in the story, e.g., 'person vs person', 'person vs nature'",
+      "title": "Conflict Type"
+    },
+    "themes": {
+      "anyOf": [
+        {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Central themes in the story",
+      "title": "Themes"
+    },
+    "motifs": {
+      "anyOf": [
+        {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Recurring motifs or symbols in the story",
+      "title": "Motifs"
+    },
+    "characters": {
+      "anyOf": [
+        {
+          "items": {
+            "$ref": "#/$defs/Character"
+          },
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "List of characters in the story",
+      "title": "Characters"
+    },
+    "props": {
+      "anyOf": [
+        {
+          "items": {
+            "$ref": "#/$defs/Prop"
+          },
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "List of props in the story",
+      "title": "Props"
+    },
+    "story_beats": {
+      "anyOf": [
+        {
+          "items": {
+            "$ref": "#/$defs/StoryBeat"
+          },
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "List of key narrative beats in the story",
+      "title": "Story Beats"
+    },
+    "subplots": {
+      "anyOf": [
+        {
+          "items": {
+            "$ref": "#/$defs/Subplot"
+          },
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Subplots running alongside the main plot",
+      "title": "Subplots"
+    },
+    "emotional_arc": {
+      "anyOf": [
+        {
+          "items": {
+            "$ref": "#/$defs/EmotionalArc"
+          },
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Track the emotional shifts in the story",
+      "title": "Emotional Arc"
+    },
+    "acts": {
+      "anyOf": [
+        {
+          "items": {
+            "$ref": "#/$defs/Act"
+          },
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Acts or chapters to organize the story structure",
+      "title": "Acts"
+    }
+  },
+  "title": "Story",
+  "type": "object"
+}
