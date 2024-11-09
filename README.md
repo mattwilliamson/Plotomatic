@@ -6,16 +6,24 @@ Use LLMs to generate compelling stories in different mediums in an automated fas
 # Samples
 
 ## Robot Ninja Gif
+Prompt: 
+> A video game: In a futuristic world, a team of rogue robot ninjas must overthrow their corrupt AI overlords to reclaim their freedom and save humanity.
 ![Robot Ninja](./samples/kaito.cog.gif)
 
 ## 8bit Video Game Gif
+Prompt:
+> 8-bit Video Game
 ![8bit game](./samples/8_bit_fight_svd.gif)
 
 ## Video with voiceover
-[Play Sample Video](./samples/princess.mp4)
+Prompt:
+> A fantasy live action movie: A blonde haired blue eyed knight named Matt must journey to the center of the world to forge a magical weapon capable of defeating an ancient dragon and saving the babe princess and kingdom. The Princess Ashley has brown hair and blue eyes and wears glasses with thick rims.
+[Sample Video](./samples/princess.mp4)
 
 ## Audio Voiceover
-[Play Sample Audio](./samples/dr_elara.wav)
+Prompt:
+> Calm and authoritative, with a hint of warmth.
+[Sample Audio](./samples/dr_elara.wav)
 
 
 # Technologies
