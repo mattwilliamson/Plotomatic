@@ -4,11 +4,18 @@ Plot-o-matic Story Generator
 Use LLMs to generate compelling stories in different mediums in an automated fashion.
 
 # Samples
+
 ## Robot Ninja Gif
 ![Robot Ninja](./samples/kaito.cog.gif)
 
+## 8bit Video Game Gif
+![8bit game](./samples/8_bit_fight_svd.gif)
+
 ## Video with voiceover
 [Play Sample Video](./samples/princess.mp4)
+
+## Audio Voiceover
+[Play Sample Audio](./samples/dr_elara.wav)
 
 
 # Technologies
