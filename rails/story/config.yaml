@@ -13,10 +13,6 @@ parameters:
   validate:
     schema_file: "story_schema.json"
 
-parameters:
-  validate:
-    schema_file: "story_schema.json"
-
 validations:
   - name: "schema_validation"
     response:

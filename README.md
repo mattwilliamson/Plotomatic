@@ -1,11 +1,12 @@
-Plot-o-matic Story Generator
----
+# Plot-o-matic Story Generator
 
 
+## Write a grapphic novel with one prompt!
 
-Write a grapphic novel with one prompt!
+![Banner](assets/banner.jpeg)
 
 # Samples
+
 
 ## Robot Ninja Gif
 Prompt: 
@@ -14,10 +15,14 @@ Prompt:
 
 ![Robot Ninja](./samples/kaito.cog.gif)
 
+
 ## 8bit Video Game Gif
 Prompt:
+
 > 8-bit Video Game
+
 ![8bit game](./samples/8_bit_fight_svd.gif)
+
 
 ## Video with voiceover
 Prompt:
@@ -26,6 +31,7 @@ Prompt:
 
 [Sample Video](./samples/princess.mp4)
 
+
 ## Audio Voiceover
 Prompt:
 
@@ -33,6 +39,15 @@ Prompt:
 
 [Sample Audio](./samples/dr_elara.wav)
 
+
+## Music
+Prompt:
+
+> Tense and suspenseful.
+
+[Sample Music](./samples/tense_focused.wav)
+
+---
 
 # Technologies
 
@@ -105,13 +120,6 @@ Prompt:
 ### [Step 13](./13_music.ipynb)
 - Music for each scene
 
-
----
-
-
-### Beyond
-- Critique images using vision model
-- Regenerate any flagged images
-- Display original and revised images
-- Assemble the final story (text + images)
-- Output the final story in the desired format
+## TODO:
+- Plot Diagram
+- Generate screenplay
