@@ -21,26 +21,46 @@ from IPython.display import Markdown, display
 # if settings.TEMPERATURE == 0.0:
 #     torch.random.manual_seed(0)
 
-llm = Ollama(
-    model=settings.TEXT_MODEL,
-    request_timeout=1200.0,
-    temperature=settings.TEMPERATURE,
-    callback_manager=callback_manager,
-)
+if settings.TEXT_MODEL_BACKEND == "ollama":
 
-llm_json = Ollama(
-    model=settings.TEXT_MODEL,
-    request_timeout=1200.0,
-    temperature=settings.TEMPERATURE,
-    callback_manager=callback_manager,
-    json_mode=True,
-)
+    llm = Ollama(
+        model=settings.TEXT_MODEL,
+        request_timeout=1200.0,
+        temperature=settings.TEMPERATURE,
+        callback_manager=callback_manager,
+    )
 
-embedding = OllamaEmbedding(
-    model_name=settings.TEXT_MODEL,
-    # base_url="http://localhost:11434",
-    ollama_additional_kwargs={"mirostat": 2},
-)
+    llm_json = Ollama(
+        model=settings.TEXT_MODEL,
+        request_timeout=1200.0,
+        temperature=settings.TEMPERATURE,
+        callback_manager=callback_manager,
+        json_mode=True,
+    )
+
+    embedding = OllamaEmbedding(
+        model_name=settings.TEXT_MODEL,
+        # base_url="http://localhost:11434",
+        ollama_additional_kwargs={"mirostat": 2},
+    )
+
+elif settings.TEXT_MODEL_BACKEND == "nim":
+    import os
+    from llama_index.llms.nvidia import NVIDIA
+    from llama_index.core import Settings, VectorStoreIndex, SimpleDirectoryReader
+    from llama_index.core.node_parser import SentenceSplitter
+
+    # Configure the NVIDIA LLM to connect to your local NIM server
+    llm = NVIDIA(
+        model=settings.TEXT_MODEL,
+        base_url="http://localhost:8000",  # Adjust if your NIM server uses a different port
+        # base_url = "https://integrate.api.nvidia.com/v1",
+        api_key = os.environ["NGC_API_KEY"]
+    )
+
+    # Set the LLM as the default for LlamaIndex
+    Settings.llm = llm
+
 
 # from llama_index.llm_predictor import LLMPredictor
 # from llama_index.prompts.prompts import Prompt
@@ -51,6 +71,9 @@ embedding = OllamaEmbedding(
 
 
 def display_messages(messages: List[ChatMessage]):
+    if not settings.DEBUG:
+        return
+    
     output = "---\n\n### Messages\n\n"
     for m in messages:
         output += f"#### {m.role.title()}:\n\n"

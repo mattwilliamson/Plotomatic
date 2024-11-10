@@ -1,13 +1,17 @@
 Plot-o-matic Story Generator
 ---
 
-Use LLMs to generate compelling stories in different mediums in an automated fashion.
+
+
+Write a grapphic novel with one prompt!
 
 # Samples
 
 ## Robot Ninja Gif
 Prompt: 
+
 > A video game: In a futuristic world, a team of rogue robot ninjas must overthrow their corrupt AI overlords to reclaim their freedom and save humanity.
+
 ![Robot Ninja](./samples/kaito.cog.gif)
 
 ## 8bit Video Game Gif
@@ -17,29 +21,32 @@ Prompt:
 
 ## Video with voiceover
 Prompt:
+
 > A fantasy live action movie: A blonde haired blue eyed knight named Matt must journey to the center of the world to forge a magical weapon capable of defeating an ancient dragon and saving the babe princess and kingdom. The Princess Ashley has brown hair and blue eyes and wears glasses with thick rims.
+
 [Sample Video](./samples/princess.mp4)
 
 ## Audio Voiceover
 Prompt:
+
 > Calm and authoritative, with a hint of warmth.
+
 [Sample Audio](./samples/dr_elara.wav)
 
 
 # Technologies
 
-- LlamaIndex - used to generate chapters/scnees while maintaining coherence
-- NIM microservice - For serving LLNs locally
-- NeMo Guardrails - Prevent NSFW and enforce JSON outut
-- Nemotron 70b - LLM
-- CogVideoX - Text/image to video
+- [LlamaIndex](https://docs.llamaindex.ai/en/stable/examples/llm/nvidia_nim/) - used to generate chapters/scnees while maintaining coherence
+- [NeMo Guardrails](https://docs.nvidia.com/nemo/guardrails/) - Prevent NSFW and enforce JSON output
+- [NIM microservice](https://build.nvidia.com/explore/discover) - For serving LLNs locally
+- [Nemotron 70b](https://build.nvidia.com/nvidia/llama-3_1-nemotron-70b-instruct) - LLM for NIM
+- [Flux.1-dev](https://huggingface.co/black-forest-labs/FLUX.1-dev) for image creation
+- [CogVideoX-5b-I2V](https://huggingface.co/THUDM/CogVideoX-5b-I2V) - Text/image to video
+- [Parler-TTS](https://github.com/huggingface/parler-tts) for speech creation
+- [fish-speech](https://github.com/fishaudio/fish-speech) OR [CoquiTTS](https://github.com/coqui-ai/TTS) for speech cloning
+- [Musigen](https://huggingface.co/facebook/musicgen-large) for music
 
 ## Step-by-Step Process to Generate a Story Using LLM Models
-
-TODO: Break up text generation vs image generation
-
-- Data model to pass details about the story around as context
-- User input: "A young wizard embarks on a quest to find a lost artifact."
 
 ### [Step 0](./0_install_prepreqs.ipynb)
 - Setup conda env
@@ -94,6 +101,9 @@ TODO: Break up text generation vs image generation
 
 ### [Step 12](./12_character_video.ipynb)
 - Make video from audio and video clips and combine them with ffmpeg
+
+### [Step 13](./13_music.ipynb)
+- Music for each scene
 
 
 ---

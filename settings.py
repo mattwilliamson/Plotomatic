@@ -2,10 +2,11 @@ DEBUG = False
 
 STORY_DIR = "stories/my_story"
 
-EXECUTE_EXAMPLES = True
+# EXECUTE_EXAMPLES = True
+EXECUTE_EXAMPLES = False
 
-# TEXT_MODEL_BACKEND = "ollama"
-TEXT_MODEL_BACKEND = "nim"
+TEXT_MODEL_BACKEND = "ollama"
+# TEXT_MODEL_BACKEND = "nim"
 
 # TEXT_MODEL = "microsoft/Phi-3.5-mini-instruct" # ~7 GB VRAM
 # TEXT_MODEL = "meta-llama/Meta-Llama-3-8B-Instruct" # ~15.6 GB VRAM
@@ -15,6 +16,10 @@ TEXT_MODEL_BACKEND = "nim"
 # TEXT_MODEL = "llama3.1"
 # TEXT_MODEL = "llama3.1:70b"
 TEXT_MODEL = "nemotron:70b"
+
+# NIM
+# TEXT_MODEL = "nvidia/llama-3.1-nemotron-70b-instruct"
+
 
 
 # DEVICE_MAP = "cuda"
@@ -48,6 +53,9 @@ VISION_MODEL = "microsoft/Phi-3.5-vision-instruct" # Transformers
 # VISION_MODEL = "llama3.2-vision" # Ollama
 # VISION_MODEL = "llama3.2-vision:90b" # Ollama
 VISION_DEVICE_MAP = "auto"
+
+MUSIC_MODEL = "facebook/musicgen-large"
+# MUSIC_MODEL = "facebook/musicgen-medium"
 
 # Model that creates short videos from images
 VIDEO_GENERATOR_MODEL = "rain1011/pyramid-flow-sd3"

@@ -12,8 +12,8 @@ class CharacterRelationship(BaseModel):
     """
     Represents a relationship between two characters in the story.
     """
-    character_name: Optional[str] = Field(None, description='The related character')
-    relationship_type: Optional[str] = Field(None, description='Type of relationship, e.g., "friend", "enemy", "mentor"')
+    character_name: Optional[str] = Field("", description='The related character')
+    relationship_type: Optional[str] = Field("", description='Type of relationship, e.g., "friend", "enemy", "mentor"')
     description: Optional[str] = Field("", description="Further details about the relationship")
 
 
@@ -21,8 +21,8 @@ class CharacterArc(BaseModel):
     """
     Represents the development arc of a character over the course of the story.
     """
-    initial_state: Optional[str] = Field(None, description='The character\'s initial state at the beginning of the story')
-    final_state: Optional[str] = Field(None, description='The character\'s final state at the end of the story')
+    initial_state: Optional[str] = Field("", description='The character\'s initial state at the beginning of the story')
+    final_state: Optional[str] = Field("", description='The character\'s final state at the end of the story')
     key_moments: Optional[List[str]] = Field(default_factory=list, description="Key moments that define this arc")
 
 
@@ -30,7 +30,7 @@ class Character(BaseModel):
     """
     Represents a character in the story, including their attributes, relationships, and development.
     """
-    nickname: str = Field("", description="Unique nickname used as an identifier for the character")
+    nickname: Optional[str] = Field("", description="Unique nickname used as an identifier for the character")
     name: Optional[str] = Field("", description="Full name of the character")
     description: Optional[str] = Field("", description="Description of the character")
     personality: Optional[str] = Field("", description="Personality traits of the character")
@@ -42,7 +42,6 @@ class Character(BaseModel):
     catch_phrase: Optional[str] = Field("", description="Catchphrase of the character")
     animation_description: Optional[str] = Field("", description="Description of character animation")
     voice_description: Optional[str] = Field("", description="Description of character's voice")
-    voice_sample: Optional[str] = Field(None, description="Path to the character's voice audio file")
     props: Optional[List[str]] = Field(default_factory=list, description="List of props associated with the character")
     relationships: Optional[List[CharacterRelationship]] = Field(default_factory=list, description="Relationships with other characters")
     internal_conflict: Optional[str] = Field("", description="Internal conflict or struggle of the character")
@@ -66,15 +65,15 @@ class DialogueLine(BaseModel):
     """
     Represents a line of dialogue spoken by a character in a scene.
     """
-    character_nickname: str = Field(..., description='Nickname of the character speaking the line')
-    line: Optional[str] = Field(None, description='The line of dialogue')
+    character_nickname: Optional[str] = Field("", description='Nickname of the character speaking the line')
+    line: Optional[str] = Field("", description='The line of dialogue')
 
 
 class Scene(BaseModel):
     """
     Represents a scene in the story, including setting, characters, and dialogue.
     """
-    scene_id: str = Field(..., description="Unique identifier for the scene")
+    scene_id: Optional[str] = Field("", description="Unique identifier for the scene")
     title: Optional[str] = Field("", description="Title of the scene")
     description: Optional[str] = Field("", description="Description of the scene")
     characters_involved: Optional[List[str]] = Field(default_factory=list, description="List of character names involved in the scene")
@@ -97,8 +96,8 @@ class StoryBeat(BaseModel):
     """
     Represents a significant moment or turning point in the story.
     """
-    name: Optional[str] = Field(None, description='Name of the story beat, e.g., "Inciting Incident", "Climax"')
-    description: Optional[str] = Field(None, description='Explanation of the beat\'s importance in the story')
+    name: Optional[str] = Field("", description='Name of the story beat, e.g., "Inciting Incident", "Climax"')
+    description: Optional[str] = Field("", description='Explanation of the beat\'s importance in the story')
     scene: Optional[str] = Field("", description="Link to a scene if applicable")
 
 
@@ -106,7 +105,7 @@ class Subplot(BaseModel):
     """
     Represents a subplot that runs alongside the main plot of the story.
     """
-    title: Optional[str] = Field(None, description='Title of the subplot')
+    title: Optional[str] = Field("", description='Title of the subplot')
     description: Optional[str] = Field("", description="Description of the subplot")
     related_characters: Optional[List[str]] = Field(default_factory=list, description="Characters involved in this subplot")
 
@@ -115,7 +114,7 @@ class EmotionalArc(BaseModel):
     """
     Represents an emotional stage or shift within the story.
     """
-    stage: Optional[str] = Field(None, description='The emotional stage, e.g., "Hopeful", "Despair", "Triumphant"')
+    stage: Optional[str] = Field("", description='The emotional stage, e.g., "Hopeful", "Despair", "Triumphant"')
     description: Optional[str] = Field("", description="Further explanation of this emotional stage")
 
 
@@ -123,7 +122,7 @@ class Act(BaseModel):
     """
     Represents an act or chapter within the story, containing multiple scenes and props.
     """
-    act_id: str = Field(..., description="Unique identifier for the act")
+    act_id: Optional[str] = Field("", description="Unique identifier for the act")
     title: Optional[str] = Field("", description="Title of the act or chapter")
     description: Optional[str] = Field("", description="Description of the act")
     scenes: Optional[List[Scene]] = Field(default_factory=list, description="List of scenes in this act")
@@ -133,14 +132,14 @@ class SceneDialog(BaseModel):
     """
     Represents the dialogues for a specific scene.
     """
-    scene_id: str = Field(..., description="Unique identifier of the scene this dialogue belongs to")
-    dialogues: List[DialogueLine] = Field(default_factory=list, description="List of dialogue lines in the scene")
+    scene_id: Optional[str] = Field("", description="Unique identifier of the scene this dialogue belongs to")
+    dialogues: Optional[List[DialogueLine]] = Field(default_factory=list, description="List of dialogue lines in the scene")
 
 class ActDialog(BaseModel):
     """
     Represents dialogues for an act, containing dialogues for multiple scenes.
     """
-    act_id: str = Field(..., description="Unique identifier of the act this dialogue belongs to")
+    act_id: Optional[str] = Field("", description="Unique identifier of the act this dialogue belongs to")
     scene_dialogs: List[SceneDialog] = Field(default_factory=list, description="List of SceneDialog objects for the act")
 
 class StoryDialog(BaseModel):
@@ -177,7 +176,7 @@ class StoryDialog(BaseModel):
         """Get a list of valid character nicknames from the associated Story."""
         if self._story is None:
             return []
-        return [char.nickname for char in self._story.characters]
+        return self._story.valid_character_nicknames
 
     @model_validator(mode='after')
     def check_references(self) -> 'StoryDialog':
@@ -185,12 +184,16 @@ class StoryDialog(BaseModel):
         valid_scene_ids = self.valid_scene_ids
         valid_character_nicknames = self.valid_character_nicknames
 
+        if not valid_character_nicknames:
+            return self
+
         for act_dialog in self.act_dialogs:
             for scene_dialog in act_dialog.scene_dialogs:
                 if scene_dialog.scene_id not in valid_scene_ids:
                     raise ValueError(f"Invalid scene_id: {scene_dialog.scene_id}")
                 for dialogue in scene_dialog.dialogues:
-                    if dialogue.character_nickname not in valid_character_nicknames:
+                    if dialogue.character_nickname and dialogue.character_nickname.lower() not in valid_character_nicknames:
+                        print(f"Invalid character_nickname: {dialogue.character_nickname}({valid_character_nicknames})")
                         raise ValueError(f"Invalid character_nickname: {dialogue.character_nickname}")
         return self
 
@@ -235,15 +238,23 @@ class Story(BaseModel):
         """
         return self._story_dialog
 
+    @property
+    def valid_character_nicknames(self) -> List[str]:
+        """Get a list of valid character nicknames from the associated Story."""
+        return [char.nickname or char.name.lower() for char in self.characters]
+
     @model_validator(mode='after')
     def check_references(self) -> 'Story':
         """Check that the character nicknames in the scene are valid."""
-        valid_character_nicknames = [char.nickname for char in self.characters]
+        valid_character_nicknames = self.valid_character_nicknames
+
+        if not valid_character_nicknames:
+            return self
 
         for act in self.acts:
             for scene in act.scenes:
                 for character_involved in scene.characters_involved:
-                    if character_involved not in valid_character_nicknames:
+                    if character_involved.lower() not in valid_character_nicknames:
                         raise ValueError(f"Invalid character_nickname: {character_involved} in scene {scene.scene_id}")
         return self
 
@@ -347,6 +358,13 @@ class Story(BaseModel):
             story_dialog = None  # No story_dialog found
 
         return story
+    
+    def load_story_dialog(self, directory_path: str) -> StoryDialog:
+        """Load the associated StoryDialog from a directory containing a story_dialog.json file."""
+        story_dialog_json_path = os.path.join(directory_path, "story_dialog.json")
+        with open(story_dialog_json_path, "r") as json_file:
+            story_dialog_data = json.load(json_file)
+        return StoryDialog(**story_dialog_data)
 
 
 
