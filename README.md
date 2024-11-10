@@ -13,7 +13,7 @@ Prompt:
 
 > A video game: In a futuristic world, a team of rogue robot ninjas must overthrow their corrupt AI overlords to reclaim their freedom and save humanity.
 
-![:video_game: Robot Ninja](./samples/kaito.cog.gif)
+![Robot Ninja](./samples/kaito.cog.gif)
 
 
 ## 8bit Video Game Gif
@@ -21,7 +21,7 @@ Prompt:
 
 > 8-bit Video Game
 
-![:fireworks: 8bit game](./samples/8_bit_fight_svd.gif)
+![8bit game](./samples/8_bit_fight_svd.gif)
 
 
 ## Video with voiceover
@@ -29,7 +29,7 @@ Prompt:
 
 > A fantasy live action movie: A blonde haired blue eyed knight named Matt must journey to the center of the world to forge a magical weapon capable of defeating an ancient dragon and saving the babe princess and kingdom. The Princess Ashley has brown hair and blue eyes and wears glasses with thick rims.
 
-[ :arrow_forward: Sample Video](./samples/princess.mp4)
+[Sample Video :arrow_forward:](./samples/princess.mp4)
 
 
 ## Audio Voiceover
@@ -37,7 +37,7 @@ Prompt:
 
 > Calm and authoritative, with a hint of warmth.
 
-[:headphones: Sample Audio :headphones:](./samples/dr_elara.wav)
+[Sample Audio :headphones:](./samples/dr_elara.wav)
 
 
 ## Music
@@ -45,7 +45,7 @@ Prompt:
 
 > Tense and suspenseful.
 
-[:musical_note: Sample Music :musical_note:](./samples/tense_focused.wav)
+[Sample Music :musical_note:](./samples/tense_focused.wav)
 
 ---
 
@@ -78,46 +78,46 @@ Prompt:
     * ~~qwen2.5:72b~~
     * ~~phi3.5~~
 
-### *[Step 1](./1_generate_samples.ipynb) (WIP)*
+### *[Step 1: 1_generate_samples.ipynb](./1_generate_samples.ipynb) (WIP)*
 - UseLlamaIndex to generate summaries from real literature to use as few-shot examples 
 
-### [Step 2](./2_title_plot.ipynbb)
+### [Step 2: 2_title_plot.ipynbb](./2_title_plot.ipynbb)
 - Generate plot summary
 - Generate story title
 - Decide Genre + Medium + Visual Style
 
-### [Step 3](./3_character_descriptions.ipynb)
+### [Step 3: 3_character_descriptions.ipynb](./3_character_descriptions.ipynb)
 - Generate a list characters and descriptions
 
-### [Step 4](./4_scene_descriptions.ipynb)
+### [Step 4: 4_scene_descriptions.ipynb](./4_scene_descriptions.ipynb)
 - Generate a list of scenes
 
-### [Step 5](./5_character_images.ipynb)
+### [Step 5: 5_character_images.ipynb](./5_character_images.ipynb)
 - Generate images for characters
 
-### [Step 6](./6_scene_images.ipynb)
+### [Step 6: 6_scene_images.ipynb](./6_scene_images.ipynb)
 - Generate scene images
 
-### [Step 7](./7_character_animated.ipynb)
+### [Step 7: 7_character_animated.ipynb](./7_character_animated.ipynb)
 - Generate animations for character images
 
-### *[Step 8](./8_prop_descriptions.ipynb) (WIP)*
+### *[Step 8: 8_prop_descriptions.ipynb](./8_prop_descriptions.ipynb) (WIP)*
 - Generate a list of props
 
-### *[Step 9](./9_prop_images.ipynb) (WIP)*
+### *[Step 9: 9_prop_images.ipynb](./9_prop_images.ipynb) (WIP)*
 - Generate prop images
 
-### *[Step 10](./10_sprite_extraction.ipynb) (WIP)*
+### *[Step 10: 10_sprite_extraction.ipynb](./10_sprite_extraction.ipynb) (WIP)*
 - Extract sprites
 
-### [Step 11](./11_character_voice.ipynb)
+### [Step 11: 11_character_voice.ipynb](./11_character_voice.ipynb)
 - Character voice baseline for grounding
 - Character voice clone
 
-### [Step 12](./12_character_video.ipynb)
+### [Step 12: 12_character_video.ipynb](./12_character_video.ipynb)
 - Make video from audio and video clips and combine them with ffmpeg
 
-### [Step 13](./13_music.ipynb)
+### [Step 13: 13_music.ipynb](./13_music.ipynb)
 - Music for each scene
 
 ## TODO:
