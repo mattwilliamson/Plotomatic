@@ -1,59 +1,80 @@
-# Plot-o-matic Story Generator
+# **:clapper: Plot-o-matic Story Generator :clapper:**
 
-
-## Write a graphic novel with one prompt!
+Transform your story ideas into immersive graphic novels, animations, and audio experiences—all from a single prompt!
 
 ![Banner](assets/banner.jpeg)
 
-# Samples
+## :rocket: Write an Entire Graphic Novel with One Prompt!
 
+Dive into a world where a single idea sparks entire universes. From rogue ninjas overthrowing AI overlords to epic knights on mystical quests, Plot-o-matic Story Generator brings your story to life across various media—quickly, creatively, and with endless customization options.
 
-## Robot Ninja Gif
+### :star2: **Story Samples**
+
+Here are some examples of what Plot-o-matic can generate:
+
+---
+
+### :robot: **Robot Ninja** *(GIF)*
 Prompt: 
-
 > A video game: In a futuristic world, a team of rogue robot ninjas must overthrow their corrupt AI overlords to reclaim their freedom and save humanity.
 
 ![Robot Ninja](./samples/kaito.cog.gif)
 
+---
 
-## 8bit Video Game Gif
+### :video_game: **8-bit Video Game** *(GIF)*
 Prompt:
-
 > 8-bit Video Game
 
 ![8bit game](./samples/8_bit_fight_svd.gif)
 
+---
 
-## Video with voiceover
+### :microphone: **Voiceover** *(Audio)*
 Prompt:
-
-> A fantasy live action movie: A blonde haired blue eyed knight named Matt must journey to the center of the world to forge a magical weapon capable of defeating an ancient dragon and saving the babe princess and kingdom. The Princess Ashley has brown hair and blue eyes and wears glasses with thick rims.
-
-[Sample Video :arrow_forward:](./samples/princess.mp4)
-
-
-## Audio Voiceover
-Prompt:
-
 > Calm and authoritative, with a hint of warmth.
 
 [Sample Audio :headphones:](./samples/dr_elara.wav)
 
+---
 
-## Music
+### :musical_note: **Suspenseful Music** *(Music)*
 Prompt:
-
 > Tense and suspenseful.
 
 [Sample Music :musical_note:](./samples/tense_focused.wav)
 
 ---
 
-# Technologies
+### :european_castle: **Fantasy Knight Adventure** *(Video with Voiceover)* 
+Prompt:
+> A fantasy live-action movie: A blonde-haired, blue-eyed knight named Matt must journey to the center of the world to forge a magical weapon capable of defeating an ancient dragon and saving the princess and kingdom.
 
-- [LlamaIndex](https://docs.llamaindex.ai/en/stable/examples/llm/nvidia_nim/) - used to generate chapters/scnees while maintaining coherence
+[Sample Video :arrow_forward:](./samples/princess.mp4)
+
+---
+
+## :book: **About the Project**
+
+Plot-o-matic combines the power of AI to turn any story idea into a wide variety of storytelling formats:
+
+- Graphic Novels & Books
+- Short Films
+- Podcasts & Audio Dramas
+- Comics
+- Video Game Storylines & Assets
+- Plays
+- Cartoons & animations
+- Documentaries
+- Song Lyrics and much more!
+
+## :hammer_and_wrench: **Technologies**
+
+We leverage a suite of AI tools to bring your stories to life:
+
+- [LlamaIndex](https://docs.llamaindex.ai/en/stable/examples/llm/nvidia_nim/) - used to generate chapters/scenes while maintaining coherence
 - [NeMo Guardrails](https://docs.nvidia.com/nemo/guardrails/) - Prevent NSFW and enforce JSON output
-- [NIM microservice](https://build.nvidia.com/explore/discover) - For serving LLNs locally
+- [NIM microservice](https://build.nvidia.com/explore/discover) - For serving LLMs locally or using NVIDIA NIM in the cloud
 - [Nemotron 70b](https://build.nvidia.com/nvidia/llama-3_1-nemotron-70b-instruct) - LLM for NIM
 - [Flux.1-dev](https://huggingface.co/black-forest-labs/FLUX.1-dev) for image creation
 - [CogVideoX-5b-I2V](https://huggingface.co/THUDM/CogVideoX-5b-I2V) - Text/image to video
@@ -61,65 +82,75 @@ Prompt:
 - [fish-speech](https://github.com/fishaudio/fish-speech) OR [CoquiTTS](https://github.com/coqui-ai/TTS) for speech cloning
 - [Musigen](https://huggingface.co/facebook/musicgen-large) for music
 
-## Step-by-Step Process to Generate a Story Using LLM Models
 
-### [Step 0](./0_install_prepreqs.ipynb)
-- Setup conda env
+## :memo: **Step-by-Step Notebooks**
+
+### [view_plot.ipynb](./view_plot.ipynb)
+- **Review and Evolve the Plot**
+
+This notebook provides tools to visualize and track the story's development. After each generation step, you can revisit this notebook to review the evolving plot through detailed overviews, interactive diagrams, and other visualization tools. 
+
+As you refine the story prompt or adjust the model’s settings, use this notebook to see how those changes impact the narrative structure. With each re-run, observe how characters, themes, and events unfold differently—allowing you to shape and perfect the story iteratively.
+
+---
+
+### [0_install_prepreqs.ipynb](./0_install_prepreqs.ipynb)
+- Set up conda env
 - Install conda packages
 - Install pip packages
 
-### [Step 0](./0_test_llm.ipynb)
+### [0_test_llm.ipynb](./0_test_llm.ipynb)
 - Compare the creativity of different models
-    * **nemotron:70b** - this one is arbitrarily my favorite
-    * hermes3:70b
-    * llama3.1:70b
-    * gemma2:27b
-    * mistral-openorca:7b
-    * ~~qwen2.5:72b~~
-    * ~~phi3.5~~
+- **nemotron:70b** - This one is arbitrarily my favorite
 
-### *[Step 1: 1_generate_samples.ipynb](./1_generate_samples.ipynb) (WIP)*
-- UseLlamaIndex to generate summaries from real literature to use as few-shot examples 
+### [1_story_prompt.ipynb](./1_story_prompt.ipynb)
+- Set the input prompt for the story and kick it off
 
-### [Step 2: 2_title_plot.ipynbb](./2_title_plot.ipynbb)
+### [2_title_plot.ipynbb](./2_title_plot.ipynbb)
 - Generate plot summary
 - Generate story title
 - Decide Genre + Medium + Visual Style
 
-### [Step 3: 3_character_descriptions.ipynb](./3_character_descriptions.ipynb)
-- Generate a list characters and descriptions
+### [3_character_descriptions.ipynb](./3_character_descriptions.ipynb)
+- Generate a list of characters and descriptions
 
-### [Step 4: 4_scene_descriptions.ipynb](./4_scene_descriptions.ipynb)
+### [4_scene_descriptions.ipynb](./4_scene_descriptions.ipynb)
 - Generate a list of scenes
 
-### [Step 5: 5_character_images.ipynb](./5_character_images.ipynb)
+### [5_character_images.ipynb](./5_character_images.ipynb)
 - Generate images for characters
 
-### [Step 6: 6_scene_images.ipynb](./6_scene_images.ipynb)
+### [6_scene_images.ipynb](./6_scene_images.ipynb)
 - Generate scene images
 
-### [Step 7: 7_character_animated.ipynb](./7_character_animated.ipynb)
+### [7_character_animated.ipynb](./7_character_animated.ipynb)
 - Generate animations for character images
 
-### *[Step 8: 8_prop_descriptions.ipynb](./8_prop_descriptions.ipynb) (WIP)*
+### *[8_prop_descriptions.ipynb](./8_prop_descriptions.ipynb)* (WIP :construction:)
 - Generate a list of props
 
-### *[Step 9: 9_prop_images.ipynb](./9_prop_images.ipynb) (WIP)*
+### *[9_prop_images.ipynb](./9_prop_images.ipynb)* (WIP :construction:)
 - Generate prop images
 
-### *[Step 10: 10_sprite_extraction.ipynb](./10_sprite_extraction.ipynb) (WIP)*
+### :sparkles: *[10_sprite_extraction.ipynb](./10_sprite_extraction.ipynb)* (WIP :construction:)
 - Extract sprites
 
-### [Step 11: 11_character_voice.ipynb](./11_character_voice.ipynb)
+### :microphone: [11_character_voice.ipynb](./11_character_voice.ipynb)
 - Character voice baseline for grounding
 - Character voice clone
 
-### [Step 12: 12_character_video.ipynb](./12_character_video.ipynb)
+### [12_character_video.ipynb](./12_character_video.ipynb)
 - Make video from audio and video clips and combine them with ffmpeg
 
-### [Step 13: 13_music.ipynb](./13_music.ipynb)
+### :musical_note: [13_music.ipynb](./13_music.ipynb)
 - Music for each scene
+
+### *[generate_samples.ipynb](./generate_samples.ipynb)* (WIP :construction:)
+- Use LlamaIndex to generate summaries from real literature to use as few-shot examples 
+
+
 
 ## TODO:
 - Plot Diagram
 - Generate screenplay
+- Gallery

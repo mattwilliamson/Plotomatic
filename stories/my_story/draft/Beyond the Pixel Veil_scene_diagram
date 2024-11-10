@@ -1,0 +1,41 @@
+digraph "Screenplay Scene Diagram" {
+	fontsize=20 label="Beyond the Pixel Veil" labelloc=top rankdir=TB
+	subgraph cluster_discovery {
+		color=lightgrey fontsize=16 label="Act 1: The Nexus Revelation" style=filled
+		nexus_awakening [label="The Awakening
+Location: Dual Reality: Earth & The Nexus
+Characters: meera
+Description: Meera's VR gaming session reveals an unexpected connection to the Nexus." color=lightblue fontsize=10 shape=box style="rounded,filled"]
+		midnight_origins [label="Uncovering Midnight's Past
+Location: Earth (Meera's home)
+Characters: meera
+Description: Meera delves into her gaming history, seeking connections to the Nexus." color=lightblue fontsize=10 shape=box style="rounded,filled"]
+		nexus_awakening -> midnight_origins
+	}
+	subgraph cluster_convergence {
+		color=lightgrey fontsize=16 label="Act 2: The Unlikely Alliance" style=filled
+		specter_encounter [label="Meeting Specter
+Location: The Nexus
+Characters: meera, jax
+Description: Meera encounters Jax 'Specter' Lee, a brilliant hacker, in the Nexus." color=lightblue fontsize=10 shape=box style="rounded,filled"]
+		zee_guidance [label="Dr. Wei's Wisdom
+Location: The Nexus
+Characters: meera, zee
+Description: Meera meets Dr. Zhang 'Zee' Wei, who offers guidance on the Nexus." color=lightblue fontsize=10 shape=box style="rounded,filled"]
+		specter_encounter -> zee_guidance
+	}
+	subgraph cluster_confrontation {
+		color=lightgrey fontsize=16 label="Act 3: Shadows and Revelations" style=filled
+		architect_encounter [label="The Architect's Truth
+Location: The Nexus (Architect's Realm)
+Characters: meera, jax, zee, architect
+Description: Meera's team meets the enigmatic Architect, revealing shocking truths about the Nexus." color=lightblue fontsize=10 shape=box style="rounded,filled"]
+		umbra_confrontation [label="Facing Umbra
+Location: The Nexus (Shadow Organization's Hideout)
+Characters: meera, jax, zee, umbra
+Description: Meera's team confronts Umbra Blackwood, leader of the Shadow Organization." color=lightblue fontsize=10 shape=box style="rounded,filled"]
+		architect_encounter -> umbra_confrontation
+	}
+	midnight_origins -> specter_encounter [style=dashed]
+	zee_guidance -> architect_encounter [style=dashed]
+}

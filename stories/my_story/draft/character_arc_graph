@@ -1,0 +1,11 @@
+digraph "Character Arc" {
+	initial [label="Initial State
+(Brooding and intensely focused)"]
+	final [label="Final State
+(Loyal and trusting team member)"]
+	stage_0 [label="Meeting Meera 'Midnight' Singh"]
+	initial -> stage_0
+	stage_1 [label="Confronting Umbra Blackwood"]
+	stage_0 -> stage_1
+	stage_1 -> final
+}
