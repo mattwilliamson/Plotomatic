@@ -84,6 +84,13 @@ else:
     CHARACTER_ANIMATION_HEIGHT = 480
 
 
+# TTS_MODEL = "parler-tts/parler-tts-large-v1"
+TTS_MODEL = "parler-tts/parler-tts-mini-v1"
+
+TTS_REFERENCE_SPEECH = ("The birch canoe slid on the smooth planks. Glue the sheet to the dark blue background. "
+                       "These days a chicken leg is a rare dish. Rice is often served in round bowls. "
+                       "Help the woman get back to her feet.")
+
 VOICE_CLONE_MODEL = "fish"
 # CoquiTTS
 

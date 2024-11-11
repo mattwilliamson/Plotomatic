@@ -1,11 +1,13 @@
 from model import *
 from typing import List
 from pydantic import BaseModel
-import copy
+import torch
 import difflib
+import random
 from IPython.display import Markdown, display
 import textwrap
 from llama_index.core.llms import ChatMessage
+import numpy as np
 
 def chat_message_to_dict(message: ChatMessage) -> dict:
     # Use model_dump to get the dictionary representation and adjust the role
@@ -77,6 +79,26 @@ def show_diff(story1: Story, story2: Story):
     # display(Markdown(f'```json\n{story1_json}\n```'))
     # display(Markdown(f'```json\n{story2_json}\n```'))
     display(Markdown(f'```diff\n{diff_text}\n```'))
+
+
+def set_torch_seed(seed: int):
+    if seed < 0:
+        seed = -seed
+    if seed > (1 << 31):
+        seed = 1 << 31
+
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed(seed)
+        torch.cuda.manual_seed_all(seed)
+
+    if torch.backends.cudnn.is_available():
+        torch.backends.cudnn.deterministic = True
+        torch.backends.cudnn.benchmark = False
+
 
 
 
