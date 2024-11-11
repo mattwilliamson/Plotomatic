@@ -17,6 +17,8 @@ TEXT_MODEL_BACKEND = "ollama"
 # TEXT_MODEL = "llama3.1:70b"
 TEXT_MODEL = "nemotron:70b"
 
+TEXT_CONTEXT_WINDOW = 100000 # 128k for llama3.1
+
 # NIM
 # TEXT_MODEL = "nvidia/llama-3.1-nemotron-70b-instruct"
 

@@ -1,0 +1,589 @@
+{
+    "act_dialogs": [
+        {
+            "act_id": "discovery",
+            "scene_dialogs": [
+                {
+                    "scene_id": "nexus_awakening",
+                    "dialogues": [
+                        {
+                            "character_nickname": "meera",
+                            "line": "This can't be just a glitch. I've played this game hundreds of times, and nothing like this has ever happened."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "What are these strange symbols on the screen? They're nothing I recognize from any game code or language."
+                        },
+                        {
+                            "character_nickname": "jax",
+                            "line": "Midnight, are you seeing this too? Something feels... off. Like the game is watching us, reacting."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "I don't know what's going on, Specter. This is beyond anything I've encountered."
+                        },
+                        {
+                            "character_nickname": "zee",
+                            "line": "Stay calm, both of you. Remember, the Nexus is a place of possibilities. Sometimes, it shows you things based on your own intentions, or fears."
+                        },
+                        {
+                            "character_nickname": "jax",
+                            "line": "Intentions? You mean, it's reading our minds? That's impossible."
+                        },
+                        {
+                            "character_nickname": "zee",
+                            "line": "Impossible in our world, perhaps. But here in the Nexus, the impossible is just the beginning."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "That's not exactly reassuring, Dr. Wei. What if the Nexus decides to... I don't know... turn on us?"
+                        },
+                        {
+                            "character_nickname": "zee",
+                            "line": "Then we'll have to outsmart it. But remember, the Nexus isn't inherently good or evil. It mirrors back what you bring to it."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "If that's true, then why am I feeling this... dread? Like something is lurking in the code, watching every move."
+                        },
+                        {
+                            "character_nickname": "jax",
+                            "line": "Maybe you're just paranoid. Or maybe you're right. Either way, let's keep moving."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "No, we need answers first. Dr. Wei, you've studied this place more than any of us. What else should we expect?"
+                        },
+                        {
+                            "character_nickname": "zee",
+                            "line": "Expect the unexpected, Meera. The Nexus will test every part of you—your logic, your courage, and perhaps most importantly, your heart."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "Well, I'm not one to back down. Let's see what this place has to show us."
+                        },
+                        {
+                            "character_nickname": "jax",
+                            "line": "Just remember, Midnight, courage without caution can lead to ruin. Let's move with purpose, but don't be reckless."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "Fine, fine. I'll try to restrain my curiosity. But something tells me we're on the edge of something big here."
+                        },
+                        {
+                            "character_nickname": "zee",
+                            "line": "Perhaps. But keep in mind, the Nexus has layers we've barely scratched. It may take us a lifetime to fully understand its mysteries."
+                        }
+                    ]
+                },
+                {
+                    "scene_id": "midnight_origins",
+                    "dialogues": [
+                        {
+                            "character_nickname": "meera",
+                            "line": "I have to understand what happened the first time I saw the Nexus. It's not just a game anymore."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "Every glitch, every mistake... they're all connected somehow."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "The first time I entered, it was just a flash—a strange anomaly on the screen that I brushed off."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "But now, thinking back... that was no ordinary glitch. It was almost like the Nexus was reaching out."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "How many times did I ignore the signs, thinking it was just another bug?"
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "Was I too focused on winning, too driven to notice what was right in front of me?"
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "I remember the first anomaly. A flicker, a flash of code that didn't make sense. It was so brief, I thought I imagined it."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "But that moment stayed with me, a feeling that something was lurking just out of reach."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "What if that glitch was more than just a malfunction? What if it was the Nexus trying to communicate?"
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "The more I think about it, the more it feels like each error, each glitch, was placed deliberately."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "Was the Nexus testing me, even back then? A way to see if I was worthy of its secrets?"
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "Or was I simply too naïve to realize the depth of what I was getting myself into?"
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "Every time I play, it's as if the Nexus becomes more familiar. Like it's shaping itself to fit me."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "Is this place alive? Could a virtual world have its own consciousness?"
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "I can't shake the feeling that I'm being watched, like someone or something is observing my every move."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "What if the Nexus has been here all along, waiting for the right person to understand it?"
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "Why me? Why did it choose me to reveal its secrets to?"
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "Maybe I was drawn to it just as much as it was drawn to me. A strange pull I can't explain."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "Every game, every level... they all feel like memories now. Moments that led me here."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "Was each glitch a message? Or perhaps a test, each one harder than the last?"
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "I need to piece this together. Go back to the beginning and retrace every step."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "The Nexus... it's like a puzzle, a mystery that I need to solve."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "But where do I even start? Each clue leads to another, like a trail winding deeper into the unknown."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "I remember the fear the first time I felt the Nexus reaching back. It was subtle, like a whisper in the dark."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "But now that whisper has grown louder. I can't ignore it anymore."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "Was that initial glitch the start of something greater? A door that once opened, can't be closed?"
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "The Nexus is vast, and I've only seen a fraction of it. But each glimpse feels like a revelation."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "I need to keep pushing, keep exploring. The answers are here, I just know it."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "It's strange. Thinking back to all the times I've been here, it's like looking at a mirror version of myself."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "The more I explore, the more I feel like I'm unraveling my own mind."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "What does that say about me? Am I too obsessed with finding meaning in everything?"
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "Maybe the Nexus is just a game, and I'm reading too much into it. But my instincts tell me otherwise."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "Instincts... they've never steered me wrong. So why start doubting now?"
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "If there's one thing I know, it's that this place holds something profound, something meant for me to discover."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "But will I like what I find? What if the truth is more terrifying than I'm prepared for?"
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "Courage, Meera. I have to keep going, keep uncovering whatever lies beneath this digital veil."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "Every time I enter, it's like I leave a piece of myself behind, lost in the code."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "And yet, with each piece I lose, I feel closer to understanding the whole."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "Could it be that the Nexus is asking for pieces of us? To understand, we must give part of ourselves?"
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "If that's the case, then what happens when I have nothing left to give?"
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "Is it worth it, risking everything just to understand this place?"
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "I don't know. But I can't stop now. I'm too far in."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "This journey is mine alone. I have to see it through, even if it leads me to something dark."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "The Nexus has changed me, shaped me in ways I never imagined."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "I need to know... was this the plan all along?"
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "Did someone build this place for people like me, seekers of answers in a world of shadows?"
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "Or am I just a piece in someone else's puzzle, a pawn in a game I'll never fully understand?"
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "Either way, I'm here now. And there's no going back."
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "act_id": "convergence",
+            "scene_dialogs": [
+                {
+                    "scene_id": "specter_encounter",
+                    "dialogues": [
+                        {
+                            "character_nickname": "jax",
+                            "line": "You're the infamous Midnight? Didn't expect you to be this... unassuming."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "Looks can be deceiving. Are you here to help or make this harder?"
+                        },
+                        {
+                            "character_nickname": "jax",
+                            "line": "Let's just say we both need something from the Nexus. Team up?"
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "A team-up? With you? I thought you worked solo, Specter."
+                        },
+                        {
+                            "character_nickname": "jax",
+                            "line": "I usually do. But the Nexus... it's bigger than any of us."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "Fine. But if we're doing this, I need to know I can trust you."
+                        },
+                        {
+                            "character_nickname": "jax",
+                            "line": "Trust? In the Nexus? You should know better than that."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "Then why should I join forces with you if trust isn't part of the deal?"
+                        },
+                        {
+                            "character_nickname": "jax",
+                            "line": "Because sometimes, the enemy of my enemy... is my ally."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "Clever. But I'm not looking for an ally who'll stab me in the back."
+                        },
+                        {
+                            "character_nickname": "jax",
+                            "line": "Look, Midnight. You and I both know the Nexus changes people. But we don't have to like each other to get what we want."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "So, it's strictly business?"
+                        },
+                        {
+                            "character_nickname": "jax",
+                            "line": "Strictly. We both have our own goals. But right now, they align."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "Then let's get one thing straight—no games, no tricks. We work together until we don't."
+                        },
+                        {
+                            "character_nickname": "jax",
+                            "line": "Deal. But fair warning—I'm not here to hold your hand."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "I don't need anyone to hold my hand. I can handle myself."
+                        },
+                        {
+                            "character_nickname": "jax",
+                            "line": "We'll see. The Nexus has a way of exposing weaknesses."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "Then maybe you should watch your own back, Specter."
+                        },
+                        {
+                            "character_nickname": "jax",
+                            "line": "Consider it done. Shall we proceed, then?"
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "Lead the way."
+                        },
+                        {
+                            "character_nickname": "jax",
+                            "line": "Funny, I figured you'd take the lead, Midnight. After all, you've been here longer."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "Seniority doesn't mean much in the Nexus. But I'll take point if you're scared."
+                        },
+                        {
+                            "character_nickname": "jax",
+                            "line": "Scared? Hardly. I just enjoy watching your back."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "Is that so? I'll remember that when the going gets tough."
+                        },
+                        {
+                            "character_nickname": "jax",
+                            "line": "Oh, don't worry. I can handle a little turbulence."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "Turbulence? You clearly underestimate the Nexus."
+                        },
+                        {
+                            "character_nickname": "jax",
+                            "line": "Underestimating anything here would be a mistake. I'm just saying I'm prepared."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "Good. Because once we step forward, there's no going back."
+                        },
+                        {
+                            "character_nickname": "jax",
+                            "line": "I'm not the kind to look back, Midnight. Let's keep moving."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "Fine. But if you so much as flinch, I'll know you're not as fearless as you pretend to be."
+                        },
+                        {
+                            "character_nickname": "jax",
+                            "line": "I wouldn't worry about that. Fear isn't part of my vocabulary."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "Then prove it. Let's see what you're really made of."
+                        },
+                        {
+                            "character_nickname": "jax",
+                            "line": "Challenge accepted."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "Good. Because this path isn't for the faint-hearted."
+                        },
+                        {
+                            "character_nickname": "jax",
+                            "line": "I wouldn't have it any other way."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "Then let's move. The Nexus waits for no one."
+                        },
+                        {
+                            "character_nickname": "jax",
+                            "line": "After you, Midnight."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "Gladly. But don't lag behind."
+                        },
+                        {
+                            "character_nickname": "jax",
+                            "line": "I'm right on your heels."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "Good. Keep up, Specter."
+                        },
+                        {
+                            "character_nickname": "jax",
+                            "line": "Oh, I will. Just try not to get lost."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "I never get lost. I know this place like the back of my hand."
+                        },
+                        {
+                            "character_nickname": "jax",
+                            "line": "Is that so? We'll see how well that holds up when things get chaotic."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "Chaos is just a part of the Nexus. Embrace it, and you'll be fine."
+                        },
+                        {
+                            "character_nickname": "jax",
+                            "line": "Wise words. But easier said than done."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "For some, maybe. But I'm not like most people."
+                        },
+                        {
+                            "character_nickname": "jax",
+                            "line": "Clearly. That's why I chose to team up with you."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "You chose me, did you? I thought it was the other way around."
+                        },
+                        {
+                            "character_nickname": "jax",
+                            "line": "Let's call it mutual interest, then."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "Fine. But remember—this alliance is temporary."
+                        },
+                        {
+                            "character_nickname": "jax",
+                            "line": "Of course. When our goals no longer align, we part ways."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "Agreed. Until then, let's make the most of it."
+                        },
+                        {
+                            "character_nickname": "jax",
+                            "line": "Gladly. The Nexus won't know what hit it."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "Bold words. But I hope you're ready to back them up."
+                        },
+                        {
+                            "character_nickname": "jax",
+                            "line": "Don't worry about me. Just focus on what's ahead."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "I always do."
+                        },
+                        {
+                            "character_nickname": "jax",
+                            "line": "Then we'll make a great team, at least for now."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "As long as you keep up, Specter."
+                        },
+                        {
+                            "character_nickname": "jax",
+                            "line": "I'll be right beside you, Midnight. Let's go."
+                        }
+                    ]
+                },
+                {
+                    "scene_id": "zee_guidance",
+                    "dialogues": [
+                        {
+                            "character_nickname": "zee",
+                            "line": "The Nexus is not just code, Meera. It's alive in ways you may not understand yet."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "Alive? What does that even mean? How does it connect to the real world?"
+                        },
+                        {
+                            "character_nickname": "zee",
+                            "line": "Understanding that is your journey. But be careful—each action you take resonates beyond what you see."
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "act_id": "confrontation",
+            "scene_dialogs": [
+                {
+                    "scene_id": "architect_encounter",
+                    "dialogues": [
+                        {
+                            "character_nickname": "architect",
+                            "line": "Welcome, Meera. You and your friends are braver than most to step into my world."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "Why do we feel like pawns in your game? What is the Nexus really for?"
+                        },
+                        {
+                            "character_nickname": "architect",
+                            "line": "The Nexus serves a greater purpose, one that few can grasp. But you will see in time."
+                        },
+                        {
+                            "character_nickname": "jax",
+                            "line": "You mean, we're just... experiments to you?"
+                        }
+                    ]
+                },
+                {
+                    "scene_id": "umbra_confrontation",
+                    "dialogues": [
+                        {
+                            "character_nickname": "umbra",
+                            "line": "So, you've come this far, little gamers. But this world belongs to the shadows."
+                        },
+                        {
+                            "character_nickname": "meera",
+                            "line": "Not if we can help it. We're here to take back control."
+                        },
+                        {
+                            "character_nickname": "jax",
+                            "line": "Umbra, your games end here."
+                        },
+                        {
+                            "character_nickname": "umbra",
+                            "line": "Oh, you misunderstand. This is only the beginning."
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

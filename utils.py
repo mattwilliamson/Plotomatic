@@ -21,29 +21,28 @@ def deindent(text: str) -> str:
     """Remove leading whitespace from each line of text."""
     return textwrap.dedent(text).strip()
 
-def merge_stories(story1: Story, story2: Story) -> Story:
+def merge_models(obj1: BaseModel, obj2: BaseModel) -> Story:
     """
-    Take two Story objects, make a copy of the first, and update the copy
-    with any non-empty values from the second, recursively.
+    Take two BaseModel objects (e.g., Story or StoryDialog), make a copy of the first,
+    and update the copy with any non-empty values from the second, recursively.
     """
-    # Too many copies here, but I am troubleshooting a bug
-    story1 = story1.copy()
-    story2 = story2.copy()
+    # Copy the first object to avoid mutating the original
+    obj_copy = obj1.copy()
 
-    def update_recursive(obj1, obj2):
-        if isinstance(obj1, BaseModel) and isinstance(obj2, BaseModel):
-            for field in obj2.model_fields:
-                value1 = getattr(obj1, field, None)
-                value2 = getattr(obj2, field, None)
+    def update_recursive(target, source):
+        if isinstance(target, BaseModel) and isinstance(source, BaseModel):
+            for field in source.model_fields:
+                value1 = getattr(target, field, None)
+                value2 = getattr(source, field, None)
                 if value2 not in [None, "", [], {}]:
                     if isinstance(value1, BaseModel) and isinstance(value2, BaseModel):
                         update_recursive(value1, value2)
                     elif isinstance(value1, list) and isinstance(value2, list):
                         update_list(value1, value2)
                     else:
-                        setattr(obj1, field, value2)
-        elif isinstance(obj1, list) and isinstance(obj2, list):
-            update_list(obj1, obj2)
+                        setattr(target, field, value2)
+        elif isinstance(target, list) and isinstance(source, list):
+            update_list(target, source)
 
     def update_list(list1: List, list2: List):
         """
@@ -60,10 +59,8 @@ def merge_stories(story1: Story, story2: Story) -> Story:
                 # Append new items from list2 that aren't in list1
                 list1.append(value2)
 
-    story_copy = copy.deepcopy(story1)
-    update_recursive(story_copy, story2)
-
-    return story_copy
+    update_recursive(obj_copy, obj2)
+    return obj_copy
 
 def show_diff(story1: Story, story2: Story):
     """Show the differences between two Story objects in a python notebook."""
@@ -88,7 +85,7 @@ blank_story = Story(
     # motifs=[],
     characters=[
         Character(
-            nickname="",
+            nickname="character1",
             name="",
             description="",
             personality="",
@@ -103,12 +100,12 @@ blank_story = Story(
     ],
     acts=[
         Act(
-            act_id="",
+            act_id="act1",
             props=[""],
             scenes=[
                 Scene(
-                    scene_id="",
-                    characters_involved=[""],
+                    scene_id="scene1",
+                    characters_involved=["character1"],
                     props=[""],
                     key_actions=[""],
                 ),
@@ -141,13 +138,13 @@ blank_story = Story(
 blank_story_dialog = StoryDialog(
     act_dialogs=[
         ActDialog(
-            act_id="",
+            act_id="act1",
             dialogs=[
                 SceneDialog(
-                    scene_id="",
+                    scene_id="scene1",
                     dialogs=[
                         DialogueLine(
-                            character_nickname="",
+                            character_nickname="character1",
                             line="",
                         ),
                     ],

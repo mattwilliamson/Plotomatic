@@ -1,5 +1,5 @@
 digraph "Timeline Diagram" {
-	fontsize=20 label="Beyond the Pixel Veil" labelloc=top rankdir=LR
+	fontsize=20 label="Beyond the Pixel Veil" labelloc=top rankdir=TB
 	subgraph cluster_discovery {
 		color=lightgrey fontsize=16 label="Act 1: The Nexus Revelation" style=filled
 		nexus_awakening [label="The Awakening

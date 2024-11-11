@@ -99,10 +99,6 @@ As you refine the story prompt or adjust the model’s settings, use this notebo
 - Install conda packages
 - Install pip packages
 
-### [0_test_llm.ipynb](./0_test_llm.ipynb)
-- Compare the creativity of different models
-- **nemotron:70b** - This one is arbitrarily my favorite
-
 ### [1_story_prompt.ipynb](./1_story_prompt.ipynb)
 - Set the input prompt for the story and kick it off
 
@@ -144,6 +140,12 @@ As you refine the story prompt or adjust the model’s settings, use this notebo
 
 ### :musical_note: [13_music.ipynb](./13_music.ipynb)
 - Music for each scene
+
+---
+
+### [test_llm.ipynb](./test_llm.ipynb)
+- Compare the creativity of different models
+- **nemotron:70b** - This one is arbitrarily my favorite
 
 ### *[generate_samples.ipynb](./generate_samples.ipynb)* (WIP :construction:)
 - Use LlamaIndex to generate summaries from real literature to use as few-shot examples 
