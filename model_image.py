@@ -84,7 +84,12 @@ def generate_image(prompt: Union[str, List[str]] = None, prompt2: Union[str, Lis
 
 
 def show_image_grid(images, main_title=None, titles=None):
-    """Display a list of images as a grid with an optional main title."""
+    """Display a list of images as a grid with an optional main title.
+    if images is a dictionary, the keys will be used as titles for each image."""
+    if isinstance(images, dict):
+        titles = list(images.keys())
+        images = list(images.values())
+
     # Split images into a list of lists where each sublist has at most 4 images
     image_grid = [images[i:i + 4] for i in range(0, len(images), 4)]
 

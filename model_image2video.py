@@ -106,6 +106,6 @@ def image_to_video(prompt: str,
             display(Video(video_filename))
     if gif_filename:
         export_to_gif(all_frames, gif_filename)
-        if display_video:
-            display(Video(gif_filename))
+        # if display_video:
+            # display(Video(gif_filename))
     return all_frames

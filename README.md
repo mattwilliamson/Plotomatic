@@ -156,3 +156,4 @@ As you refine the story prompt or adjust the model’s settings, use this notebo
 - Plot Diagram
 - Generate screenplay
 - Gallery
+- Voice description should describe better like: "A youthful male voice with a distinct Latin American accent speaks clearly and energetically. The tone is persuasive and determined, occasionally revealing subtle hints of vulnerability. The speaker's voice has a warm timbre with a slight melodic lilt typical of Latin American Spanish speakers. The speech pattern includes softened consonants and rhythmic intonation. The audio quality is exceptionally high, with a close-up feel that captures the nuances of the voice, including breath control and subtle vocal inflections. The overall delivery is dynamic and engaging, with emphasis on key words to enhance persuasiveness."

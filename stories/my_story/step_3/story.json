@@ -1,13 +1,13 @@
 {
-    "prompt": "In a world where virtual reality gaming competitions have become the new norm, Meera, a teenage underdog gamer, discovers her life is intertwined with an alternate reality of cosmic proportions. As she learns to harness her extraordinary skills, Meera forms an unlikely team with fellow gamers she was at odds with previously.\n\nFacing the harsh truth that her actions in this alternate universe directly impact events on Earth, Meera confronts the internal struggle of knowing she has taken lives. Embracing her destiny as a hero, Meera and her diverse team navigate through challenges, deception, and danger to uncover the truth behind the lies they've been told.",
+    "prompt": "In a world where virtual reality gaming competitions have become the new norm, Meera, a teenage underdog gamer, discovers her life is intertwined with an alternate reality of cosmic proportions. \nAs she learns to harness her extraordinary skills, Meera forms an unlikely team with fellow gamers she was at odds with previously.\nFacing the harsh truth that her actions in this alternate universe directly impact events on Earth, Meera confronts the internal struggle of knowing she has taken lives. \nEmbracing her destiny as a hero, Meera and her diverse team navigate through challenges, deception, and danger to uncover the truth behind the lies they've been told.",
     "title": "Beyond the Pixel Veil",
     "video": false,
-    "visual_style": "Vibrant, Neon-Lit Cyberpunk Manga Illustration - Dynamic Panel Layouts, Exaggerated Character Expressions, and Intricate Digital Worldscapes",
-    "time_period": "Near Future/Dystopian Present",
-    "location": "Dual Reality: Earth & The Nexus (Virtual Reality World)",
-    "genre": "Science Fantasy/Young Adult Thriller",
+    "visual_style": "Vibrant, Neon-Lit Cyberpunk Manga Illustration - Dynamic Panel Layouts, Intricate Digital Patterns, and Soft Glow Effects",
+    "time_period": "Near Future/Dystopian Alternate Reality",
+    "location": "New Mumbai (Earth) / Nexus (Alternate Reality)",
+    "genre": "Science Fantasy/Young Adult Gaming Thriller",
     "medium": "Novel with Illustrated Chapters",
-    "plot_overview": "In the immersive world of Eon, where virtual reality gaming competitions have captivated the globe, 17-year-old Meera 'Midnight' Singh is an unassuming underdog gamer. Her life takes a dramatic turn when she discovers that her VR exploits are inextricably linked to an alternate reality known as the Nexus, where the fabric of space and time hangs in the balance.\n\nAs Meera delves deeper into this cosmic convergence, she must confront the unsettling truth: her in-game actions have inadvertently claimed lives in the real world. Torn between guilt and determination, Meera embarks on a transformative journey to harness her extraordinary gaming skills for the greater good.\n\nForming an unlikely alliance with former rivals - Jax 'Specter' Lee, a brilliant hacker; Dr. Zhang 'Zee' Wei, a soft-spoken genius inventor; and Maya 'Rampart' Patel, a fearless esports athlete - Meera navigates treacherous landscapes, avoids deadly creatures, and uncovers hidden agendas within the Nexus.\n\nAs they progress, the team encounters the enigmatic Architect, creator of the Nexus, who reveals shocking truths about the simulated reality and the true purpose of the gaming competitions. Meera and her team must now confront the dark forces manipulating the Nexus, threatening to destroy both the virtual and real worlds.\n\nWith each heart-pumping challenge, Meera's team discovers that their diverse skills are not only essential to survival but also to unraveling the mysteries of the Nexus. Through self-discovery, trust, and sacrifice, Meera evolves from an uncertain teenager to a courageous hero, ready to face the ultimate test: saving two worlds from destruction.\n\n**Key Plot Twists:**\n\n1. **The Nexus Revelation**: Meera discovers her VR actions have real-world consequences.\n2. **The Architect's True Intentions**: The team learns the shocking purpose behind the gaming competitions.\n3. **The Shadow Organization**: A hidden force is revealed, manipulating the Nexus for catastrophic gains.\n\n**Themes:**\n\n1. **Redemption and Self-Discovery**\n2. **Power of Diversity and Teamwork**\n3. **Balancing Consequences of Emerging Technologies",
+    "plot_overview": "In the immersive world of Eon, where virtual reality gaming competitions have captivated the globe, 17-year-old Meera 'Midnight' Singh is an unassuming underdog gamer from the outskirts of New Mumbai. Her life takes a drastic turn when she discovers that her exceptional gaming skills are, in fact, a conduit to an alternate reality known as the Nexus - a realm where celestial entities clash, and the fabric of space-time hangs in the balance.\n\nAs Meera delves deeper into the mysteries of the Nexus, she's forced to put aside past rivalries and form an uneasy alliance with her gaming nemeses: Jax 'Specter' Lee, a charismatic streaming sensation; Dr. Zhang 'Zen' Wei, a soft-spoken yet brilliant gamer with a hidden agenda; and Maya 'Rampart' Patel, a fierce and enigmatic player with unparalleled defensive skills.\n\nTogether, they must navigate the blurred lines between their virtual reality gaming world, Eon, and the Nexus. Meera soon confronts the devastating truth: every decision she makes in the Nexus has catastrophic consequences on Earth, including the loss of human lives. Torn between her passion for gaming and the weight of her newfound responsibility, Meera must come to terms with the moral implications of her actions.\n\nAs the team progresses through the treacherous landscape of the Nexus, they encounter formidable foes, ancient deities, and hidden forces manipulating the gamers from the shadows. Meera's quest for answers leads her to the Architects, enigmatic creators of Eon and the Nexus, who harbor secrets that threaten to upend everything she thought she knew about reality.\n\nWith the fate of two worlds hanging in the balance, Meera and her diverse team must put aside their differences, trust each other, and master their unique skills to prevent a cosmic catastrophe. Will Meera embrace her destiny as a hero, or will the pressures of her dual existence tear her apart? The journey through Eon and the Nexus is just the beginning, where the boundaries between gaming, reality, and legend are forever altered.",
     "narrative_perspective": "",
     "conflict_type": "",
     "themes": [],
@@ -16,145 +16,154 @@
         {
             "nickname": "meera",
             "name": "Meera 'Midnight' Singh",
-            "description": "The protagonist, a teenage underdog gamer who discovers her life is intertwined with an alternate reality.",
-            "personality": "Determined, resourceful, and initially uncertain, evolving into a courageous hero.",
-            "physical_appearance": "Petite, with short, spiky black hair, expressive brown eyes, and a collection of colorful tattoos on her arms. Often wears edgy, neon-lit gaming gear.",
+            "description": "The protagonist, a teenage underdog gamer with extraordinary skills that connect her to an alternate reality.",
+            "personality": "Determined, resourceful, and initially introverted, with a growing sense of responsibility and leadership.",
+            "physical_appearance": "Petite, with short, spiky black hair, expressive brown eyes, and a collection of gaming-themed tattoos on her arms. Often wears comfortable, neon-lit gaming attire.",
             "role": "Protagonist/Gamer",
             "gender": "Female",
             "race": "Indian",
             "age": "17",
             "catch_phrase": "Beyond the pixel veil, lies our true reality.",
             "animation_description": "",
-            "voice_description": "Youthful, energetic, and determined, with a hint of vulnerability.",
+            "voice_description": "Youthful, energetic, and assertive, with a hint of vulnerability.",
             "props": [
-                "Custom Gaming Rig",
-                "Neon-Lit Tattoos"
+                "Custom Gaming Controller",
+                "Neon-Lit Headset"
             ],
             "relationships": [
                 {
                     "character_name": "Jax 'Specter' Lee",
-                    "relationship_type": "Unlikely Ally",
+                    "relationship_type": "Unlikely Ally/Rival",
                     "description": ""
                 },
                 {
-                    "character_name": "Dr. Zhang 'Zee' Wei",
-                    "relationship_type": "Mentor Figure",
+                    "character_name": "Dr. Zhang 'Zen' Wei",
+                    "relationship_type": "Trusted Ally/Mentor",
                     "description": ""
                 },
                 {
                     "character_name": "Maya 'Rampart' Patel",
-                    "relationship_type": "Fellow Gamer/Rival-turned- Ally",
+                    "relationship_type": "Respected Ally/Friend",
                     "description": ""
                 }
             ],
-            "internal_conflict": "Guilt over in-game actions affecting the real world, self-doubt, and fear of responsibility.",
+            "internal_conflict": "Grapples with the moral implications of her actions in the Nexus affecting Earth.",
             "character_arc": null,
-            "image_prompt": "Vibrant, Neon-Lit Cyberpunk Manga Illustration - Close-up of Meera 'Midnight' Singh. Petite, with short, spiky **black hair**, expressive **brown eyes**, and a collection of colorful tattoos on her arms. Wears edgy, **neon-lit gaming gear** with a predominantly **dark blue and pink color scheme**. Background: Blurred, neon-drenched cityscape.",
-            "image_prompt_short": ""
+            "image_prompt": "Vibrant, Neon-Lit Cyberpunk Manga Illustration - Close-up of Meera 'Midnight' Singh. Petite, with short, spiky **black hair**, expressive **brown eyes**, and a collection of **neon-lit gaming-themed tattoos** on her arms. Wears comfortable, **electric blue and purple neon-lit gaming attire** with a subtle glow effect.",
+            "image_prompt_short": "Vibrant Cyberpunk Manga - Meera 'Midnight' Singh, petite, spiky black hair, expressive brown eyes, neon-lit gaming tattoos, electric blue/purple gaming attire."
         },
         {
             "nickname": "jax",
             "name": "Jax 'Specter' Lee",
-            "description": "A brilliant, yet reclusive hacker who joins Meera's team.",
-            "personality": "Brooding, intensely focused, with a dry sense of humor and deep loyalty to those he trusts.",
-            "physical_appearance": "Tall, lean, with messy black hair, piercing green eyes, and a collection of futuristic, high-tech gadgets.",
-            "role": "Hacker/Supporting Character",
+            "description": "A charismatic streaming sensation and Meera's gaming nemesis turned ally.",
+            "personality": "Confident, outgoing, and strategic, with a hidden vulnerable side.",
+            "physical_appearance": "Tall, lean, with messy blond hair, piercing blue eyes, and a charming smile. Often wears sleek, branded gaming attire.",
+            "role": "Supporting Character/Gamer",
             "gender": "Male",
             "race": "Korean-American",
             "age": "19",
-            "catch_phrase": "In the shadows, I find my strength.",
+            "catch_phrase": "Specter's got your back, Midnight!",
             "animation_description": "",
-            "voice_description": "Low, smooth, and mysterious, with occasional sarcastic undertones.",
+            "voice_description": "Smooth, charismatic, and playful, with occasional hints of seriousness.",
             "props": [
-                "Custom Cyberdeck",
-                "Hacking Tools"
+                "Custom Branded Gaming Mouse",
+                "Streaming Camera"
             ],
             "relationships": [
                 {
                     "character_name": "Meera 'Midnight' Singh",
-                    "relationship_type": "Unlikely Ally",
+                    "relationship_type": "Unlikely Ally/Rival",
+                    "description": ""
+                },
+                {
+                    "character_name": "Dr. Zhang 'Zen' Wei",
+                    "relationship_type": "Respected Colleague",
                     "description": ""
                 }
             ],
-            "internal_conflict": "Trust issues, fear of emotional connection, and the weight of his past mistakes.",
+            "internal_conflict": "",
             "character_arc": null,
-            "image_prompt": "None",
-            "image_prompt_short": ""
+            "image_prompt": "Vibrant, Neon-Lit Cyberpunk Manga Illustration - Jax 'Sparrow' Lee in a dynamic pose. Lean, with **short, spiky brown hair**, bright **hazel eyes**, and a confident smile. Holds a **Custom Branded Gaming Mouse**; wears **dark grey and neon-green gaming gear** with a sleek, high-tech aesthetic.",
+            "image_prompt_short": "Vibrant Cyberpunk Manga - Jax 'Sparrow' Lee, lean, spiky brown hair, bright hazel eyes, custom gaming mouse, dark grey/neon-green gaming gear."
         },
         {
-            "nickname": "zee",
-            "name": "Dr. Zhang 'Zee' Wei",
-            "description": "A soft-spoken genius inventor who helps Meera understand the Nexus.",
-            "personality": "Warm, nurturing, with a calm and collected demeanor, hiding a sharp mind and quick wit.",
-            "physical_appearance": "Middle-aged, with short, graying hair, wise brown eyes, and a pair of round, wire-rimmed glasses. Often wears comfortable, layered clothing.",
-            "role": "Mentor/Supporting Character",
+            "nickname": "dr_zhang",
+            "name": "Dr. Zhang 'Zen' Wei",
+            "description": "A soft-spoken yet brilliant gamer with a hidden agenda, who becomes Meera's mentor.",
+            "personality": "Introspective, analytical, and enigmatic, with a deep sense of responsibility.",
+            "physical_appearance": "Slender, with short, straight black hair, wire-rimmed glasses, and an understated yet elegant sense of style.",
+            "role": "Supporting Character/Gamer/Mentor",
             "gender": "Non-Binary",
             "race": "Chinese",
-            "age": "45",
-            "catch_phrase": "Knowledge is the bridge between worlds.",
+            "age": "Late 20s",
+            "catch_phrase": "The Nexus holds secrets; we must listen to its whispers.",
             "animation_description": "",
-            "voice_description": "Soothing, gentle, and authoritative, with a hint of playfulness.",
+            "voice_description": "Calm, measured, and insightful, with a hint of mystery.",
             "props": [
-                "Innovative Inventions",
-                "Ancient Tomes"
+                "Custom Gaming Keyboard",
+                "Ancient-looking Leather Journal"
             ],
             "relationships": [
                 {
                     "character_name": "Meera 'Midnight' Singh",
-                    "relationship_type": "Mentor Figure",
+                    "relationship_type": "Trusted Ally/Mentor",
+                    "description": ""
+                },
+                {
+                    "character_name": "Jax 'Specter' Lee",
+                    "relationship_type": "Respected Colleague",
                     "description": ""
                 }
             ],
-            "internal_conflict": "Balancing the desire to protect Meera with the need to prepare her for the challenges ahead.",
+            "internal_conflict": "",
             "character_arc": null,
-            "image_prompt": "Vibrant, Neon-Lit Cyberpunk Manga Illustration - Dr. Zhang 'Zee' Wei in a warm, comforting environment. **Middle-aged** with **short, graying hair**, wise **brown eyes**, and round, **wire-rimmed glasses**. Wears comfortable, layered clothing in soothing **pastel shades**. Background: Soft focus, futuristic laboratory with gentle, pulsing lights.",
-            "image_prompt_short": ""
+            "image_prompt": "Vibrant, Neon-Lit Cyberpunk Manga Illustration - Dr. Zhang 'Zen' Wei in a contemplative stance. Slender, with **short, straight black hair**, **wire-rimmed glasses**, and an understated yet elegant sense of style incorporating **subtle, glow-in-the-dark accents** on their attire.",
+            "image_prompt_short": "Vibrant Cyberpunk Manga - Dr. Zhang 'Zen' Wei, slender, straight black hair, wire-rimmed glasses, subtle glow-in-the-dark fashion accents."
         },
         {
             "nickname": "maya",
             "name": "Maya 'Rampart' Patel",
-            "description": "A fearless esports athlete who becomes Meera's ally and potential rival.",
-            "personality": "Confident, charismatic, with a quick wit and sharp tongue, but also fiercely loyal and protective of those she cares about.",
-            "physical_appearance": "Athletic build, with long, curly brown hair, bright hazel eyes, and a collection of bold, colorful tattoos. Often wears sleek, high-tech sports gear.",
-            "role": "Esports Athlete/Supporting Character",
+            "description": "A fierce and enigmatic player with unparalleled defensive skills, who joins Meera's team.",
+            "personality": "Bold, fiercely independent, and guarded, with a deep sense of loyalty.",
+            "physical_appearance": "Athletic build, with long, dark hair, piercing green eyes, and intricate, glow-in-the-dark tattoos on her arms. Often wears edgy, protective gaming gear.",
+            "role": "Supporting Character/Gamer",
             "gender": "Female",
             "race": "Indian-American",
             "age": "20",
-            "catch_phrase": "Victory is not just about winning, it's about the climb.",
+            "catch_phrase": "Rampart's got the shield; you handle the sword!",
             "animation_description": "",
-            "voice_description": "Bold, energetic, and assertive, with a hint of sassiness.",
+            "voice_description": "Confident, assertive, and slightly husky, with a hint of warmth.",
             "props": [
-                "Custom Gaming Gear",
-                "Trophy Collection"
+                "Custom Defensive Gaming Gauntlets",
+                "Glow-in-the-Dark Tattoo Designs"
             ],
             "relationships": [
                 {
                     "character_name": "Meera 'Midnight' Singh",
-                    "relationship_type": "Fellow Gamer/Rival-turned-Ally",
+                    "relationship_type": "Respected Ally/Friend",
                     "description": ""
                 }
             ],
-            "internal_conflict": "Managing her competitive nature with the need for teamwork and trust.",
+            "internal_conflict": "",
             "character_arc": null,
-            "image_prompt": "Vibrant, Neon-Lit Cyberpunk Manga Illustration - Maya 'Rampart' Patel in dynamic action. **Athletic build** with **long, curly brown hair**, bright **hazel eyes**, and bold, colorful tattoos. Wears sleek, high-tech sports gear in a vibrant **orange and white color scheme**. Background: Blurred, neon-lit stadium with cheering crowds.",
-            "image_prompt_short": ""
+            "image_prompt": "Vibrant, Neon-Lit Cyberpunk Manga Illustration - Maya 'Rampart' Patel in a powerful defensive stance. Athletic build, with **long, dark hair**, piercing **green eyes**, and intricate, **glow-in-the-dark tattoos** on her arms. Wears edgy, protective **neon-lit gaming gear** emphasizing defense.",
+            "image_prompt_short": "Vibrant Cyberpunk Manga - Maya 'Rampart' Patel, athletic build, long dark hair, piercing green eyes, glow-in-the-dark tattoos, neon-lit defensive gaming gear."
         },
         {
             "nickname": "architect",
-            "name": "The Architect",
-            "description": "The enigmatic creator of the Nexus, with true intentions shrouded in mystery.",
-            "personality": "Calm, collected, and calculating, with an air of superiority and a deep understanding of the cosmos.",
-            "physical_appearance": "Androgynous, with an ageless, ethereal appearance, featuring piercing blue eyes and silver hair. Often dressed in flowing, white attire.",
-            "role": "Antagonist/Mysterious Figure",
-            "gender": "Non-Binary",
-            "race": "Unknown",
+            "name": "The Architect (Erebus)",
+            "description": "An enigmatic creator of Eon and the Nexus, with secrets that threaten to upend Meera's understanding of reality.",
+            "personality": "Enigmatic, calculating, and seemingly omnipotent, with a hidden sense of purpose.",
+            "physical_appearance": "Androgynous, with an ever-shifting, glitch-art appearance, reflecting the fluidity of the digital realm.",
+            "role": "Antagonist/Creator",
+            "gender": "Non-Applicable",
+            "race": "Non-Human (AI/Entity)",
             "age": "Ageless",
-            "catch_phrase": "Reality is but a canvas, waiting to be reshaped.",
+            "catch_phrase": "Reality is a canvas; we are the brushstrokes.",
             "animation_description": "",
-            "voice_description": "Ethereal, hypnotic, and commanding, with an undercurrent of menace.",
+            "voice_description": "Ethereal, androgynous, and hauntingly melodic, with an undercurrent of authority.",
             "props": [
-                "The Nexus Code",
-                "Cosmic Artifacts"
+                "Glitching, Reality-Bending Code"
             ],
             "relationships": [
                 {
@@ -163,97 +172,96 @@
                     "description": ""
                 }
             ],
-            "internal_conflict": "Balancing the pursuit of knowledge with the responsibility that comes with immense power.",
+            "internal_conflict": "",
             "character_arc": null,
-            "image_prompt": "Vibrant, Neon-Lit Cyberpunk Manga Illustration - The Architect in an ethereal, commanding pose. **Androgynous** with **ageless appearance**, piercing **blue eyes**, and **silver hair**. Wears flowing, elegant attire in a serene **white and gold color scheme**. Background: Soft, gradient sky with floating, glowing orbs.",
-            "image_prompt_short": ""
+            "image_prompt": "Vibrant, Neon-Lit Cyberpunk Manga Illustration - The Architect (Erebus) in an ethereal, glitching environment. Androgynous, with an **ever-shifting, glitch-art appearance** reflecting the fluidity of the digital realm; **pulsating neon lights** underscore their omnipotent presence.",
+            "image_prompt_short": "Vibrant Cyberpunk Manga - The Architect (Erebus), androgynous, ever-shifting glitch-art form, pulsating neon lights."
         },
         {
-            "nickname": "nova",
-            "name": "Nova Snow",
-            "description": "A charismatic gaming personality and Meera's idol, hiding secrets about her involvement with the Shadow Organization.",
-            "personality": "Bubbly, outgoing, and confident on camera, but privately struggling with the moral implications of her actions.",
-            "physical_appearance": "Petite, with short, platinum-blonde hair, bright blue eyes, and a collection of trendy, neon-lit outfits. Often wears bold, eye-catching accessories.",
-            "role": "Supporting Character/Potential Antagonist",
+            "nickname": "nexus_guardian",
+            "name": "The Nexus Guardian (Astrum)",
+            "description": "An ancient, powerful entity tasked with protecting the balance of the Nexus and guiding Meera.",
+            "personality": "Wisdom-imbued, compassionate, and fiercely protective, with a deep understanding of the cosmos.",
+            "physical_appearance": "Ethereal, with an luminous, star-like appearance, embodying the celestial essence of the Nexus.",
+            "role": "Supporting Character/Guardian",
+            "gender": "Non-Applicable",
+            "race": "Non-Human (Celestial Entity)",
+            "age": "Ageless",
+            "catch_phrase": "Balance is key; harmony is our goal.",
+            "animation_description": "",
+            "voice_description": "Soothing, melodious, and filled with ancient wisdom, conveying a sense of reassurance.",
+            "props": [
+                "Stellar Energy Manipulation"
+            ],
+            "relationships": [
+                {
+                    "character_name": "Meera 'Midnight' Singh",
+                    "relationship_type": "Mentor-Protege",
+                    "description": ""
+                }
+            ],
+            "internal_conflict": "",
+            "character_arc": null,
+            "image_prompt": "Vibrant, Neon-Lit Cyberpunk Manga Illustration - The Nexus Guardian (Astrum) amidst a celestial backdrop. Ethereal, with a **luminous, star-like appearance** embodying the celestial essence of the Nexus; **soft, ethereal glow** surrounds their form.",
+            "image_prompt_short": "Vibrant Cyberpunk Manga - The Nexus Guardian (Astrum), ethereal, luminous star-like form, soft ethereal glow."
+        },
+        {
+            "nickname": "earth_rebel",
+            "name": "Kaito 'Sparrow' Hernandez",
+            "description": "A charismatic leader of an underground rebellion on Earth, fighting against the oppressive forces exploiting Eon.",
+            "personality": "Passionate, resourceful, and fearless, with a strong sense of justice.",
+            "physical_appearance": "Lean, with short, spiky brown hair, bright hazel eyes, and a collection of scars from past encounters. Often wears practical, makeshift rebel gear.",
+            "role": "Supporting Character/Rebel Leader",
+            "gender": "Male",
+            "race": "Latin American",
+            "age": "22",
+            "catch_phrase": "Together, we rise; together, we overcome!",
+            "animation_description": "",
+            "voice_description": "Energetic, persuasive, and determined, with a hint of vulnerability.",
+            "props": [
+                "Customized Rebel Comms Device",
+                "Graffiti Tagging Gear"
+            ],
+            "relationships": [
+                {
+                    "character_name": "Meera 'Midnight' Singh",
+                    "relationship_type": "Unlikely Ally",
+                    "description": ""
+                }
+            ],
+            "internal_conflict": "",
+            "character_arc": null,
+            "image_prompt": "Vibrant, Neon-Lit Cyberpunk Manga Illustration - Kaito 'Sparrow' Hernandez in a rebellious pose. Lean, with **short, spiky brown hair**, bright **hazel eyes**, and a determined expression. Wears practical, **makeshift rebel gear** with visible **graffiti tags**; holds a **Customized Rebel Comms Device**.",
+            "image_prompt_short": "Vibrant Cyberpunk Manga - Kaito 'Sparrow' Hernandez, lean, spiky brown hair, bright hazel eyes, makeshift rebel gear, graffiti tags."
+        },
+        {
+            "nickname": "corporate_exec",
+            "name": "Regina 'The Shark' Thornton",
+            "description": "A ruthless, cunning executive exploiting Eon for corporate gain, serving as a primary antagonist on Earth.",
+            "personality": "Ambitious, manipulative, and devoid of empathy, with a singular focus on profit.",
+            "physical_appearance": "Polished, with long, curly blonde hair, piercing blue eyes, and impeccable, high-end business attire.",
+            "role": "Antagonist/Corporate Executive",
             "gender": "Female",
             "race": "Caucasian",
-            "age": "22",
-            "catch_phrase": "Sparkle, shine, and slay the game!",
+            "age": "35",
+            "catch_phrase": "In the game of power, only the strongest thrive.",
             "animation_description": "",
-            "voice_description": "Bright, cheerful, and engaging, with a hint of vulnerability.",
+            "voice_description": "Slick, persuasive, and menacing, with an undercurrent of superiority.",
             "props": [
-                "Gaming Channel Props",
-                "Sponsored Gear"
+                "Luxury Smartwatch",
+                "High-Security Briefcase"
             ],
             "relationships": [
                 {
                     "character_name": "Meera 'Midnight' Singh",
-                    "relationship_type": "Idol-Protagonist Dynamic",
+                    "relationship_type": "Adversarial",
                     "description": ""
                 }
             ],
-            "internal_conflict": "Torn between her loyalty to the Shadow Organization and her growing sense of morality.",
+            "internal_conflict": "",
             "character_arc": null,
-            "image_prompt": "Vibrant, Neon-Lit Cyberpunk Manga Illustration - Nova Snow in a lively, charismatic setting. **Petite** with **short, platinum-blonde hair**, bright **blue eyes**, and trendy, neon-lit outfits in a bold **purple and silver color scheme**. Background: Vibrant, neon-drenched gaming studio with flashing lights.",
-            "image_prompt_short": ""
-        },
-        {
-            "nickname": "umbra",
-            "name": "Umbra Blackwood",
-            "description": "The leader of the Shadow Organization, manipulating events from behind the scenes.",
-            "personality": "Charismatic, cunning, and ruthless, with a talent for deception and a hidden agenda.",
-            "physical_appearance": "Tall, imposing, with chiseled features, piercing red eyes, and jet-black hair. Often dressed in dark, tailored attire.",
-            "role": "Main Antagonist",
-            "gender": "Male",
-            "race": "Unknown",
-            "age": "Late 30s",
-            "catch_phrase": "In the shadows, we shape the future.",
-            "animation_description": "",
-            "voice_description": "Deep, commanding, and menacing, with a hint of sophistication.",
-            "props": [
-                "Shadow Organization Emblem",
-                "Advanced Surveillance Tech"
-            ],
-            "relationships": [
-                {
-                    "character_name": "Nova Snow",
-                    "relationship_type": "Leader-Minon Dynamic",
-                    "description": ""
-                }
-            ],
-            "internal_conflict": "Maintaining control over the Shadow Organization while facing the growing threat of Meera and her team.",
-            "character_arc": null,
-            "image_prompt": "Vibrant, Neon-Lit Cyberpunk Manga Illustration - Umbra Blackwood in a dark, commanding environment. **Tall, imposing** with **chiseled features**, piercing **red eyes**, and **jet-black hair**. Wears dark, tailored attire in a ominous **black and dark gray color scheme**. Background: Blurred, dark alleyway with faint, neon lights.",
-            "image_prompt_short": ""
-        },
-        {
-            "nickname": "echo",
-            "name": "Echo Flux",
-            "description": "A mysterious, masked figure who becomes Meera's ally in the Nexus.",
-            "personality": "Enigmatic, agile, and quick-witted, with a deep understanding of the Nexus and its workings.",
-            "physical_appearance": "Androgynous, with an ageless appearance, featuring piercing purple eyes and short, spiky hair. Often dressed in dark, high-tech attire and a mask.",
-            "role": "Supporting Character/Mysterious Ally",
-            "gender": "Non-Binary",
-            "race": "Unknown",
-            "age": "Ageless",
-            "catch_phrase": "In the flux, we find our strength.",
-            "animation_description": "",
-            "voice_description": "Smooth, androgynous, and mysterious, with a hint of playfulness.",
-            "props": [
-                "Mask",
-                "Advanced Nexus Abilities"
-            ],
-            "relationships": [
-                {
-                    "character_name": "Meera 'Midnight' Singh",
-                    "relationship_type": "Mysterious Ally-Protagonist Dynamic",
-                    "description": ""
-                }
-            ],
-            "internal_conflict": "Balancing the desire to help Meera with the need to maintain their own secrets and agenda.",
-            "character_arc": null,
-            "image_prompt": "Vibrant, Neon-Lit Cyberpunk Manga Illustration - Echo Flux in a mysterious, dynamic pose. **Androgynous** with an **ageless appearance**, piercing **purple eyes**, and **short, spiky hair**. Wears dark, high-tech attire with a mask in a bold **dark blue and neon green color scheme**. Background: Blurred, neon-lit cityscape at dusk.",
-            "image_prompt_short": ""
+            "image_prompt": "Vibrant, Neon-Lit Cyberpunk Manga Illustration - Regina 'The Shark' Thornton in a commanding stance. Polished, with **long, curly blonde hair**, piercing **blue eyes**, and impeccable, **high-end business attire** incorporating **subtle neon accents** symbolizing corporate power.",
+            "image_prompt_short": "Vibrant Cyberpunk Manga - Regina 'The Shark' Thornton, polished, curly blonde hair, piercing blue eyes, high-end business attire with subtle neon accents."
         }
     ],
     "props": [],

@@ -84,6 +84,9 @@ else:
     CHARACTER_ANIMATION_HEIGHT = 480
 
 
+VOICE_CLONE_MODEL = "fish"
+# CoquiTTS
+
 # https://huggingface.co/docs/accelerate/en/usage_guides/model_size_estimator for estimating model size
 
 # !export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
