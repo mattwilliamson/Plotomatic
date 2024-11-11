@@ -1,6 +1,6 @@
 import settings
 import torch
-from IPython.display import Video, display
+from IPython.display import Video, display, Image as IPImage
 from diffusers.utils import export_to_gif, export_to_video
 # from IPython.display import Image as IPImage
 from PIL import Image
@@ -102,10 +102,10 @@ def image_to_video(prompt: str,
     
     if video_filename:
         export_to_video(all_frames, video_filename, fps=8)
-        if display_video:
-            display(Video(video_filename))
+        # if display_video:
+            # display(Video(video_filename))
     if gif_filename:
         export_to_gif(all_frames, gif_filename)
-        # if display_video:
-            # display(Video(gif_filename))
+        if display_video:
+            display(IPImage(filename=gif_filename))
     return all_frames
