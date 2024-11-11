@@ -90,7 +90,9 @@ def image_to_video(prompt: str,
                    guidance_scale:float = 6.0, 
                    video_filename:str = None, 
                    gif_filename: str = None, 
+                   gif_small_filename: str = None,
                    display_video:bool = True, 
+                   loop_reverse:bool = False,
                    sequences: int = 1) -> List[Image.Image]:
     # If sequences > 1, we will generate multiple videos and concatenate them, using the last frame from each video to start the next one
     all_frames = []
@@ -100,12 +102,21 @@ def image_to_video(prompt: str,
         # Use last frame as input for next video
         image = video[-1]
     
+    if loop_reverse:
+        all_frames.extend(reversed(all_frames))
+
+    if gif_small_filename:
+        small_frames = [frame.resize((frame.width // 2, frame.height // 2)) for frame in all_frames]
+        export_to_gif(small_frames, gif_small_filename)
+        if display_video:
+            display(IPImage(filename=gif_small_filename))
+    
     if video_filename:
         export_to_video(all_frames, video_filename, fps=8)
         # if display_video:
             # display(Video(video_filename))
     if gif_filename:
         export_to_gif(all_frames, gif_filename)
-        if display_video:
-            display(IPImage(filename=gif_filename))
+        # if display_video:
+        #     display(IPImage(filename=gif_filename))
     return all_frames

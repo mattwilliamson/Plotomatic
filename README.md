@@ -72,7 +72,7 @@ Plot-o-matic combines the power of AI to turn any story idea into a wide variety
 
 We leverage a suite of AI tools to bring your stories to life:
 
-- [LlamaIndex](https://docs.llamaindex.ai/en/stable/examples/llm/nvidia_nim/) - used to generate chapters/scenes while maintaining coherence
+- [LlamaIndex](https://docs.llamaindex.ai/en/stable/examples/llm/nvidia_nim/) :dromedary_camel: - used to generate chapters/scenes while maintaining coherence
 - [NeMo Guardrails](https://docs.nvidia.com/nemo/guardrails/) - Prevent NSFW and enforce JSON output
 - [NIM microservice](https://build.nvidia.com/explore/discover) - For serving LLMs locally or using NVIDIA NIM in the cloud
 - [Nemotron 70b](https://build.nvidia.com/nvidia/llama-3_1-nemotron-70b-instruct) - LLM for NIM
@@ -90,7 +90,7 @@ We leverage a suite of AI tools to bring your stories to life:
 
 This notebook provides tools to visualize and track the story's development. After each generation step, you can revisit this notebook to review the evolving plot through detailed overviews, interactive diagrams, and other visualization tools. 
 
-As you refine the story prompt or adjust the model’s settings, use this notebook to see how those changes impact the narrative structure. With each re-run, observe how characters, themes, and events unfold differently—allowing you to shape and perfect the story iteratively.
+As you refine the story prompt or adjust the model's settings, use this notebook to see how those changes impact the narrative structure. With each re-run, observe how characters, themes, and events unfold differently—allowing you to shape and perfect the story iteratively.
 
 ---
 
