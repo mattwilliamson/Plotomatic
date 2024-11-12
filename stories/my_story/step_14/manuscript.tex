@@ -1,22 +1,27 @@
 
-    \documentclass[12pt]{book}
+    \documentclass[12pt]{report}  % Using 'report' class to avoid blank pages between chapters
     \usepackage{setspace}
     \usepackage{titlesec}
     \usepackage{graphicx}
     \usepackage{url}
     \titleformat{\chapter}[display]
       {\normalfont\huge\bfseries}{\chaptername\ \thechapter}{20pt}{\Huge}
+    \usepackage{fancyhdr}
+    \pagestyle{fancy}
+    \fancyhf{}
+    \rhead{\thepage}
     \begin{document}
     \onehalfspacing
-    \begin{center}
-\includegraphics[width=\textwidth]{stories/my_story/step_6/scenes/title.png}
-\end{center}
-\newpage
+    \pagenumbering{gobble} % Suppress page numbers until Chapter 1
+    \begin{center}\n\includegraphics[width=0.8\textwidth]{stories/my_story/step_6/scenes/title.png}
+\vspace{1cm}
 
-\title{Beyond the Pixel Veil}
-\maketitle
-
-\chapter*{Chapter 1: The Underdog's Rise}
+    {\Huge \textbf{Beyond the Pixel Veil}} \\[2cm]
+    \end{center}
+    
+    \newpage
+    \pagenumbering{arabic} % Start page numbering
+    \chapter*{Chapter 1: The Underdog's Rise}
 \addcontentsline{toc}{chapter}{Chapter 1: The Underdog's Rise}
 \textit{Meera participates in a high-stakes Eon gaming tournament, showcasing her extraordinary skills.}
 
@@ -103,8 +108,6 @@ gathering storm. She smiled, unsure what the future held, but ready to
 face whatever challenges lay beyond the screen.
 
 
-\newpage
-
 \chapter*{Chapter 2: Awakening to Nexus}
 \addcontentsline{toc}{chapter}{Chapter 2: Awakening to Nexus}
 \textit{Meera discovers she can manipulate the Nexus, an alternate reality, through her gaming skills.}
@@ -180,8 +183,6 @@ tremors of a transformation, one that would forever alter the trajectory
 of her life. The stars around her pulsed in anticipation, as if the very
 fabric of reality was holding its breath, waiting for her response.
 
-
-\newpage
 
 \chapter*{Chapter 3: Confronting Rivals}
 \addcontentsline{toc}{chapter}{Chapter 3: Confronting Rivals}
@@ -302,8 +303,6 @@ journey that would change the course of their lives - and the fate of
 Nexus - forever.
 
 
-\newpage
-
 \chapter*{Chapter 4: First Trial in Nexus}
 \addcontentsline{toc}{chapter}{Chapter 4: First Trial in Nexus}
 \textit{Meera and her new allies face their first challenge in the Nexus, testing their teamwork.}
@@ -390,8 +389,6 @@ her allies, their bond forged in the heart of the Nexus. Together, they
 stood ready to face whatever trials lay ahead, their trust in each other
 burning brighter than any illusion.
 
-
-\newpage
 
 \chapter*{Chapter 5: Aftermath on Earth}
 \addcontentsline{toc}{chapter}{Chapter 5: Aftermath on Earth}
@@ -487,8 +484,6 @@ awaiting her response. With a deep breath, she made her decision.
 "I'm in."
 
 
-\newpage
-
 \chapter*{Chapter 6: Confronting the Architect}
 \addcontentsline{toc}{chapter}{Chapter 6: Confronting the Architect}
 \textit{Meera and her allies confront the enigmatic Architect (Erebus), seeking answers about Nexus and Eon.}
@@ -578,9 +573,8 @@ worlds resting on her shoulders. The question was, which path would she
 choose?
 
 
-\newpage
 
-
+    \newpage
     \vfill
     \begin{center}
     \textit{Made with \textbf{Plotomatic}.} \\
