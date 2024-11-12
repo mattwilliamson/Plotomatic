@@ -12,17 +12,20 @@ from typing import List
 
 model_name = settings.IMAGE_TO_VIDEO_MODEL
 
+print(f"Using model: {model_name} on device: {settings.DEVICE}")
+
 kwargs = dict(
     num_videos_per_prompt=1,
     num_inference_steps=50,
     num_frames=49,
-    generator=torch.Generator(device="cuda").manual_seed(42),
+    generator=torch.Generator(device=settings.DEVICE).manual_seed(42),
+    use_dynamic_cfg=settings.IMAGE_TO_VIDEO_DYNAMIC_CFG, # Use dynamic config,
 )
 
 if "CogVideoX" in model_name:
     # kwargs['num_inference_steps'] = 50
     kwargs['num_frames'] = 49
-    kwargs['generator'] = torch.Generator(device="cuda").manual_seed(42)
+    kwargs['generator'] = torch.Generator(device=settings.DEVICE).manual_seed(42)
 
     if settings.IMAGE_TO_VIDEO_QUANTIZED:
         # Quantized
@@ -97,6 +100,8 @@ def image_to_video(prompt: str,
     # If sequences > 1, we will generate multiple videos and concatenate them, using the last frame from each video to start the next one
     all_frames = []
     for _ in range(sequences):
+        kwargs['width'] = image.width
+        kwargs['height'] = image.height
         video = pipe(prompt=prompt, image=image, guidance_scale=guidance_scale, **kwargs).frames[0]
         all_frames.extend(video)
         # Use last frame as input for next video

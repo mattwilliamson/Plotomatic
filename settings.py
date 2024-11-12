@@ -28,6 +28,7 @@ TEXT_CONTEXT_WINDOW = 100000 # 128k for llama3.1
 # DEVICE_MAP = "cpu"
 DEVICE_MAP = "auto"
 
+# TODO: Might want to do this for different models
 import torch
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
@@ -70,9 +71,14 @@ TOKENIZERS_PARALLELISM="true"
 
 IMAGE_TO_VIDEO_MODEL = "THUDM/CogVideoX-5b-I2V"
 # IMAGE_TO_VIDEO_MODEL = "ali-vilab/i2vgen-xl"
-TEXT_TO_VIDEO_MODEL = 'THUDM/CogVideoX-5b'
 IMAGE_TO_VIDEO_QUANTIZED = False
+IMAGE_TO_VIDEO_DYNAMIC_CFG = True
+
+TEXT_TO_VIDEO_MODEL = 'THUDM/CogVideoX-5b'
 TEXT_TO_VIDEO_QUANTIZED = False
+
+# By leveraging dynamic CFG, you can potentially achieve better video quality and more accurate prompt adherence in your CogVideoX generations.
+# However, dynamic CFG may also lead to slower inference times and higher memory usage.
 
 if "i2vgen-xl" in IMAGE_TO_VIDEO_MODEL:
     # Size for i2vgen-xl
