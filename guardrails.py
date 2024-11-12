@@ -3,7 +3,7 @@ NVIDIA NeMo Guardrails loader and writer.
 This module provides functionality to read and write JSON schema files for the Story and StoryDialog models.
 """
 
-from model import Story, StoryDialog
+from model import Story, StoryDialogue
 from nemoguardrails import LLMRails, RailsConfig
 from nemoguardrails.actions import action
 import json
@@ -39,7 +39,7 @@ def write_schema():
         json.dump(story_schema, f, indent=2)
 
     # For StoryDialog
-    story_dialog_schema = StoryDialog.model_json_schema()
+    story_dialog_schema = StoryDialogue.model_json_schema()
     with open(story_dialog_schema_path, 'w') as f:
         json.dump(story_dialog_schema, f, indent=2)
 

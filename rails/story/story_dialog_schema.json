@@ -8,12 +8,12 @@
           "title": "Act Id",
           "type": "string"
         },
-        "scene_dialogs": {
+        "scene_dialogues": {
           "description": "List of SceneDialog objects for the act",
           "items": {
             "$ref": "#/$defs/SceneDialog"
           },
-          "title": "Scene Dialogs",
+          "title": "Scene Dialogues",
           "type": "array"
         }
       },
@@ -77,12 +77,12 @@
   },
   "description": "Represents the dialogues for the entire story, organized by acts and scenes.",
   "properties": {
-    "act_dialogs": {
+    "act_dialogues": {
       "description": "List of ActDialog objects for the story",
       "items": {
         "$ref": "#/$defs/ActDialog"
       },
-      "title": "Act Dialogs",
+      "title": "Act Dialogues",
       "type": "array"
     }
   },

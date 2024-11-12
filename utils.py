@@ -157,14 +157,14 @@ blank_story = Story(
     ],
 )
 
-blank_story_dialog = StoryDialog(
-    act_dialogs=[
-        ActDialog(
+blank_story_dialog = StoryDialogue(
+    act_dialogues=[
+        ActDialogue(
             act_id="act1",
-            dialogs=[
-                SceneDialog(
+            dialogues=[
+                SceneDialogue(
                     scene_id="scene1",
-                    dialogs=[
+                    dialogues=[
                         DialogueLine(
                             character_nickname="character1",
                             line="",
@@ -177,4 +177,4 @@ blank_story_dialog = StoryDialog(
 )
 
 # Associate the blank story and story dialog with each other
-blank_story.set_story_dialog(blank_story_dialog)
+blank_story.set_story_dialogue(blank_story_dialog)

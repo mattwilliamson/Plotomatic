@@ -128,25 +128,27 @@ class Act(BaseModel):
     scenes: Optional[List[Scene]] = Field(default_factory=list, description="List of scenes in this act")
     props: Optional[List[str]] = Field(default_factory=list, description="List of prop names used in this act")
 
-class SceneDialog(BaseModel):
+class SceneDialogue(BaseModel):
     """
     Represents the dialogues for a specific scene.
+    Dialogues are organized by character and line and would be used for movies and such.
     """
     scene_id: Optional[str] = Field("", description="Unique identifier of the scene this dialogue belongs to")
-    dialogues: Optional[List[DialogueLine]] = Field(default_factory=list, description="List of dialogue lines in the scene")
+    dialogues: Optional[List[DialogueLine]] = Field(default_factory=list, description="List of dialogue lines in the scene for screenplays")
+    content: Optional[str] = Field("", description="Content of the scene")
 
-class ActDialog(BaseModel):
+class ActDialogue(BaseModel):
     """
     Represents dialogues for an act, containing dialogues for multiple scenes.
     """
     act_id: Optional[str] = Field("", description="Unique identifier of the act this dialogue belongs to")
-    scene_dialogs: List[SceneDialog] = Field(default_factory=list, description="List of SceneDialog objects for the act")
+    scene_dialogues: List[SceneDialogue] = Field(default_factory=list, description="List of SceneDialog objects for the act")
 
-class StoryDialog(BaseModel):
+class StoryDialogue(BaseModel):
     """
     Represents the dialogues for the entire story, organized by acts and scenes.
     """
-    act_dialogs: List[ActDialog] = Field(default_factory=list, description="List of ActDialog objects for the story")
+    act_dialogues: List[ActDialogue] = Field(default_factory=list, description="List of ActDialog objects for the story")
 
     # Private attribute to hold the reference back to the Story
     _story: Optional['Story'] = PrivateAttr(default=None)
@@ -179,7 +181,7 @@ class StoryDialog(BaseModel):
         return self._story.valid_character_nicknames
 
     @model_validator(mode='after')
-    def check_references(self) -> 'StoryDialog':
+    def check_references(self) -> 'StoryDialogue':
         """Check that the scene IDs and character nicknames in the dialogues are valid."""
         valid_scene_ids = self.valid_scene_ids
         valid_character_nicknames = self.valid_character_nicknames
@@ -187,8 +189,8 @@ class StoryDialog(BaseModel):
         if not valid_character_nicknames:
             return self
 
-        for act_dialog in self.act_dialogs:
-            for scene_dialog in act_dialog.scene_dialogs:
+        for act_dialog in self.act_dialogues:
+            for scene_dialog in act_dialog.scene_dialogues:
                 if scene_dialog.scene_id not in valid_scene_ids:
                     raise ValueError(f"Invalid scene_id: {scene_dialog.scene_id}")
                 for dialogue in scene_dialog.dialogues:
@@ -223,16 +225,16 @@ class Story(BaseModel):
     acts: Optional[List[Act]] = Field(default_factory=list, description="Acts or chapters to organize the story structure")
 
     # Private attribute to hold the reference to the associated StoryDialog
-    _story_dialog: Optional['StoryDialog'] = PrivateAttr(default=None)
+    _story_dialog: Optional['StoryDialogue'] = PrivateAttr(default=None)
 
-    def set_story_dialog(self, story_dialog: 'StoryDialog'):
+    def set_story_dialogue(self, story_dialog: 'StoryDialogue'):
         """
         Set the associated StoryDialog and establish a reverse reference.
         """
         self._story_dialog = story_dialog
         story_dialog._story = self  # Set reverse reference
 
-    def get_story_dialog(self) -> Optional['StoryDialog']:
+    def get_story_dialogue(self) -> Optional['StoryDialogue']:
         """
         Get the associated StoryDialog.
         """
@@ -325,18 +327,20 @@ class Story(BaseModel):
             os.makedirs(directory_path)
 
         # Save the story data as JSON
-        story_data = self.model_dump(exclude={"original_images", "revised_images"})
+        story_data = self.model_dump_json(indent=4)
+        story_data = unidecode(story_data)
         json_path = os.path.join(directory_path, "story.json")
         with open(json_path, "w") as json_file:
-            json.dump(story_data, json_file, indent=4)
+            json_file.write(story_data)
 
         # Save the story_dialog if it exists
         if self._story_dialog is not None:
             # Save the StoryDialog data as JSON
-            story_dialog_data = self._story_dialog.model_dump()
+            story_dialog_data = self._story_dialog.model_dump_json(indent=4)
+            story_dialog_data = unidecode(story_dialog_data)
             story_dialog_json_path = os.path.join(directory_path, "story_dialog.json")
             with open(story_dialog_json_path, "w") as json_file:
-                json.dump(story_dialog_data, json_file, indent=4)
+                json_file.write(story_dialog_data)
 
     @classmethod
     def load_from_directory(cls, directory_path: str) -> 'Story':
@@ -353,18 +357,18 @@ class Story(BaseModel):
         try:
             story_dialog = story.load_story_dialog(directory_path)
             # Establish references
-            story.set_story_dialog(story_dialog)
+            story.set_story_dialogue(story_dialog)
         except FileNotFoundError:
             story_dialog = None  # No story_dialog found
 
         return story
     
-    def load_story_dialog(self, directory_path: str) -> StoryDialog:
+    def load_story_dialog(self, directory_path: str) -> StoryDialogue:
         """Load the associated StoryDialog from a directory containing a story_dialog.json file."""
         story_dialog_json_path = os.path.join(directory_path, "story_dialog.json")
         with open(story_dialog_json_path, "r") as json_file:
             story_dialog_data = json.load(json_file)
-        return StoryDialog(**story_dialog_data)
+        return StoryDialogue(**story_dialog_data)
 
 
 

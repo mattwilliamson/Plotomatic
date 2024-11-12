@@ -92,6 +92,21 @@ def display_messages(messages: List[ChatMessage]):
     display(Markdown(output))
 
 
+def stream_llm_response(response, progress=None):
+    line_len = 0
+    for r in response:
+        if progress:
+            progress.value += 1
+        print(r.delta, end="")
+        line_len += len(r.delta)
+        if line_len > 120:
+            print()
+            line_len = 0
+        elif "\n" in r.delta:
+            line_len = 0
+    return r.message.content
+
+
 # # This is for llama
 # generator = pipeline(model=settings.TEXT_MODEL, device_map=settings.DEVICE_MAP, torch_dtype=torch.bfloat16)
 
