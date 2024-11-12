@@ -1,0 +1,41 @@
+digraph "Act-Scene Timeline Diagram" {
+	fontsize=20 label="Beyond the Pixel Veil" labelloc=top rankdir=LR
+	subgraph cluster_discovery {
+		color=lightgrey fontsize=16 label="Act 1: Beyond the Screen" rankdir=TB style=filled
+		gaming_tournament [label="The Underdog's Rise
+Time: Night
+Location: Cyber Arena
+Characters: meera" color=lightblue fontsize=10 shape=ellipse style=filled]
+		nexus_awakening [label="Awakening to Nexus
+Time: Eternal Dawn
+Location: Nexus Realm
+Characters: meera, nexus_guardian" color=lightblue fontsize=10 shape=ellipse style=filled]
+		gaming_tournament -> nexus_awakening
+	}
+	subgraph cluster_alliance {
+		color=lightgrey fontsize=16 label="Act 2: Unlikely Allies" rankdir=TB style=filled
+		rival_encounter [label="Confronting Rivals
+Time: Afternoon
+Location: Gaming Expo
+Characters: meera, jax, dr_zhang, maya" color=lightblue fontsize=10 shape=ellipse style=filled]
+		nexus_challenge [label="First Trial in Nexus
+Time: Eternal Dawn
+Location: Nexus Realm
+Characters: meera, jax, dr_zhang, maya, nexus_guardian" color=lightblue fontsize=10 shape=ellipse style=filled]
+		rival_encounter -> nexus_challenge
+	}
+	subgraph cluster_consequences {
+		color=lightgrey fontsize=16 label="Act 3: The Weight of Reality" rankdir=TB style=filled
+		earth_aftermath [label="Aftermath on Earth
+Time: Night
+Location: Post-Disaster Zone
+Characters: meera, earth_rebel" color=lightblue fontsize=10 shape=ellipse style=filled]
+		architect_encounter [label="Confronting the Architect
+Time: Eternal Dawn
+Location: The Architect's Domain
+Characters: meera, jax, dr_zhang, maya, architect" color=lightblue fontsize=10 shape=ellipse style=filled]
+		earth_aftermath -> architect_encounter
+	}
+	nexus_awakening -> rival_encounter [style=dashed]
+	nexus_challenge -> earth_aftermath [style=dashed]
+}

@@ -1,0 +1,11 @@
+digraph "Character Arc" {
+	initial [label="Initial State
+(Fierce, guarded gamer)"]
+	final [label="Final State
+(Loyal, open member of the team)"]
+	stage_0 [label=rival_encounter]
+	initial -> stage_0
+	stage_1 [label=nexus_challenge]
+	stage_0 -> stage_1
+	stage_1 -> final
+}
