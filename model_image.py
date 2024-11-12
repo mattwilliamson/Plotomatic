@@ -47,7 +47,7 @@ from typing import Union
 from typing import List, Optional
 from IPython.display import display
 
-def generate_image(prompt: Union[str, List[str]] = None, prompt2: Union[str, List[str]] = None, height: float = None, width: float = None) -> Image:
+def generate_image(prompt: Union[str, List[str]] = None, prompt2: Union[str, List[str]] = None, height: float = None, width: float = None, guidance_scale: float = 0.0) -> Image:
     """Generate an image based on a free text prompt input."""
 
     # default to Timestep-distilled model
@@ -63,6 +63,9 @@ def generate_image(prompt: Union[str, List[str]] = None, prompt2: Union[str, Lis
             "guidance_scale": 3.5,
             "num_inference_steps": 50
         }
+
+    if guidance_scale:
+        pipe_kwargs["guidance_scale"] = guidance_scale
 
     if prompt2:
         prompt = prompt if len(prompt) > len(prompt2) else prompt2
