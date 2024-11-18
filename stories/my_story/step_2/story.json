@@ -1,13 +1,14 @@
 {
-    "prompt": "In a world where virtual reality gaming competitions have become the new norm, Meera, a teenage underdog gamer, discovers her life is intertwined with an alternate reality of cosmic proportions. \nAs she learns to harness her extraordinary skills, Meera forms an unlikely team with fellow gamers she was at odds with previously.\nFacing the harsh truth that her actions in this alternate universe directly impact events on Earth, Meera confronts the internal struggle of knowing she has taken lives. \nEmbracing her destiny as a hero, Meera and her diverse team navigate through challenges, deception, and danger to uncover the truth behind the lies they've been told.",
-    "title": "Beyond the Pixel Veil",
-    "video": false,
-    "visual_style": "Vibrant, Neon-Lit Cyberpunk Manga Illustration - Dynamic Panel Layouts, Intricate Digital Patterns, and Soft Glow Effects",
-    "time_period": "Near Future/Dystopian Alternate Reality",
-    "location": "New Mumbai (Earth) / Nexus (Alternate Reality)",
-    "genre": "Science Fantasy/Young Adult Gaming Thriller",
-    "medium": "Novel with Illustrated Chapters",
-    "plot_overview": "In the immersive world of Eon, where virtual reality gaming competitions have captivated the globe, 17-year-old Meera 'Midnight' Singh is an unassuming underdog gamer from the outskirts of New Mumbai. Her life takes a drastic turn when she discovers that her exceptional gaming skills are, in fact, a conduit to an alternate reality known as the Nexus - a realm where celestial entities clash, and the fabric of space-time hangs in the balance.\n\nAs Meera delves deeper into the mysteries of the Nexus, she's forced to put aside past rivalries and form an uneasy alliance with her gaming nemeses: Jax 'Specter' Lee, a charismatic streaming sensation; Dr. Zhang 'Zen' Wei, a soft-spoken yet brilliant gamer with a hidden agenda; and Maya 'Rampart' Patel, a fierce and enigmatic player with unparalleled defensive skills.\n\nTogether, they must navigate the blurred lines between their virtual reality gaming world, Eon, and the Nexus. Meera soon confronts the devastating truth: every decision she makes in the Nexus has catastrophic consequences on Earth, including the loss of human lives. Torn between her passion for gaming and the weight of her newfound responsibility, Meera must come to terms with the moral implications of her actions.\n\nAs the team progresses through the treacherous landscape of the Nexus, they encounter formidable foes, ancient deities, and hidden forces manipulating the gamers from the shadows. Meera's quest for answers leads her to the Architects, enigmatic creators of Eon and the Nexus, who harbor secrets that threaten to upend everything she thought she knew about reality.\n\nWith the fate of two worlds hanging in the balance, Meera and her diverse team must put aside their differences, trust each other, and master their unique skills to prevent a cosmic catastrophe. Will Meera embrace her destiny as a hero, or will the pressures of her dual existence tear her apart? The journey through Eon and the Nexus is just the beginning, where the boundaries between gaming, reality, and legend are forever altered.",
+    "prompt": "psychological thriller novel that is a cross between Freida McFadden and Colleen Hoover",
+    "title": "Beneath the Surface of Deceit",
+    "has_video": false,
+    "has_images": false,
+    "visual_style": "Ominous, Moody Book Cover Art - Dark, muted color palette with subtle, eerie textures and haunting typography",
+    "time_period": "Present Day",
+    "location": "Upper-Middle-Class Suburbia",
+    "genre": "Psychological Thriller/Romantic Suspense",
+    "medium": "Novel",
+    "plot_overview": "**Title:** \"Beneath the Surface of Deceit\"\n\n**Protagonist:**\nDr. Emma Taylor",
     "narrative_perspective": "",
     "conflict_type": "",
     "themes": [],
@@ -17,5 +18,7 @@
     "story_beats": [],
     "subplots": [],
     "emotional_arc": [],
-    "acts": []
+    "acts": [],
+    "avg_scene_count": "20-30 chapters",
+    "avg_scene_length": "3000-4000 words"
 }

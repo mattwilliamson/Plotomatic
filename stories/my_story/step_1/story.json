@@ -1,7 +1,8 @@
 {
-    "prompt": "In a world where virtual reality gaming competitions have become the new norm, Meera, a teenage underdog gamer, discovers her life is intertwined with an alternate reality of cosmic proportions. \nAs she learns to harness her extraordinary skills, Meera forms an unlikely team with fellow gamers she was at odds with previously.\nFacing the harsh truth that her actions in this alternate universe directly impact events on Earth, Meera confronts the internal struggle of knowing she has taken lives. \nEmbracing her destiny as a hero, Meera and her diverse team navigate through challenges, deception, and danger to uncover the truth behind the lies they've been told.",
+    "prompt": "psychological thriller novel that is a cross between Freida McFadden and Colleen Hoover",
     "title": "",
-    "video": false,
+    "has_video": false,
+    "has_images": false,
     "visual_style": "",
     "time_period": "",
     "location": "",
@@ -17,5 +18,7 @@
     "story_beats": [],
     "subplots": [],
     "emotional_arc": [],
-    "acts": []
+    "acts": [],
+    "avg_scene_count": "",
+    "avg_scene_length": ""
 }

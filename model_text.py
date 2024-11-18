@@ -12,7 +12,7 @@ from llama_index.llms.ollama import Ollama
 from llama_index.embeddings.ollama import OllamaEmbedding
 from typing import List
 from IPython.display import Markdown, display
-
+from llama_index.core.constants import DEFAULT_CONTEXT_WINDOW
 
 # TODO: Nim
 
@@ -23,25 +23,68 @@ from IPython.display import Markdown, display
 
 if settings.TEXT_MODEL_BACKEND == "ollama":
 
+    # Make a custom Ollama model to increase the token limit
+    # import ollama
+    # from utils import deindent
+
+    # writer_model = 'nemotron'
+    # writer_model = 'nemotron:70b'
+    # writer_model = 'mistral-large' # 123b
+
+    # modelfile = deindent(f'''
+    #     FROM {writer_model}
+    #     PARAMETER num_ctx 126000
+    #     PARAMETER num_predict 64000
+    #     SYSTEM You are an exceptionally talented award-winning author who writes one full-length chapter for a given story outline. You do not write titles, descriptions, settings or think out loud. You only output the narrative text of the chapter.
+    # ''')
+    # writer_model_tag = f'author-long:{writer_model}'
+
+    # ollama.create(model=writer_model_tag, modelfile=modelfile)
+
     llm = Ollama(
         model=settings.TEXT_MODEL,
-        request_timeout=1200.0,
+        request_timeout=12000.0,
         temperature=settings.TEMPERATURE,
         callback_manager=callback_manager,
+        context_window=DEFAULT_CONTEXT_WINDOW * 2,
+        keep_alive='48h',
+        additional_kwargs={
+            "num_predict": 4000,
+            # "mirostat": 2
+        },
     )
 
     llm_json = Ollama(
         model=settings.TEXT_MODEL,
-        request_timeout=1200.0,
+        request_timeout=12000.0,
         temperature=settings.TEMPERATURE,
         callback_manager=callback_manager,
         json_mode=True,
+        context_window=DEFAULT_CONTEXT_WINDOW * 2,
+        additional_kwargs={"num_predict": 4000},
+        keep_alive='48h',
     )
 
     embedding = OllamaEmbedding(
         model_name=settings.TEXT_MODEL,
         # base_url="http://localhost:11434",
         ollama_additional_kwargs={"mirostat": 2},
+    )
+
+    llm_writer = Ollama(
+        # model=settings.TEXT_MODEL,
+        # model=writer_model_tag,
+        # model='mistral-large',
+        model=settings.TEXT_MODEL,
+        request_timeout=12000.0,
+        temperature=settings.TEMPERATURE,
+        callback_manager=callback_manager,
+        context_window=20000,
+        keep_alive='48h',
+        additional_kwargs={
+            "num_predict": 10000,
+            # "mirostat": 2
+        },
     )
 
 elif settings.TEXT_MODEL_BACKEND == "nim":
@@ -55,7 +98,7 @@ elif settings.TEXT_MODEL_BACKEND == "nim":
         model=settings.TEXT_MODEL,
         base_url="http://localhost:8000",  # Adjust if your NIM server uses a different port
         # base_url = "https://integrate.api.nvidia.com/v1",
-        api_key = os.environ["NGC_API_KEY"]
+        api_key = os.environ["NGC_API_KEY"],
     )
 
     # Set the LLM as the default for LlamaIndex
@@ -104,7 +147,29 @@ def stream_llm_response(response, progress=None):
             line_len = 0
         elif "\n" in r.delta:
             line_len = 0
+
+    if 'usage' in r.raw:
+        print(f"Token usage: {r.raw['usage']}")
+    
     return r.message.content
+
+def stream_llm_completion(response, progress=None):
+    line_len = 0
+    for r in response:
+        if progress:
+            progress.value += 1
+        print(r.delta, end="")
+        line_len += len(r.delta)
+        if line_len > 120:
+            print()
+            line_len = 0
+        elif "\n" in r.delta:
+            line_len = 0
+
+    if 'usage' in r.raw:
+        print(f"Token usage: {r.raw['usage']}")
+
+    return r.text
 
 
 # # This is for llama

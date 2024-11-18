@@ -206,7 +206,8 @@ class Story(BaseModel):
     """
     prompt: Optional[str] = Field("", description="Prompt or inspiration for the story")
     title: Optional[str] = Field("", description="Title of the story")
-    video: Optional[bool] = Field(False, description="Whether the story is animated")
+    has_video: Optional[bool] = Field(False, description="Whether the story is animated")
+    has_images: Optional[bool] = Field(False, description="Whether the story includes images")
     visual_style: Optional[str] = Field("", description="Visual style of the story, e.g., 'Anime', 'Realistic'")
     time_period: Optional[str] = Field("", description="Time period in which the story is set")
     location: Optional[str] = Field("", description="Location where the story takes place")
@@ -223,6 +224,8 @@ class Story(BaseModel):
     subplots: Optional[List[Subplot]] = Field(default_factory=list, description="Subplots running alongside the main plot")
     emotional_arc: Optional[List[EmotionalArc]] = Field(default_factory=list, description="Track the emotional shifts in the story")
     acts: Optional[List[Act]] = Field(default_factory=list, description="Acts or chapters to organize the story structure")
+    avg_scene_count: Optional[str] = Field("", description="Average number of scenes per act")
+    avg_scene_length: Optional[str] = Field("", description="Average length of scenes in words")
 
     # Private attribute to hold the reference to the associated StoryDialog
     _story_dialog: Optional['StoryDialogue'] = PrivateAttr(default=None)
@@ -245,20 +248,20 @@ class Story(BaseModel):
         """Get a list of valid character nicknames from the associated Story."""
         return [char.nickname or char.name.lower() for char in self.characters]
 
-    @model_validator(mode='after')
-    def check_references(self) -> 'Story':
-        """Check that the character nicknames in the scene are valid."""
-        valid_character_nicknames = self.valid_character_nicknames
+    # @model_validator(mode='after')
+    # def check_references(self) -> 'Story':
+    #     """Check that the character nicknames in the scene are valid."""
+    #     valid_character_nicknames = self.valid_character_nicknames
 
-        if not valid_character_nicknames:
-            return self
+    #     if not valid_character_nicknames:
+    #         return self
 
-        for act in self.acts:
-            for scene in act.scenes:
-                for character_involved in scene.characters_involved:
-                    if character_involved.lower() not in valid_character_nicknames:
-                        raise ValueError(f"Invalid character_nickname: {character_involved} in scene {scene.scene_id}")
-        return self
+    #     for act in self.acts:
+    #         for scene in act.scenes:
+    #             for character_involved in scene.characters_involved:
+    #                 if character_involved.lower() not in valid_character_nicknames:
+    #                     raise ValueError(f"Invalid character_nickname: {character_involved} in scene {scene.scene_id}")
+    #     return self
 
     @classmethod
     def model_validate_json(cls, json_data: str | bytes | bytearray, *, strict: bool | None = None, context: Any | None = None) -> "Story":
