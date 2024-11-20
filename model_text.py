@@ -254,14 +254,16 @@ def stream_llm_response(
         except json.JSONDecodeError:
             display_handle.update(Markdown("Invalid JSON received."))
 
-    return unidecode(content_str)
+    return unidecode(content_str).strip()
 
-def stream_llm_completion(response, progress=None):
+def stream_llm_completion(response, progress=None, progress_overall=None):
     line_len = 0
     for r in response:
         if progress:
             progress.value += len(r.delta.split())
             progress.description = f"{progress.value} words"
+        if progress_overall:
+            progress_overall.value += len(r.delta.split())
         print(r.delta, end="")
         line_len += len(r.delta)
         if line_len > 120:
@@ -273,7 +275,7 @@ def stream_llm_completion(response, progress=None):
     if 'usage' in r.raw:
         print(f"\n\nToken usage: {r.raw['usage']}")
 
-    return unidecode(r.text)
+    return unidecode(r.text).strip()
 
 
 # # This is for llama

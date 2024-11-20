@@ -109,6 +109,7 @@ class ProgressTracker:
 
         Args:
             max_items (int): The total number of items to process.
+            description (str): A label to show next to the progress bar.
         """
         self._max = max_items
         self._value = 0
@@ -119,7 +120,7 @@ class ProgressTracker:
         self.progress_bar = widgets.IntProgress(
             value=self._value, min=0, max=self._max,
             description=self._description,
-            layout=widgets.Layout(width="100%")
+            layout=widgets.Layout(width="50%")
         )
         self.status_display = widgets.HTML(value="")
         self.time_display = widgets.HTML(value="")
@@ -136,9 +137,7 @@ class ProgressTracker:
 
     @value.setter
     def value(self, new_value: int):
-        if not (0 <= new_value <= self._max):
-            raise ValueError(f"value must be between 0 and {self._max}")
-        self._value = new_value
+        self._value = max(0, min(new_value, self._max))
         self.current_items = self._value  # Sync with current_items for display updates
         self._update_display()
 
