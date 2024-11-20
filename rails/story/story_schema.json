@@ -372,7 +372,7 @@
     "CharacterRelationship": {
       "description": "Represents a relationship between two characters in the story.",
       "properties": {
-        "character_name": {
+        "character_nickname": {
           "anyOf": [
             {
               "type": "string"
@@ -582,7 +582,7 @@
           "description": "Description of the scene",
           "title": "Description"
         },
-        "characters_involved": {
+        "characters_involved_nicknames": {
           "anyOf": [
             {
               "items": {

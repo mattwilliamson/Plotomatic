@@ -1,1072 +1,670 @@
 {
-    "prompt": "psychological thriller novel that is a cross between Freida McFadden and Colleen Hoover",
-    "title": "Beneath the Surface of Deceit",
+    "author": "Matt Williamson",
+    "prompt": "novel that is a cross between Freida McFadden and Colleen Hoover",
+    "title": "Beneath the Facade",
     "has_video": false,
     "has_images": false,
-    "visual_style": "Ominous, Moody Book Cover Art - Dark, muted color palette with subtle, eerie textures and haunting typography",
-    "time_period": "Present Day",
-    "location": "Upper-Middle-Class Suburbia",
-    "genre": "Psychological Thriller/Romantic Suspense",
+    "visual_style": "Dark, Moody, and Psychologically Complex - think muted color palettes with flashes of intense emotional hues, reflecting the turmoil within",
+    "title_image_prompt": "A haunting, mixed-media artwork for 'Beneath the Facade'. The dominant feature is a woman's face (representing Dr. Emma Taylor) with an unsettling, cracked mask-like overlay, symbolizing her fractured persona. Her eyes, the only visible facial features, are cast in an intense, emotional shade of indigo, conveying turmoil. The background transitions from a muted, suburban upscale setting (e.g., a blurred, elegant living room) on one side to a dark, eerie landscape (e.g., twisted trees, misty fog) on the other, reflecting the contrast between Emma's present and past. The overall color palette is predominantly muted with flashes of indigo and faint, ominous grays, encapsulating the psychological complexity and suspense of the novel.",
+    "cover_image_prompt": "A captivating book cover design for 'Beneath the Facade' by Matt Williamson. **Composition:** A close-up of a woman's eye (in indigo, as described in the title image) is seen through a shattered glass pane or a broken mirror, positioned centrally against a textured, gradient background that shifts from the muted blues of suburban night skies to the deep, foreboding grays of isolated landscapes. **Typography:** The title 'Beneath the Facade' is emblazoned in bold, metallic letters with a fractured effect, echoing the broken glass/mirror, in a vibrant, golden yellow that contrasts starkly with the dark background, evoking a sense of urgency and revelation. **Author Name:** 'Matt Williamson' is displayed prominently at the bottom in a clean, white font, providing a striking contrast to the darkness above. **Tagline:** 'Every perfect life hides a perfect lie.' is subtly integrated around the edges of the shattered glass/mirror, possibly in a lighter shade of gray or a faint, eerie blue, enhancing the suspenseful and psychologically complex tone without overpowering the title. The overall design exudes an air of mystery, emotional depth, and impending revelation, perfectly encapsulating the essence of a Psychological Women's Fiction/Emotional Thriller.",
+    "tagline": "Every perfect life hides a perfect lie.",
+    "time_period": "Contemporary",
+    "location": "A mix of upscale suburban settings and the eerie, isolated landscapes of the protagonist's past",
+    "genre": "Psychological Women's Fiction/Emotional Thriller",
     "medium": "Novel",
-    "plot_overview": "**Title:** \"Beneath the Surface of Deceit\"\n\n**Protagonist:**\nDr. Emma Taylor",
-    "narrative_perspective": "Multiple Third-person Limited (primarily Emma, with glimpses into Liam, Sarah, and Alex's thoughts)",
+    "plot_overview": "**Title:** \"The Shadows We Keep\"\n\n**Genre:** Psychological Women's Fiction, Emotional Thriller\n\n**Plot Idea (Crossing Freida McFadden's dark, twisty style with Colleen Hoover's emotional depth):**\n\nProtagonist Dr. Emma Taylor, a successful psychologist with a penchant for fixing broken people, has it all: a thriving practice, a handsome husband, and a beautiful home. However, her perfectly crafted facade begins to crumble when she meets her new patient, enigmatic and troubled Asher Black.\n\nAsher's presence awakens long-dormant demons from Emma's own dark past, which she's kept hidden behind a mask of professionalism. As their sessions progress, Emma finds herself inextricably drawn to Asher's mysterious pain, even as she suspects he might be manipulating her. The lines between doctor and patient blur, threatening to destroy everything Emma holds dear.\n\nMeanwhile, a series of eerie, unexplained events starts to unfold around Emma, echoing the traumatic incidents from her childhood that she's desperately tried to forget. It becomes clear that someone is watching her, waiting for the perfect moment to expose the secrets she's kept hidden for so long.\n\nAs tensions escalate and the stakes grow higher, Emma's world begins to unravel. She must confront the shadows of her own past and the true nature of her obsession with Asher. But will she be able to distinguish between reality and the lies she's told herself, or will the truth destroy everything she thought she knew about herself and those around her?\n\n**Twists and Turns:**\n\n1. **Asher's True Identity:** Mid-novel reveal that Asher is, in fact, a former victim of Emma's past, seeking closure and justice.\n2. **The Stalker's Revelation:** The person watching Emma is exposed as her own husband, hiding secrets of his own that threaten to upend their marriage.\n3. **Emma's Dark Past:** Through flashbacks and Asher's sessions, the depth of Emma's childhood trauma and its lasting impact on her life are slowly uncovered.\n\n**Themes (a la Colleen Hoover):**\n\n* The complexities of human emotions and relationships\n* Confronting and overcoming deep-seated traumas\n* The blurred lines between truth and deception in personal and professional relationships\n\n**Psychological Thriller Elements (inspired by Freida McFadden):**\n\n* Mind games and manipulation between characters\n* Unreliable narrators and unexpected plot twists\n* A gripping, suspenseful atmosphere that keeps readers guessing until the very end",
+    "narrative_perspective": "Multiple Third-Person Limited (Emma, Asher, Ryan)",
     "conflict_type": "Man vs. Self, Man vs. Man, and Man vs. Society",
     "themes": [
-        "Deception and Betrayal",
-        "The Masks We Wear",
-        "Toxic Relationships"
+        "The Complexity of Human Emotions",
+        "Confronting Trauma",
+        "Deception in Relationships"
     ],
     "motifs": [
-        "Mirrors and Reflections",
-        "Water and Drowning (symbolizing emotional turmoil)"
+        "Mirrors (Reflection of Self)",
+        "Shadows (Hidden Truths)",
+        "Masks (Facade)]",
+        "characters':[...]},"
     ],
     "characters": [
         {
             "nickname": "emmat",
             "name": "Dr. Emma Taylor",
-            "description": "A successful psychologist with a seemingly perfect life, hiding secrets of her own.",
-            "personality": "Introspective, empathetic, and guarded, with a growing sense of desperation.",
-            "physical_appearance": "Slender, with long, curly brown hair, expressive green eyes, and a subtle scar above her left eyebrow. Often dressed in elegant, understated attire.",
+            "description": "A successful psychologist with a dark past, struggling to maintain her facade.",
+            "personality": "Complex, guarded, empathetic, and intensely private.",
+            "physical_appearance": "Elegant, polished appearance with long, curly brown hair, expressive green eyes, and a fit physique, often dressed in tailored professional attire.",
             "role": "Protagonist",
             "gender": "Female",
             "race": "Caucasian",
-            "age": "Late 20s/Early 30s",
-            "catch_phrase": "",
+            "age": "Late 30s",
+            "catch_phrase": "The truth is in the shadows.",
             "animation_description": "",
-            "voice_description": "Soft-spoken, yet authoritative, with a hint of vulnerability.",
+            "voice_description": "Sophisticated, yet laced with underlying emotional depth.",
             "props": [],
             "relationships": [
                 {
-                    "character_name": "liam",
-                    "relationship_type": "Husband",
-                    "description": "Complex, loving, and potentially controlling."
+                    "character_nickname": "asher",
+                    "relationship_type": "Patient-Doctor, Complicated Attraction",
+                    "description": ""
                 },
                 {
-                    "character_name": "sarah",
-                    "relationship_type": "Best Friend/Confidant",
-                    "description": "Supportive, outgoing, and hiding secrets of her own."
+                    "character_nickname": "husband",
+                    "relationship_type": "Marriage, Deception",
+                    "description": ""
                 }
             ],
-            "internal_conflict": "Torn between maintaining her perfect facade and confronting the dark truths threatening to upend her life.",
+            "internal_conflict": "Torn between her professional ethics and personal desires, while confronting the traumas of her past.",
             "character_arc": null,
-            "image_prompt": "Ominous, moody book cover art style. A slender woman with long, curly brown hair and expressive green eyes, bearing a subtle scar above her left eyebrow. She's dressed in elegant, understated attire, set against a dark, muted background with eerie textures, hinting at the turmoil beneath her polished facade.",
-            "image_prompt_short": "Woman with curly brown hair, green eyes, and a subtle scar, in elegant attire, against a dark, textured backdrop."
+            "image_prompt": "Dark, moody style, full-body shot of a woman in her late 30s with elegant, curly brown hair and expressive green eyes. She wears tailored professional attire, conveying a sense of polished sophistication, yet hints of emotional depth linger beneath the surface.",
+            "image_prompt_short": "Polished woman with curly brown hair, green eyes, and a hint of inner turmoil."
         },
         {
-            "nickname": "liam",
-            "name": "Liam Taylor",
-            "description": "Emma's charming, successful husband with a hidden agenda.",
-            "personality": "Charismatic, calculating, and intensely possessive.",
-            "physical_appearance": "Tall, with chiseled features, piercing blue eyes, and a captivating smile. Always impeccably dressed.",
-            "role": "Husband/Antagonist",
-            "gender": "Male",
-            "race": "Caucasian",
-            "age": "Early 30s",
-            "catch_phrase": "",
-            "animation_description": "",
-            "voice_description": "Smooth, persuasive, with an undercurrent of menace.",
-            "props": [],
-            "relationships": [
-                {
-                    "character_name": "emmat",
-                    "relationship_type": "Wife",
-                    "description": "Controlling, yet deeply invested in their relationship."
-                },
-                {
-                    "character_name": "alex",
-                    "relationship_type": "Business Partner/Rival",
-                    "description": "Cordial, yet intensely competitive."
-                }
-            ],
-            "internal_conflict": "Struggles with the moral implications of his actions, walking a fine line between love and manipulation.",
-            "character_arc": null,
-            "image_prompt": "Ominous, moody book cover art style. A tall, chiseled man with piercing blue eyes and a captivating smile, dressed impeccably in a tailored suit. The background is a muted, dark color palette with subtle, eerie textures, suggesting the darkness beneath his charming exterior.",
-            "image_prompt_short": "Tall, chiseled man with piercing blue eyes, in a tailored suit, against a muted, dark backdrop with eerie textures."
-        },
-        {
-            "nickname": "sarah",
-            "name": "Sarah Lee",
-            "description": "Emma's vivacious, supportive best friend, concealing her own dark past.",
-            "personality": "Bubbly, loyal, and haunted by personal demons.",
-            "physical_appearance": "Petite, with short, spiky black hair, bright pink highlights, and expressive brown eyes. Often dressed in trendy, eclectic outfits.",
-            "role": "Best Friend/Confidant",
-            "gender": "Female",
-            "race": "Asian-American",
-            "age": "Late 20s",
-            "catch_phrase": "",
-            "animation_description": "",
-            "voice_description": "Bubbly, energetic, with a hint of sadness.",
-            "props": [],
-            "relationships": [
-                {
-                    "character_name": "emmat",
-                    "relationship_type": "Best Friend",
-                    "description": "Supportive, yet guarded about her own secrets."
-                },
-                {
-                    "character_name": "jason",
-                    "relationship_type": "Love Interest",
-                    "description": "Tentative, yet potentially redemptive."
-                }
-            ],
-            "internal_conflict": "Fears being judged for her past mistakes, making it difficult to open up to those closest to her.",
-            "character_arc": null,
-            "image_prompt": "Ominous, moody book cover art style. A petite woman with short, spiky black hair, bright pink highlights, and expressive brown eyes, wearing trendy, eclectic outfits. The dark, muted background with subtle, eerie textures contrasts with her vibrant appearance, hinting at her inner turmoil.",
-            "image_prompt_short": "Petite woman with spiky black hair, pink highlights, in eclectic attire, against a dark, textured backdrop."
-        },
-        {
-            "nickname": "alex",
-            "name": "Alexander 'Alex' Thompson",
-            "description": "Liam's cunning business partner, with a hidden vendetta against the Taylors.",
-            "personality": "Suave, intelligent, and ruthlessly ambitious.",
-            "physical_appearance": "Lean, with slicked-back blond hair, piercing gray eyes, and a charming, disarming smile. Always impeccably dressed in designer suits.",
-            "role": "Antagonist/Business Partner",
+            "nickname": "asher",
+            "name": "Asher Black",
+            "description": "An enigmatic patient with a troubled history, hiding secrets of his own.",
+            "personality": "Brooding, intense, and calculating, with a deep sense of pain and vulnerability.",
+            "physical_appearance": "Tall, lean build with unruly black hair, piercing blue eyes, and scars on his hands, often dressed in dark, casual clothing.",
+            "role": "Patient, Antagonist",
             "gender": "Male",
             "race": "Caucasian",
             "age": "Mid 30s",
-            "catch_phrase": "",
+            "catch_phrase": "Pain is the only truth I know.",
             "animation_description": "",
-            "voice_description": "Smooth, confident, with a hint of condescension.",
+            "voice_description": "Low, gravelly, and hypnotic, with an undercurrent of emotion.",
             "props": [],
             "relationships": [
                 {
-                    "character_name": "liam",
-                    "relationship_type": "Business Partner/Rival",
-                    "description": "Cordial, yet intensely competitive."
+                    "character_nickname": "emmat",
+                    "relationship_type": "Doctor-Patient, Complex Attraction",
+                    "description": ""
                 },
                 {
-                    "character_name": "emmat",
-                    "relationship_type": "Acquaintance/Adversary",
-                    "description": "Polite, yet suspicious of her intentions."
+                    "character_nickname": "husband",
+                    "relationship_type": "Unknown, Potentially Connected",
+                    "description": ""
                 }
             ],
-            "internal_conflict": "Struggles with the moral implications of his actions, walking a fine line between ambition and destruction.",
+            "internal_conflict": "Struggles to reconcile his past and present, seeking redemption and justice.",
             "character_arc": null,
-            "image_prompt": "Ominous, moody book cover art style. A lean man with slicked-back blond hair, piercing gray eyes, and a charming smile, dressed in a designer suit. The muted, dark background with eerie textures suggests the cunning nature beneath his polished appearance.",
-            "image_prompt_short": "Lean man with blond hair, gray eyes, in a designer suit, against a muted, dark backdrop with eerie textures."
+            "image_prompt": "Dark, moody style, full-body shot of a man in his mid-30s with unruly black hair, piercing blue eyes, and scars on his hands. He wears dark, casual clothing, exuding an air of mystery and intensity, as if pain and vulnerability simmer just beneath the surface.",
+            "image_prompt_short": "Brooding man with black hair, blue eyes, and scars, radiating intensity."
         },
         {
-            "nickname": "jason",
-            "name": "Jason Patel",
-            "description": "A kind-hearted, gentle soul who becomes Sarah's love interest, helping her heal.",
-            "personality": "Empathetic, soft-spoken, and genuinely caring.",
-            "physical_appearance": "Tall, with messy brown hair, warm, honey-colored eyes, and a comforting smile. Often dressed in casual, laid-back attire.",
-            "role": "Love Interest/Supporting Character",
+            "nickname": "husband",
+            "name": "Ryan Taylor",
+            "description": "Emma's charming yet deceptive husband, hiding secrets that threaten their marriage.",
+            "personality": "Charismatic, manipulative, and controlling, with a facade of warmth and concern.",
+            "physical_appearance": "Handsome, athletic build with short, blond hair, bright blue eyes, and a captivating smile, often dressed in upscale casual attire.",
+            "role": "Antagonist",
             "gender": "Male",
-            "race": "Indian-American",
-            "age": "Late 20s",
-            "catch_phrase": "",
+            "race": "Caucasian",
+            "age": "Late 30s",
+            "catch_phrase": "I'm just trying to protect you, Emma.",
             "animation_description": "",
-            "voice_description": "Softer, calming, with a hint of warmth.",
+            "voice_description": "Smooth, persuasive, and menacing, with an undercurrent of threat.",
             "props": [],
             "relationships": [
                 {
-                    "character_name": "sarah",
-                    "relationship_type": "Love Interest",
-                    "description": "Tentative, yet potentially redemptive."
+                    "character_nickname": "emmat",
+                    "relationship_type": "Marriage, Deception",
+                    "description": ""
                 },
                 {
-                    "character_name": "emmat",
-                    "relationship_type": "Acquaintance/Confidant",
-                    "description": "Supportive, yet cautious due to Sarah's influence."
+                    "character_nickname": "asher",
+                    "relationship_type": "Unknown, Potentially Connected",
+                    "description": ""
                 }
             ],
-            "internal_conflict": "Fears not being enough for Sarah, given her troubled past.",
+            "internal_conflict": "Torn between maintaining his facade and the risk of exposure, as his secrets begin to unravel.",
             "character_arc": null,
-            "image_prompt": "Ominous, moody book cover art style. A tall, gentle-looking man with messy brown hair and warm, honey-colored eyes, wearing casual, laid-back attire. The soft contrast with the dark, muted background and subtle, eerie textures conveys a sense of warmth and comfort.",
-            "image_prompt_short": "Tall, gentle man with brown hair, warm eyes, in casual attire, against a softly contrasting dark backdrop."
+            "image_prompt": "Dark, moody style, full-body shot of a handsome man in his late 30s with short, blond hair, bright blue eyes, and a captivating smile. He wears upscale casual attire, embodying charm and warmth, yet subtle hints of manipulation and control lurk beneath the facade.",
+            "image_prompt_short": "Charming man with blond hair, blue eyes, and a smile, hiding a menacing undercurrent."
         },
         {
-            "nickname": "detectivejames",
-            "name": "Detective James 'Jim' Mitchell",
-            "description": "A seasoned, no-nonsense investigator with a keen eye for deception.",
-            "personality": "Gruff, astute, and fiercely dedicated to justice.",
-            "physical_appearance": "Stocky, with short, graying hair, piercing brown eyes, and a weathered face. Often dressed in worn, comfortable clothing.",
-            "role": "Supporting Character/Investigator",
-            "gender": "Male",
-            "race": "African-American",
-            "age": "50s",
-            "catch_phrase": "",
+            "nickname": "sarahk",
+            "name": "Sarah Knight",
+            "description": "Emma's closest friend and confidant, providing a sounding board for her concerns.",
+            "personality": "Warm, empathetic, and non-judgmental, with a sharp insight into human nature.",
+            "physical_appearance": "Vibrant, curly red hair, bright hazel eyes, and a comforting smile, often dressed in colorful, bohemian attire.",
+            "role": "Supporting Character",
+            "gender": "Female",
+            "race": "Caucasian",
+            "age": "Late 30s",
+            "catch_phrase": "You can't pour from an empty cup, Emma.",
             "animation_description": "",
-            "voice_description": "Gravelly, authoritative, with a hint of world-weariness.",
+            "voice_description": "Warm, soothing, and encouraging, with a hint of playfulness.",
             "props": [],
             "relationships": [
                 {
-                    "character_name": "emmat",
-                    "relationship_type": "Investigator/Subject",
-                    "description": "Skeptical, yet intrigued by her potential innocence."
+                    "character_nickname": "emmat",
+                    "relationship_type": "Close Friendship",
+                    "description": ""
                 }
             ],
-            "internal_conflict": "Struggles with the personal toll of his job, questioning whether justice is truly served.",
+            "internal_conflict": "Balances her desire to support Emma with the need to respect her boundaries.",
             "character_arc": null,
-            "image_prompt": "Ominous, moody book cover art style. A stocky, seasoned man with short, graying hair, piercing brown eyes, and a weathered face, dressed in worn, comfortable clothing. The muted, dark background with eerie textures underscores his rugged, no-nonsense demeanor.",
-            "image_prompt_short": "Stocky, graying man with brown eyes, in worn attire, against a muted, dark backdrop with eerie textures."
+            "image_prompt": "Warm, vibrant style, full-body shot of a woman in her late 30s with curly red hair, bright hazel eyes, and a comforting smile. She wears colorful, bohemian attire, radiating warmth, empathy, and a deep understanding of those around her.",
+            "image_prompt_short": "Vibrant woman with red hair, hazel eyes, and a warm smile, exuding empathy."
+        },
+        {
+            "nickname": "lucyb",
+            "name": "Lucy Brooks",
+            "description": "A young, ambitious journalist investigating a series of unexplained events connected to Emma's past.",
+            "personality": "Determined, resourceful, and fiercely independent, with a strong sense of justice.",
+            "physical_appearance": "Short, spiky black hair, piercing brown eyes, and a small tattoo of a pen on her wrist, often dressed in edgy, modern attire.",
+            "role": "Supporting Character",
+            "gender": "Female",
+            "race": "African American",
+            "age": "Early 20s",
+            "catch_phrase": "The truth is out there, waiting to be uncovered.",
+            "animation_description": "",
+            "voice_description": "Confident, assertive, and quick-witted, with a hint of youthful enthusiasm.",
+            "props": [],
+            "relationships": [
+                {
+                    "character_nickname": "emmat",
+                    "relationship_type": "Investigator-Subject, Potential Ally",
+                    "description": ""
+                }
+            ],
+            "internal_conflict": "Navigates the challenges of her first major investigation while facing potential dangers and setbacks.",
+            "character_arc": null,
+            "image_prompt": "Edgy, modern style, full-body shot of a young woman in her early 20s with short, spiky black hair, piercing brown eyes, and a small tattoo of a pen on her wrist. She wears edgy, modern attire, embodying determination, resourcefulness, and a fierce pursuit of justice.",
+            "image_prompt_short": "Edgy young journalist with black hair, brown eyes, and a pen tattoo, radiating determination."
+        },
+        {
+            "nickname": "drlee",
+            "name": "Dr. Sophia Lee",
+            "description": "A seasoned psychologist and Emma's mentor, offering guidance and support during turbulent times.",
+            "personality": "Wise, compassionate, and astute, with a deep understanding of the human psyche.",
+            "physical_appearance": "Serene, silver hair, warm brown eyes, and a gentle smile, often dressed in elegant, understated attire.",
+            "role": "Supporting Character",
+            "gender": "Female",
+            "race": "Asian",
+            "age": "60s",
+            "catch_phrase": "Healing begins with self-awareness, Emma.",
+            "animation_description": "",
+            "voice_description": "Soothing, authoritative, and reassuring, with a hint of warmth.",
+            "props": [],
+            "relationships": [
+                {
+                    "character_nickname": "emmat",
+                    "relationship_type": "Mentorship",
+                    "description": ""
+                }
+            ],
+            "internal_conflict": "Balances her desire to help Emma with the need to maintain professional boundaries.",
+            "character_arc": null,
+            "image_prompt": "Serene, elegant style, full-body shot of a woman in her 60s with silver hair, warm brown eyes, and a gentle smile. She wears understated, elegant attire, conveying wisdom, compassion, and a deep understanding of the human psyche.",
+            "image_prompt_short": "Serene woman with silver hair, brown eyes, and a gentle smile, embodying wisdom."
         }
     ],
     "props": [],
-    "story_beats": [
-        {
-            "name": "Inciting Incident",
-            "description": "Emma discovers a cryptic message hinting at Liam's infidelity.",
-            "scene": "Shattered Illusions"
-        },
-        {
-            "name": "Rising Tension",
-            "description": "Sarah reveals her own dark past, deepening Emma's emotional turmoil.",
-            "scene": "Secrets in the Night"
-        },
-        {
-            "name": "Midpoint Twist",
-            "description": "Alex's true intentions are revealed, threatening the Taylors' reputation.",
-            "scene": "A Web of Deceit"
-        },
-        {
-            "name": "Complications and setbacks",
-            "description": "Detective James starts investigating the Taylors, suspecting foul play.",
-            "scene": "Under Scrutiny"
-        },
-        {
-            "name": "Climax",
-            "description": "Emma confronts Liam about his deceit; Alex's vendetta is exposed.",
-            "scene": "Beneath the Surface"
-        },
-        {
-            "name": "Resolution",
-            "description": "Emma must rebuild her life, confronting the truth about those around her.",
-            "scene": "Aftermath and Awakening"
-        }
-    ],
-    "subplots": [
-        {
-            "title": "Sarah's Redemption",
-            "description": "Sarah faces her past with Jason's help, finding solace.",
-            "related_characters": [
-                "Sarah Lee",
-                "Jason Patel"
-            ]
-        },
-        {
-            "title": "The Detective's Pursuit",
-            "description": "Detective James navigates the complex web of deceit to uncover the truth.",
-            "related_characters": [
-                "Detective James 'Jim' Mitchell",
-                "Dr. Emma Taylor"
-            ]
-        }
-    ],
-    "emotional_arc": [
-        {
-            "stage": "Denial",
-            "description": "Emma refuses to accept the cracks in her perfect life."
-        },
-        {
-            "stage": "Desperation",
-            "description": "As truths surface, Emma's world begins to unravel."
-        },
-        {
-            "stage": "Acceptance and Empowerment",
-            "description": "Emma confronts reality, ready to rebuild and heal."
-        }
-    ],
+    "story_beats": [],
+    "subplots": [],
+    "emotional_arc": [],
     "acts": [
         {
-            "act_id": "behind_the_facade",
-            "title": "Act 1 - Behind the Facade",
-            "description": "Introduce Dr. Emma Taylor's seemingly perfect life, hinting at underlying secrets and tensions.",
-            "scenes": [
+            "act_id": "behind_the_mask",
+            "title": "Act 1 - Behind the Mask",
+            "description": "Introduce Dr. Emma Taylor's seemingly perfect life, her new patient Asher Black, and the subtle cracks in her facade. Set the stage for the inciting incident that will disrupt her world.",
+            "chapters": [
                 {
-                    "scene_id": "perfect_life",
-                    "title": "The Perfect Life",
-                    "description": "Emma's daily routine, showcasing her successful psychology practice and loving relationship with Liam.",
-                    "characters_involved": [
-                        "Dr. Emma Taylor (ET)",
-                        "Liam (LT)"
-                    ],
-                    "setting": "Taylor Residence & Psychology Practice",
-                    "time_of_day": "Morning -> Afternoon",
-                    "location": "Suburban Neighborhood & City Center",
-                    "lighting": "Warm/Natural Light",
-                    "mood": "Serenity, Hint of Restlessness",
-                    "props": [],
-                    "key_actions": [
-                        "ET prepares breakfast for LT",
-                        "ET's successful therapy session with a client",
-                        "LT surprises ET with lunch at her practice"
-                    ],
-                    "background_image_prompt": "A serene, upscale suburban home with elegant furnishings, set against a muted, pastel-colored background with subtle texture.",
-                    "background_animation": "Subtle, warm sunlight filtering through the windows, with gentle dust motes dancing in the air.",
-                    "scene_image_prompt": "A digital painting style with watercolor elements of a slender woman (long, curly brown hair, expressive green eyes, subtle scar above left eyebrow) in elegant attire, preparing breakfast in the kitchen, while a tall, chiseled man (piercing blue eyes, captivating smile) looks on, set against the serene home background.",
-                    "scene_image_prompt_short": "Digital painting of Emma (elegant, slender, curly brown hair, green eyes) cooking, with Liam (chiseled, blue eyes, smiling) watching, in their upscale suburban kitchen."
+                    "chapter_id": "chapter1",
+                    "title": "The Perfect Facade",
+                    "description": "Dr. Emma Taylor's polished life is introduced, showcasing her thriving practice, handsome husband, and beautiful home.",
+                    "scenes": [
+                        {
+                            "scene_id": "scene1",
+                            "title": "Polished Facade",
+                            "description": "Emma's morning, highlighting her attention to detail and controlled environment.",
+                            "characters_involved_nicknames": [
+                                "emmat"
+                            ],
+                            "setting": "The Taylor's upscale suburban home",
+                            "time_of_day": "Morning",
+                            "location": "",
+                            "lighting": "Soft, natural light",
+                            "mood": "Serene, with a hint of tension",
+                            "props": [
+                                "Coffee cup",
+                                "perfectly arranged decor"
+                            ],
+                            "key_actions": [
+                                "Emma prepares for her day, revealing her meticulous nature."
+                            ],
+                            "background_image_prompt": "An upscale suburban home with manicured lawns and a grand, weathered mansion looming in the background.",
+                            "background_animation": "Wind gently rustling through tall trees, shadows shifting with the morning sun.",
+                            "scene_image_prompt": "Dark, moody style, full-body shot of a woman in her late 30s with elegant, curly brown hair and expressive green eyes. She wears tailored professional attire, conveying a sense of polished sophistication, yet hints of emotional depth linger beneath the surface.",
+                            "scene_image_prompt_short": "Polished woman in a perfect kitchen."
+                        },
+                        {
+                            "scene_id": "scene2",
+                            "title": "Enigmatic Patient",
+                            "description": "Emma meets Asher Black, her new patient, and senses an unusual connection.",
+                            "characters_involved_nicknames": [
+                                "emmat",
+                                "asher"
+                            ],
+                            "setting": "Emma's psychology practice",
+                            "time_of_day": "Afternoon",
+                            "location": "",
+                            "lighting": "Warm, comforting lighting",
+                            "mood": "Intriguing, with a touch of unease",
+                            "props": [
+                                "Notepad",
+                                "pen",
+                                "and a box of tissues"
+                            ],
+                            "key_actions": [
+                                "Asher's enigmatic presence unsettles Emma, sparking her curiosity."
+                            ],
+                            "background_image_prompt": "A cozy office with a professional ambiance, warm lighting, and comfortable seating.",
+                            "background_animation": "The desk lamp flickering slightly, shadows moving with Emma's motions.",
+                            "scene_image_prompt": "Dark, moody style, full-body shot of a man in his mid-30s with unruly black hair, piercing blue eyes, and scars on his hands. He wears dark, casual clothing, exuding an air of mystery and intensity, as if pain and vulnerability simmer just beneath the surface.",
+                            "scene_image_prompt_short": "Engaged doctor and brooding patient."
+                        }
+                    ]
                 },
                 {
-                    "scene_id": "cracks_in_theFacade",
+                    "chapter_id": "chapter2",
                     "title": "Cracks in the Facade",
-                    "description": "Subtle hints at Emma's growing desperation and the controlling nature of her husband, Liam.",
-                    "characters_involved": [
-                        "Dr. Emma Taylor (ET)",
-                        "Liam (LT)"
-                    ],
-                    "setting": "Taylor Residence",
-                    "time_of_day": "Evening",
-                    "location": "Suburban Neighborhood",
-                    "lighting": "Dim, with Shadows",
-                    "mood": "Tension, Underlying Fear",
-                    "props": [],
-                    "key_actions": [
-                        "ET receives a mysterious, unsettling phone call",
-                        "LT questions ET about her day, focusing on her interactions with male clients",
-                        "ET feels trapped while LT discusses future plans without her input"
-                    ],
-                    "background_image_prompt": "A dimly lit, upscale suburban home with elegant furnishings, set against a muted, dark-colored background with subtle, eerie textures.",
-                    "background_animation": "Flickering dim light, with shadows cast on walls, hinting at unease.",
-                    "scene_image_prompt": "A moody, cinematic style of a slender woman (long, curly brown hair, expressive green eyes, subtle scar above left eyebrow) in elegant attire, looking uneasy, while a tall, chiseled man (piercing blue eyes, captivating smile) looms over her, set against the dimly lit home background with shadows.",
-                    "scene_image_prompt_short": "Moody cinematic shot of Emma (elegant, slender, curly brown hair, green eyes) looking uneasy, with Liam (chiseled, blue eyes) looming, in their dimly lit suburban home."
+                    "description": "Subtle hints of Emma's troubled past and her husband's suspicious behavior emerge.",
+                    "scenes": [
+                        {
+                            "scene_id": "scene3",
+                            "title": "Fractured Memories",
+                            "description": "Emma experiences a disturbing dream, hinting at her repressed memories.",
+                            "characters_involved_nicknames": [
+                                "emmat",
+                                "asher"
+                            ],
+                            "setting": "Emma's Psychology Practice",
+                            "time_of_day": "Late Afternoon",
+                            "location": "",
+                            "lighting": "Dim, with flashes of bright light",
+                            "mood": "Intense, Emotional",
+                            "props": [
+                                "Shattered Mirror"
+                            ],
+                            "key_actions": [
+                                "Asher pushes Emma to confront her past.",
+                                "Emma recalls a pivotal, traumatic event from her childhood."
+                            ],
+                            "background_image_prompt": "A dimly lit, sparse room with flashes of bright light, symbolizing the turmoil within.",
+                            "background_animation": "The flickering light casting eerie shadows on the walls.",
+                            "scene_image_prompt": "Dark, moody style, close-up shot of a woman in her late 30s with elegant, curly brown hair and expressive green eyes. Her face contorts in anguish as she recalls a pivotal, traumatic event from her childhood.",
+                            "scene_image_prompt_short": "Distressed woman in a dark bedroom."
+                        },
+                        {
+                            "scene_id": "scene4",
+                            "title": "Deceptive Facades",
+                            "description": "Emma catches her husband, Ryan, in a suspicious conversation, fueling her growing unease.",
+                            "characters_involved_nicknames": [
+                                "lucyb",
+                                "husband"
+                            ],
+                            "setting": "The Taylor Residence (while Emma is away)",
+                            "time_of_day": "Evening",
+                            "location": "",
+                            "lighting": "Soft, with an air of unease",
+                            "mood": "Suspenseful, Investigative",
+                            "props": [
+                                "Hidden Camera Footage"
+                            ],
+                            "key_actions": [
+                                "Lucy discovers discrepancies in Ryan's story.",
+                                "Ryan becomes increasingly agitated as his secrets are uncovered."
+                            ],
+                            "background_image_prompt": "The Taylor Residence (while Emma is away), with soft lighting and an air of unease.",
+                            "background_animation": "Shadows cast across the room, hinting at the deception unfolding.",
+                            "scene_image_prompt": "Dark, moody style, full-body shot of a handsome man in his late 30s with short, blond hair, bright blue eyes, and a captivating smile. He wears upscale casual attire, embodying charm and warmth, yet subtle hints of manipulation and control lurk beneath the facade.",
+                            "scene_image_prompt_short": "Confrontation in a suburban living room."
+                        }
+                    ]
                 },
                 {
-                    "scene_id": "sarahs_concerns",
-                    "title": "Sarah's Concerns",
-                    "description": "Emma's best friend, Sarah, expresses worries about Emma's relationship with Liam, revealing her own dark past.",
-                    "characters_involved": [
-                        "Dr. Emma Taylor (ET)",
-                        "Sarah Jenkins (SJ)"
-                    ],
-                    "setting": "Coffee Shop",
-                    "time_of_day": "Late Afternoon",
-                    "location": "City Center",
-                    "lighting": "Cozy, Warm Lighting",
-                    "mood": "Concern, Empathy",
-                    "props": [],
-                    "key_actions": [
-                        "SJ inquires about ET's relationship satisfaction",
-                        "ET brushes off concerns, prompting SJ to share her past experiences with abuse",
-                        "ET begins to question her own situation"
-                    ],
-                    "background_image_prompt": "A warm, cozy coffee shop with comfortable seating, set against a muted, earthy-colored background with subtle texture.",
-                    "background_animation": "Cozy coffee shop ambiance, with gentle steam rising from cups.",
-                    "scene_image_prompt": "A warm, inviting illustration style of a slender woman (long, curly brown hair, expressive green eyes, subtle scar above left eyebrow) in elegant attire, listening intently to a petite woman (short, spiky black hair, bright pink highlights, expressive brown eyes) in trendy, eclectic outfits, set against the cozy coffee shop background.",
-                    "scene_image_prompt_short": "Warm illustration of Emma (elegant, slender, curly brown hair, green eyes) and Sarah (petite, spiky black hair, pink highlights, brown eyes) in conversation, at a cozy coffee shop."
-                },
-                {
-                    "scene_id": "new_client_enigma",
-                    "title": "The Enigmatic New Client",
-                    "description": "A new client's case intrigues Emma, potentially mirroring her own life's mysteries.",
-                    "characters_involved": [
-                        "Dr. Emma Taylor (ET)",
-                        "New Client (NC)"
-                    ],
-                    "setting": "Psychology Practice",
-                    "time_of_day": "Late Morning",
-                    "location": "City Center",
-                    "lighting": "Neutral, Professional Lighting",
-                    "mood": "Intrigue, Professional Detachment",
-                    "props": [],
-                    "key_actions": [
-                        "ET meets NC, who remains vague about their issues",
-                        "ET finds herself drawn to the case's complexities",
-                        "NC hints at knowing more about ET than they should"
-                    ],
-                    "background_image_prompt": "A professional, minimalist psychology practice with comfortable seating, set against a muted, light-colored background with subtle texture.",
-                    "background_animation": "Soft, neutral lighting with occasional, subtle paper shuffling sounds.",
-                    "scene_image_prompt": "A stylized, graphic novel-inspired depiction of a slender woman (long, curly brown hair, expressive green eyes, subtle scar above left eyebrow) in elegant attire, engaged in a session with a mysterious, silhouetted figure, set against the professional practice background.",
-                    "scene_image_prompt_short": "Graphic novel style of Emma (elegant, slender, curly brown hair, green eyes) in a session with a silhouetted new client, in her minimalist psychology practice."
-                },
-                {
-                    "scene_id": "domestic_tensions_rise",
-                    "title": "Tensions Rise at Home",
-                    "description": "Liam's controlling behavior escalates, causing Emma to feel increasingly suffocated.",
-                    "characters_involved": [
-                        "Dr. Emma Taylor (ET)",
-                        "Liam (LT)"
-                    ],
-                    "setting": "Taylor Residence",
-                    "time_of_day": "Night",
-                    "location": "Suburban Neighborhood",
-                    "lighting": "Dark, with Only Moonlight",
-                    "mood": "Oppressive, Fearful",
-                    "props": [],
-                    "key_actions": [
-                        "LT confronts ET about her friendship with SJ, accusing her of gossiping",
-                        "ET stands up for herself, but LT's anger intensifies",
-                        "ET retreats, feeling isolated and trapped"
-                    ],
-                    "background_image_prompt": "",
-                    "background_animation": "",
-                    "scene_image_prompt": "",
-                    "scene_image_prompt_short": ""
-                },
-                {
-                    "scene_id": "a_glimmer_of_support",
-                    "title": "A Glimmer of Support",
-                    "description": "Sarah offers Emma a safe haven and encouragement to confront her marital issues.",
-                    "characters_involved": [
-                        "Dr. Emma Taylor (ET)",
-                        "Sarah Jenkins (SJ)"
-                    ],
-                    "setting": "Sarah's Residence",
-                    "time_of_day": "Late Evening",
-                    "location": "City Outskirts",
-                    "lighting": "Warm, Comforting Glow",
-                    "mood": "Hope, Solidarity",
-                    "props": [],
-                    "key_actions": [
-                        "ET confides in SJ about her escalating fears and doubts",
-                        "SJ shares resources for support and escape plans if needed",
-                        "ET begins to envision a path towards freedom"
-                    ],
-                    "background_image_prompt": "",
-                    "background_animation": "",
-                    "scene_image_prompt": "",
-                    "scene_image_prompt_short": ""
-                },
-                {
-                    "scene_id": "the_mask_slips",
-                    "title": "The Mask Slips",
-                    "description": "Emma's professional composure falters in front of a client, hinting at her inner turmoil.",
-                    "characters_involved": [
-                        "Dr. Emma Taylor (ET)",
-                        "Existing Client (EC)"
-                    ],
-                    "setting": "Psychology Practice",
-                    "time_of_day": "Afternoon",
-                    "location": "City Center",
-                    "lighting": "Neutral, with a hint of Fluorescent Hum",
-                    "mood": "Vulnerability, Brief Panic",
-                    "props": [],
-                    "key_actions": [
-                        "ET's emotions momentarily get the better of her during EC's session",
-                        "EC expresses concern for ET's well-being",
-                        "ET quickly regains composure, but the incident unsettles her"
-                    ],
-                    "background_image_prompt": "",
-                    "background_animation": "",
-                    "scene_image_prompt": "",
-                    "scene_image_prompt_short": ""
-                },
-                {
-                    "scene_id": "liam_monitors_emma",
-                    "title": "Under Surveillance",
-                    "description": "Liam's monitoring of Emma's activities becomes more overt, heightening her sense of captivity.",
-                    "characters_involved": [
-                        "Dr. Emma Taylor (ET)",
-                        "Liam (LT)"
-                    ],
-                    "setting": "Taylor Residence & Surroundings",
-                    "time_of_day": "Varies (Montage)",
-                    "location": "Suburban Neighborhood",
-                    "lighting": "Varied, with an emphasis on Shadows",
-                    "mood": "Claustrophobic, Paranoid",
-                    "props": [],
-                    "key_actions": [
-                        "LT is shown tracking ET's movements and interactions",
-                        "ET discovers signs of LT's surveillance, feeling violated",
-                        "ET's anxiety about her freedom intensifies"
-                    ],
-                    "background_image_prompt": "",
-                    "background_animation": "",
-                    "scene_image_prompt": "",
-                    "scene_image_prompt_short": ""
-                },
-                {
-                    "scene_id": "emma_researches_escape",
-                    "title": "Planning an Escape",
-                    "description": "Emma begins to research and plan a potential escape from her marriage, seeking legal and financial independence.",
-                    "characters_involved": [
-                        "Dr. Emma Taylor (ET)"
-                    ],
-                    "setting": "Public Library & Home Office",
-                    "time_of_day": "Night",
-                    "location": "City Center & Suburban Neighborhood",
-                    "lighting": "Dim, with Focused Desk Lighting",
-                    "mood": "Determined, Cautious",
-                    "props": [],
-                    "key_actions": [
-                        "ET gathers information on divorce laws and financial planning",
-                        "ET considers the repercussions of her actions on her practice and friendships",
-                        "ET starts to secretly set aside resources for a potential future alone"
-                    ],
-                    "background_image_prompt": "",
-                    "background_animation": "",
-                    "scene_image_prompt": "",
-                    "scene_image_prompt_short": ""
-                },
-                {
-                    "scene_id": "sarahs_warning",
-                    "title": "A Warning from Sarah",
-                    "description": "Sarah shares a disturbing encounter with Liam, prompting Emma to accelerate her escape plans.",
-                    "characters_involved": [
-                        "Dr. Emma Taylor (ET)",
-                        "Sarah Jenkins (SJ)"
-                    ],
-                    "setting": "Secure Outdoor Location (e.g., Park)",
-                    "time_of_day": "Early Evening",
-                    "location": "City Outskirts",
-                    "lighting": "Fading Natural Light, with Streetlights",
-                    "mood": "Urgency, Alarm",
-                    "props": [],
-                    "key_actions": [
-                        "SJ recounts a chilling interaction with LT, suggesting he might be more dangerous than thought",
-                        "ET realizes the urgency of her situation and decides to expedite her escape plans",
-                        "SJ pledges to support ET through the impending challenges"
-                    ],
-                    "background_image_prompt": "",
-                    "background_animation": "",
-                    "scene_image_prompt": "",
-                    "scene_image_prompt_short": ""
+                    "chapter_id": "chapter3",
+                    "title": "The Mask Begins to Slip",
+                    "description": "Emma's professional composure is tested as Asher pushes her boundaries, and she starts questioning her own sanity.",
+                    "scenes": [
+                        {
+                            "scene_id": "scene5",
+                            "title": "Shattered Illusions",
+                            "description": "Asher challenges Emma's professionalism, making her question her objectivity.",
+                            "characters_involved_nicknames": [
+                                "emmat",
+                                "asher"
+                            ],
+                            "setting": "Asher's dimly lit, sparse apartment",
+                            "time_of_day": "Night",
+                            "location": "",
+                            "lighting": "Minimal, with shadows accentuating the tension",
+                            "mood": "Intense, emotional, and confrontational",
+                            "props": [
+                                "A worn, old photograph, a crucial piece of evidence."
+                            ],
+                            "key_actions": [
+                                "Emma's world is turned upside down as Asher reveals his true identity.",
+                                "Asher's motivations for seeking Emma out are exposed."
+                            ],
+                            "background_image_prompt": "Asher's dimly lit, sparse apartment, with minimal lighting and shadows accentuating the tension.",
+                            "background_animation": "The flickering light casting intense shadows on the walls.",
+                            "scene_image_prompt": "Dark, moody style, close-up shot of a woman in her late 30s with elegant, curly brown hair and expressive green eyes. Her face contorts in shock as Asher reveals his true identity.",
+                            "scene_image_prompt_short": "Doctor's composure slipping in a tense session."
+                        },
+                        {
+                            "scene_id": "",
+                            "title": "Rebuilding and Redemption",
+                            "description": "",
+                            "characters_involved_nicknames": [
+                                "emmat",
+                                "drlee"
+                            ],
+                            "setting": "Dr. Lee's serene, welcoming office",
+                            "time_of_day": "Afternoon",
+                            "location": "",
+                            "lighting": "Warm, comforting, and inviting",
+                            "mood": "Hopeful, with a sense of new beginnings",
+                            "props": [
+                                "A journal, symbolizing Emma's commitment to self-discovery."
+                            ],
+                            "key_actions": [
+                                "Emma opens up to Dr. Lee about her traumas and recent revelations.",
+                                "Dr. Lee offers guidance, supporting Emma's path towards redemption."
+                            ],
+                            "background_image_prompt": "Dr. Lee's serene, welcoming office, with warm lighting and comfortable seating.",
+                            "background_animation": "The soft glow of the desk lamp casting a comforting ambiance.",
+                            "scene_image_prompt": "Warm, vibrant style, full-body shot of a woman in her late 30s with elegant, curly brown hair and expressive green eyes. She wears tailored professional attire, conveying a sense of polished sophistication, yet hints of emotional depth linger beneath the surface, as she opens up to Dr. Lee.",
+                            "scene_image_prompt_short": ""
+                        }
+                    ]
                 }
             ],
             "props": []
         },
         {
-            "act_id": "web_of_deceit",
-            "title": "Act 2 - Web of Deceit",
-            "description": "Emma uncovers disturbing secrets about Liam and his business partner, Alex, as tensions escalate.",
-            "scenes": [
+            "act_id": "shadows_uncovered",
+            "title": "Act 2 - Shadows Uncovered",
+            "description": "Delve into the complexities of Emma's past, Asher's true identity, and the mysterious events threatening Emma's life. Introduce twists: Asher's connection to Emma's past, Ryan's deception, and Lucy's investigation.",
+            "chapters": [
                 {
-                    "scene_id": "liams_secret_meeting",
-                    "title": "Liam's Secret Meeting",
-                    "description": "Emma discovers Liam meeting with Alex, sparking her curiosity and suspicion.",
-                    "characters_involved": [
-                        "Emma (Em)",
-                        "Liam (Li)"
-                    ],
-                    "setting": "Industrial, deserted area",
-                    "time_of_day": "Night (9 PM)",
-                    "location": "Abandoned Warehouse on 5th & Main",
-                    "lighting": "Dim, flickering overhead lights",
-                    "mood": "Ominous, suspicious",
-                    "props": [],
-                    "key_actions": [
-                        "Emma follows Liam to the warehouse",
-                        "She observes Liam and Alex arguing through a window"
-                    ],
-                    "background_image_prompt": "A deserted, industrial area with a dimly lit warehouse, set against a muted, dark-colored background with subtle, eerie textures.",
-                    "background_animation": "Dim, flickering overhead lights casting ominous shadows.",
-                    "scene_image_prompt": "A cinematic, film noir-inspired style of a slender woman (long, curly brown hair, expressive green eyes, subtle scar above left eyebrow) in elegant attire, observing from the shadows as a tall, chiseled man (piercing blue eyes, captivating smile) and a lean, blond-haired man (piercing gray eyes, charming smile) argue through a window, set against the deserted industrial area background.",
-                    "scene_image_prompt_short": "Film noir style of Emma (elegant, slender, curly brown hair, green eyes) watching Liam (chiseled, blue eyes) and Alex (lean, blond, gray eyes) argue, in a dimly lit warehouse."
+                    "chapter_id": "chapter13",
+                    "title": "Fractured Memories",
+                    "description": "Emma's sessions with Asher trigger flashbacks of her traumatic childhood.",
+                    "scenes": [
+                        {
+                            "scene_id": "scene25",
+                            "title": "Shattered Reflections",
+                            "description": "Emma confronts her fractured memories in a dramatic therapy session with Asher.",
+                            "characters_involved_nicknames": [
+                                "emmat",
+                                "asher"
+                            ],
+                            "setting": "Emma's Psychology Practice",
+                            "time_of_day": "Late Afternoon",
+                            "location": "",
+                            "lighting": "Dim, with flashes of bright light",
+                            "mood": "Intense, Emotional",
+                            "props": [
+                                "Shattered Mirror"
+                            ],
+                            "key_actions": [
+                                "Asher pushes Emma to confront her past.",
+                                "Emma recalls a pivotal, traumatic event from her childhood."
+                            ],
+                            "background_image_prompt": "A dimly lit therapy room with a shattered mirror on the floor, reflecting fragmented images of Emma's troubled past.",
+                            "background_animation": "",
+                            "scene_image_prompt": "A woman (Emma) sitting in a therapy session, staring at a shattered mirror as a man (Asher) looks on intently, prompting her to confront her darkest memories.",
+                            "scene_image_prompt_short": ""
+                        },
+                        {
+                            "scene_id": "scene26",
+                            "title": "Hidden Connections",
+                            "description": "Asher reveals his true identity, shocking Emma with their shared past.",
+                            "characters_involved_nicknames": [
+                                "emmat",
+                                "asher"
+                            ],
+                            "setting": "A Secluded Park",
+                            "time_of_day": "Night",
+                            "location": "",
+                            "lighting": "Moonlit, with shadows cast across faces",
+                            "mood": "Ominous, Revealing",
+                            "props": [],
+                            "key_actions": [
+                                "Asher discloses his connection to Emma's traumatic event.",
+                                "Emma grapples with the revelation, questioning everything."
+                            ],
+                            "background_image_prompt": "A moonlit park with silhouetted trees, a lone bench, and two figures (Emma and Asher) engaged in an intense, whispered conversation.",
+                            "background_animation": "",
+                            "scene_image_prompt": "A close-up of two faces (Emma and Asher) under the moonlight, one revealing a shocking truth, the other reeling from the discovery.",
+                            "scene_image_prompt_short": ""
+                        }
+                    ]
                 },
                 {
-                    "scene_id": "emmas_investigation_begins",
-                    "title": "The Trail of Clues",
-                    "description": "Emma starts digging into Liam's dealings, gathering initial information.",
-                    "characters_involved": [
-                        "Emma (Em)",
-                        "Informant (Inf)"
-                    ],
-                    "setting": "Busy, yet intimate setting",
-                    "time_of_day": "Morning (10 AM)",
-                    "location": "Local Coffee Shop (downtown area)",
-                    "lighting": "Warm, cozy atmosphere",
-                    "mood": "Curious, determined",
-                    "props": [],
-                    "key_actions": [
-                        "Emma researches online about Liam's company",
-                        "She strikes up a conversation with a potential informant"
-                    ],
-                    "background_image_prompt": "A busy, yet intimate coffee shop with comfortable seating, set against a muted, earthy-colored background with subtle texture.",
-                    "background_animation": "Warm, cozy coffee shop ambiance with gentle background chatter.",
-                    "scene_image_prompt": "A stylized, digital painting style of a slender woman (long, curly brown hair, expressive green eyes, subtle scar above left eyebrow) in elegant attire, researching on her laptop while engaging with an informant (varied appearance), set against the cozy coffee shop background.",
-                    "scene_image_prompt_short": "Digital painting of Emma (elegant, slender, curly brown hair, green eyes) researching, with an informant, at a busy coffee shop."
+                    "chapter_id": "chapter14",
+                    "title": "Deceptive Facades",
+                    "description": "Ryan's secrets begin to surface, threatening his marriage with Emma.",
+                    "scenes": [
+                        {
+                            "scene_id": "scene27",
+                            "title": "Behind Closed Doors",
+                            "description": "Lucy investigates Ryan's alibi for the night of the mysterious event.",
+                            "characters_involved_nicknames": [
+                                "lucyb",
+                                "husband"
+                            ],
+                            "setting": "The Taylor Residence (while Emma is away)",
+                            "time_of_day": "Evening",
+                            "location": "",
+                            "lighting": "Soft, with an air of unease",
+                            "mood": "Suspenseful, Investigative",
+                            "props": [
+                                "Hidden Camera Footage"
+                            ],
+                            "key_actions": [
+                                "Lucy discovers discrepancies in Ryan's story.",
+                                "Ryan becomes increasingly agitated as his secrets are uncovered."
+                            ],
+                            "background_image_prompt": "A dimly lit, upscale living room with a journalist (Lucy) snooping through documents, while a hidden camera captures her every move.",
+                            "background_animation": "",
+                            "scene_image_prompt": "A split-screen image: one side shows Lucy investigating, the other reveals Ryan's worried expression, hinting at his deception.",
+                            "scene_image_prompt_short": ""
+                        }
+                    ]
                 },
                 {
-                    "scene_id": "emmas_investigation",
-                    "title": "Emma's Investigation",
-                    "description": "Emma digs deeper into Liam's dealings, encountering obstacles and eerie warnings to back off.",
-                    "characters_involved": [
-                        "Emma (Em)"
-                    ],
-                    "setting": "Quiet, studious environment",
-                    "time_of_day": "Afternoon (3 PM)",
-                    "location": "Public Library (research section)",
-                    "lighting": "Soft, fluorescent lighting",
-                    "mood": "Tense, foreboding",
-                    "props": [],
-                    "key_actions": [
-                        "Emma discovers a cryptic document hinting at wrongdoing",
-                        "She receives an anonymous warning to drop the investigation"
-                    ],
-                    "background_image_prompt": "",
-                    "background_animation": "",
-                    "scene_image_prompt": "",
-                    "scene_image_prompt_short": ""
-                },
-                {
-                    "scene_id": "sarahs_concern",
-                    "title": "A Friend's Concern",
-                    "description": "Sarah expresses her worries about Emma's investigation and its potential consequences.",
-                    "characters_involved": [
-                        "Emma (Em)",
-                        "Sarah (Sa)"
-                    ],
-                    "setting": "Cozy, domestic setting",
-                    "time_of_day": "Evening (7 PM)",
-                    "location": "Emma's Apartment (living room)",
-                    "lighting": "Warm, lamp-lit atmosphere",
-                    "mood": "Supportive, apprehensive",
-                    "props": [],
-                    "key_actions": [
-                        "Sarah confronts Emma about her investigation",
-                        "Emma reassures Sarah of her caution"
-                    ],
-                    "background_image_prompt": "",
-                    "background_animation": "",
-                    "scene_image_prompt": "",
-                    "scene_image_prompt_short": ""
-                },
-                {
-                    "scene_id": "alex_in_the_shadows",
-                    "title": "Watching from the Shadows",
-                    "description": "Alex observes Emma, hinting at a more sinister involvement.",
-                    "characters_involved": [
-                        "Alex (Al)"
-                    ],
-                    "setting": "Urban, nighttime setting",
-                    "time_of_day": "Night (11 PM)",
-                    "location": "Across from Emma's Apartment",
-                    "lighting": "Dark, with only streetlights",
-                    "mood": "Menacing, stealthy",
-                    "props": [],
-                    "key_actions": [
-                        "Alex watches Emma through her apartment window",
-                        "He receives a call, responding with an ominous tone"
-                    ],
-                    "background_image_prompt": "",
-                    "background_animation": "",
-                    "scene_image_prompt": "",
-                    "scene_image_prompt_short": ""
-                },
-                {
-                    "scene_id": "sarahs_secret_revealed",
-                    "title": "Sarah's Secret Revealed",
-                    "description": "Sarah's past is exposed, deepening Emma's concern for her friend and herself.",
-                    "characters_involved": [
-                        "Emma (Em)",
-                        "Sarah (Sa)"
-                    ],
-                    "setting": "Intimate, private setting",
-                    "time_of_day": "Late Night (1 AM)",
-                    "location": "Emma's Apartment (living room)",
-                    "lighting": "Dim, with only a single lamp on",
-                    "mood": "Shocking, emotional",
-                    "props": [],
-                    "key_actions": [
-                        "Emma discovers Sarah's hidden past",
-                        "Sarah confesses, fearing the consequences"
-                    ],
-                    "background_image_prompt": "",
-                    "background_animation": "",
-                    "scene_image_prompt": "",
-                    "scene_image_prompt_short": ""
-                },
-                {
-                    "scene_id": "new_lead_uncovered",
-                    "title": "A New Lead Emerges",
-                    "description": "Emma discovers a crucial connection between Liam's business and a recent scandal.",
-                    "characters_involved": [
-                        "Emma (Em)"
-                    ],
-                    "setting": "Modern, tech-driven environment",
-                    "time_of_day": "Morning (9 AM)",
-                    "location": "Cyber Cafe (downtown area)",
-                    "lighting": "Bright, with multiple screens glowing",
-                    "mood": "Exciting, hopeful",
-                    "props": [],
-                    "key_actions": [
-                        "Emma stumbles upon an online forum discussing the scandal",
-                        "She identifies a potential whistleblower"
-                    ],
-                    "background_image_prompt": "",
-                    "background_animation": "",
-                    "scene_image_prompt": "",
-                    "scene_image_prompt_short": ""
-                },
-                {
-                    "scene_id": "liam_confronted",
-                    "title": "Confronting Liam",
-                    "description": "Emma confronts Liam about her findings, leading to a heated argument.",
-                    "characters_involved": [
-                        "Emma (Em)",
-                        "Liam (Li)"
-                    ],
-                    "setting": "Upscale, professional setting",
-                    "time_of_day": "Afternoon (2 PM)",
-                    "location": "Liam's Office (downtown high-rise)",
-                    "lighting": "Polished, with ample natural light",
-                    "mood": "Tense, confrontational",
-                    "props": [],
-                    "key_actions": [
-                        "Emma presents her evidence to Liam",
-                        "Liam denies all allegations, escalating the argument"
-                    ],
-                    "background_image_prompt": "",
-                    "background_animation": "",
-                    "scene_image_prompt": "",
-                    "scene_image_prompt_short": ""
-                },
-                {
-                    "scene_id": "alex_takes_action",
-                    "title": "Alex Takes Action",
-                    "description": "Alex initiates a plan to silence Emma, raising the stakes.",
-                    "characters_involved": [
-                        "Alex (Al)",
-                        "Associate (As)"
-                    ],
-                    "setting": "Sophisticated, exclusive setting",
-                    "time_of_day": "Night (10 PM)",
-                    "location": "High-End Nightclub (VIP area)",
-                    "lighting": "Dim, with pulsating club lights",
-                    "mood": "Menacing, calculated",
-                    "props": [],
-                    "key_actions": [
-                        "Alex instructs his associate to monitor Emma's movements",
-                        "The associate is tasked with intimidating Emma"
-                    ],
-                    "background_image_prompt": "",
-                    "background_animation": "",
-                    "scene_image_prompt": "",
-                    "scene_image_prompt_short": ""
-                },
-                {
-                    "scene_id": "emmas_fear_grows",
-                    "title": "Fear Sets In",
-                    "description": "Emma experiences a frightening encounter, making her question her safety.",
-                    "characters_involved": [
-                        "Emma (Em)"
-                    ],
-                    "setting": "Isolated, vulnerable setting",
-                    "time_of_day": "Late Night (12 AM)",
-                    "location": "Emma's Apartment (parking garage)",
-                    "lighting": "Dim, with sparse lighting",
-                    "mood": "Fearful, isolated",
-                    "props": [],
-                    "key_actions": [
-                        "Emma is confronted by an unknown figure",
-                        "She narrowly escapes, shaken"
-                    ],
-                    "background_image_prompt": "",
-                    "background_animation": "",
-                    "scene_image_prompt": "",
-                    "scene_image_prompt_short": ""
+                    "chapter_id": "chapter15",
+                    "title": "Unraveling Truths",
+                    "description": "Emma confronts Asher about their past, seeking answers and closure.",
+                    "scenes": [
+                        {
+                            "scene_id": "scene28",
+                            "title": "Confronting the Past",
+                            "description": "Emma demands the truth from Asher about their shared history.",
+                            "characters_involved_nicknames": [
+                                "emmat",
+                                "asher"
+                            ],
+                            "setting": "An Abandoned Warehouse (from Emma's childhood)",
+                            "time_of_day": "Dusk",
+                            "location": "",
+                            "lighting": "Fading Light, with Shadows Lengthening",
+                            "mood": "Tense, Confrontational",
+                            "props": [],
+                            "key_actions": [
+                                "Asher reveals more about their shared past.",
+                                "Emma begins to heal as she confronts her demons."
+                            ],
+                            "background_image_prompt": "An abandoned warehouse at dusk, with long shadows cast across the dusty floor, where two figures (Emma and Asher) engage in a tense, emotional confrontation.",
+                            "background_animation": "",
+                            "scene_image_prompt": "A dramatic close-up of Emma's face, set against the backdrop of the warehouse, as she finally confronts the truth about her past.",
+                            "scene_image_prompt_short": ""
+                        }
+                    ]
                 }
             ],
             "props": []
         },
         {
-            "act_id": "beneath_the_surface",
-            "title": "Act 3 - Beneath the Surface",
-            "description": "Emma's world unravels as she confronts Liam and Alex, leading to a shocking climax.",
-            "scenes": [
+            "act_id": "beneath_the_facade",
+            "title": "Act 3 - Beneath the Facade",
+            "description": "Climax: Emma confronts the truth about her past, Asher, and Ryan. Resolution: Emma must rebuild, seeking redemption and justice. Tie up loose ends with supporting characters, providing a sense of closure and new beginnings.",
+            "chapters": [
                 {
-                    "scene_id": "cracks_in_theFacade",
-                    "title": "Cracks in the Facade",
-                    "description": "Emma notices inconsistencies in Liam's alibi, fueling her growing suspicions.",
-                    "characters_involved": [
-                        "Emma"
-                    ],
-                    "setting": "Cluttered living room with research scattered around",
-                    "time_of_day": "Late Afternoon",
-                    "location": "Emma's Apartment",
-                    "lighting": "Dim, with sunlight fading through the windows",
-                    "mood": "Apprehensive",
-                    "props": [],
-                    "key_actions": [
-                        "Emma discovers a discrepancy in Liam's story",
-                        "She begins to feel uneasy about her relationship"
-                    ],
-                    "background_image_prompt": "A cluttered living room with research scattered around, set against a muted, dark-colored background with subtle texture.",
-                    "background_animation": "Dim, fading sunlight with long shadows, hinting at unease.",
-                    "scene_image_prompt": "A moody, cinematic style of a slender woman (long, curly brown hair, expressive green eyes, subtle scar above left eyebrow) in elegant attire, discovering a discrepancy in documents, set against the cluttered living room background with fading sunlight.",
-                    "scene_image_prompt_short": "Moody cinematic shot of Emma (elegant, slender, curly brown hair, green eyes) finding a discrepancy, in her cluttered living room."
+                    "chapter_id": "chapter1",
+                    "title": "Shattered Illusions",
+                    "description": "Emma discovers the shocking truth about Asher's true identity and Ryan's deception.",
+                    "scenes": [
+                        {
+                            "scene_id": "scene1",
+                            "title": "The Revelation",
+                            "description": "Emma confronts Asher about his past, leading to a stunning revelation.",
+                            "characters_involved_nicknames": [
+                                "emmat",
+                                "asher"
+                            ],
+                            "setting": "Asher's dimly lit, sparse apartment.",
+                            "time_of_day": "Night",
+                            "location": "",
+                            "lighting": "Minimal, with shadows accentuating the tension.",
+                            "mood": "Intense, emotional, and confrontational",
+                            "props": [
+                                "A worn, old photograph, a crucial piece of evidence."
+                            ],
+                            "key_actions": [
+                                "Emma's world is turned upside down as Asher reveals his true identity.",
+                                "Asher's motivations for seeking Emma out are exposed."
+                            ],
+                            "background_image_prompt": "A close-up of a dimly lit room with shadows cast on the walls, a single, faint light source illuminating the tense scene.",
+                            "background_animation": "Shadows dancing across the walls as the characters move, emphasizing the emotional turmoil.",
+                            "scene_image_prompt": "A woman's shocked expression as a man reveals a life-altering truth, set against a backdrop of dim lighting and sparse decor.",
+                            "scene_image_prompt_short": "Woman's shocked face in a dimly lit room."
+                        },
+                        {
+                            "scene_id": "scene2",
+                            "title": "Confronting Deceit",
+                            "description": "Emma faces Ryan about his secrets, leading to a explosive confrontation.",
+                            "characters_involved_nicknames": [
+                                "emmat",
+                                "husband"
+                            ],
+                            "setting": "The Taylor's upscale home, now feeling suffocating and false.",
+                            "time_of_day": "Night",
+                            "location": "",
+                            "lighting": "Harsh, highlighting the ugliness of the truth.",
+                            "mood": "Volcanic, with emotions on the brink of eruption",
+                            "props": [
+                                "A torn, wedding photo, symbolizing the shattered relationship."
+                            ],
+                            "key_actions": [
+                                "Emma demands answers from Ryan, who is forced to confront his lies.",
+                                "The facade of their perfect marriage crumbles, revealing the rot beneath."
+                            ],
+                            "background_image_prompt": "An upscale home's interior, now distorted and menacing, with harsh lighting emphasizing the tension.",
+                            "background_animation": "Shadows twisting, like the characters' emotions, as the confrontation reaches a boiling point.",
+                            "scene_image_prompt": "A couple in an upscale home, their faces twisted in anger and hurt, as the truth destroys their facade of happiness.",
+                            "scene_image_prompt_short": "Couple's explosive confrontation in an upscale home."
+                        }
+                    ]
                 },
                 {
-                    "scene_id": "confronting_liam",
-                    "title": "Confronting Liam",
-                    "description": "Emma accuses Liam of deceit, prompting a chilling reaction that threatens her safety.",
-                    "characters_involved": [
-                        "Emma",
-                        "Liam"
-                    ],
-                    "setting": "Sleek, modern office with minimal decor",
-                    "time_of_day": "Early Evening",
-                    "location": "Liam's Office",
-                    "lighting": "Harsh, overhead fluorescent lights",
-                    "mood": "Tense, foreboding",
-                    "props": [],
-                    "key_actions": [
-                        "Emma confronts Liam about her findings",
-                        "Liam's reaction reveals a darker side"
-                    ],
-                    "background_image_prompt": "",
-                    "background_animation": "",
-                    "scene_image_prompt": "",
-                    "scene_image_prompt_short": ""
+                    "chapter_id": "chapter2",
+                    "title": "Rebuilding and Redemption",
+                    "description": "Emma begins her journey towards healing, seeking justice for past wrongs.",
+                    "scenes": [
+                        {
+                            "scene_id": "scene3",
+                            "title": "A New Path",
+                            "description": "Emma meets with Dr. Lee, marking the start of her healing journey.",
+                            "characters_involved_nicknames": [
+                                "emmat",
+                                "drlee"
+                            ],
+                            "setting": "Dr. Lee's serene, welcoming office.",
+                            "time_of_day": "Afternoon",
+                            "location": "",
+                            "lighting": "Warm, comforting, and inviting.",
+                            "mood": "Hopeful, with a sense of new beginnings",
+                            "props": [
+                                "A journal, symbolizing Emma's commitment to self-discovery."
+                            ],
+                            "key_actions": [
+                                "Emma opens up to Dr. Lee about her traumas and recent revelations.",
+                                "Dr. Lee offers guidance, supporting Emma's path towards redemption."
+                            ],
+                            "background_image_prompt": "A serene office with warm lighting, comfortable furniture, and soothing colors, evoking feelings of safety and hope.",
+                            "background_animation": "Soft, gentle movements, like the rustling of pages, underscoring the emotional shift.",
+                            "scene_image_prompt": "A woman sitting in a cozy office, surrounded by calming elements, as she begins to confront her past with the help of a wise, older woman.",
+                            "scene_image_prompt_short": "Woman in a serene office, beginning her healing journey."
+                        },
+                        {
+                            "scene_id": "scene4",
+                            "title": "Seeking Justice",
+                            "description": "Emma, with Lucy's help, starts to uncover the truth about her past, seeking justice for those responsible.",
+                            "characters_involved_nicknames": [
+                                "emmat",
+                                "lucyb"
+                            ],
+                            "setting": "A bustling, modern coffee shop, symbolizing a new, proactive chapter in Emma's life.",
+                            "time_of_day": "Morning",
+                            "location": "",
+                            "lighting": "Bright, energetic, and motivating.",
+                            "mood": "Determined, with a sense of purpose and renewal",
+                            "props": [
+                                "A laptop, representing the duo's investigative efforts."
+                            ],
+                            "key_actions": [
+                                "Emma and Lucy strategize their investigation, fueled by a shared desire for justice.",
+                                "Their collaboration marks a turning point in Emma's journey, from victim to empowered individual."
+                            ],
+                            "background_image_prompt": "A vibrant coffee shop with natural light pouring in, comfortable seating, and the soft hum of conversation, capturing the essence of a new beginning.",
+                            "background_animation": "Steaming cups, typing on laptops, and subtle camera movements, emphasizing the dynamic, investigative atmosphere.",
+                            "scene_image_prompt": "Two women, one older, one younger, sitting in a bustling coffee shop, intently working on laptops, as they embark on a mission for truth and justice.",
+                            "scene_image_prompt_short": "Women investigating in a vibrant coffee shop."
+                        }
+                    ]
                 },
                 {
-                    "scene_id": "a_glimmer_of_truth",
-                    "title": "A Glimmer of Truth",
-                    "description": "Detective James shares a crucial lead about Alex, hinting at a larger conspiracy.",
-                    "characters_involved": [
-                        "Emma",
-                        "Detective James"
-                    ],
-                    "setting": "Busy police station with muted background noise",
-                    "time_of_day": "Night",
-                    "location": "Police Station, Detective's Desk",
-                    "lighting": "Soft, with warm desk lamp glow",
-                    "mood": "Intriguing, hopeful",
-                    "props": [],
-                    "key_actions": [
-                        "Detective James reveals new information about Alex",
-                        "Emma's determination to uncover the truth strengthens"
-                    ],
-                    "background_image_prompt": "",
-                    "background_animation": "",
-                    "scene_image_prompt": "",
-                    "scene_image_prompt_short": ""
-                },
-                {
-                    "scene_id": "the_truth_about_alex",
-                    "title": "The Truth About Alex",
-                    "description": "Detective James reveals Alex's true intentions, connecting the dots between the characters' tangled lives.",
-                    "characters_involved": [
-                        "Emma",
-                        "Detective James",
-                        "Alex (via evidence/recording)"
-                    ],
-                    "setting": "Spare, functional interrogation room",
-                    "time_of_day": "Late Night",
-                    "location": "Police Station, Interrogation Room",
-                    "lighting": "Cold, bright lights",
-                    "mood": "Revelatory, intense",
-                    "props": [],
-                    "key_actions": [
-                        "Detective James lays out the evidence against Alex",
-                        "Emma's world begins to unravel further"
-                    ],
-                    "background_image_prompt": "",
-                    "background_animation": "",
-                    "scene_image_prompt": "",
-                    "scene_image_prompt_short": ""
-                },
-                {
-                    "scene_id": "on_edge",
-                    "title": "On Edge",
-                    "description": "Emma, now aware of the dangers surrounding her, prepares for an uncertain future.",
-                    "characters_involved": [
-                        "Emma"
-                    ],
-                    "setting": "Cluttered apartment in disarray as Emma packs",
-                    "time_of_day": "Pre-Dawn",
-                    "location": "Emma's Apartment (packing to leave)",
-                    "lighting": "Dim, with occasional passing car lights outside",
-                    "mood": "Anxious, anticipatory",
-                    "props": [],
-                    "key_actions": [
-                        "Emma packs essentials, ready to flee",
-                        "She reflects on the events leading up to this moment"
-                    ],
-                    "background_image_prompt": "",
-                    "background_animation": "",
-                    "scene_image_prompt": "",
-                    "scene_image_prompt_short": ""
-                },
-                {
-                    "scene_id": "desperate_escape",
-                    "title": "Desperate Escape",
-                    "description": "Emma must flee for her life as the truth about Liam and Alex comes to a head in a heart-pumping climax.",
-                    "characters_involved": [
-                        "Emma",
-                        "Liam (or his associates)"
-                    ],
-                    "setting": "Narrow, deserted alley with trash cans and dim lighting",
-                    "time_of_day": "Dawn",
-                    "location": "Abandoned Alley (near Emma's Apartment)",
-                    "lighting": "Early dawn light, casting long shadows",
-                    "mood": "Frantic, perilous",
-                    "props": [],
-                    "key_actions": [
-                        "Emma is ambushed by Liam or his associates",
-                        "She fights to escape, her life hanging in the balance"
-                    ],
-                    "background_image_prompt": "",
-                    "background_animation": "",
-                    "scene_image_prompt": "",
-                    "scene_image_prompt_short": ""
-                },
-                {
-                    "scene_id": "aftermath_and_resolution",
-                    "title": "Aftermath and Resolution",
-                    "description": "The dust settles; Emma deals with the consequences of her discoveries and her desperate escape.",
-                    "characters_involved": [
-                        "Emma",
-                        "Detective James"
-                    ],
-                    "setting": "Cozy, secure safe house with minimal decor",
-                    "time_of_day": "Morning",
-                    "location": "Safe House (provided by Detective James)",
-                    "lighting": "Warm, comforting natural light",
-                    "mood": "Reflective, hopeful for recovery",
-                    "props": [],
-                    "key_actions": [
-                        "Emma processes the events of the previous night",
-                        "Detective James ensures her safety and discusses next steps"
-                    ],
-                    "background_image_prompt": "",
-                    "background_animation": "",
-                    "scene_image_prompt": "",
-                    "scene_image_prompt_short": ""
-                }
-            ],
-            "props": []
-        },
-        {
-            "act_id": "aftermath_and_resolution",
-            "title": "Act 4 - Aftermath and Resolution",
-            "description": "The dust settles, and Emma rebuilds her life, seeking justice and closure.",
-            "scenes": [
-                {
-                    "scene_id": "emmas_new_beginning",
-                    "title": "Emma's New Beginning",
-                    "description": "Emma starts anew, reflecting on lessons learned and the strength she's gained.",
-                    "characters_involved": [
-                        "Emma"
-                    ],
-                    "setting": "Minimalist decor, with a few cherished mementos from her past",
-                    "time_of_day": "Early Morning",
-                    "location": "Emma's New Apartment",
-                    "lighting": "Warm, Natural Light",
-                    "mood": "Contemplative, Hopeful",
-                    "props": [],
-                    "key_actions": [
-                        "Emma journals about her experiences",
-                        "She looks out the window, symbolizing a new outlook"
-                    ],
-                    "background_image_prompt": "A minimalist decor with a few cherished mementos from the past, set against a muted, light-colored background with subtle texture.",
-                    "background_animation": "Warm, natural light with gentle, swaying plants.",
-                    "scene_image_prompt": "A serene, watercolor-inspired style of a slender woman (long, curly brown hair, expressive green eyes, subtle scar above left eyebrow) in elegant attire, journaling while looking out the window, set against the minimalist decor background with warm natural light.",
-                    "scene_image_prompt_short": "Watercolor style of Emma (elegant, slender, curly brown hair, green eyes) journaling, in her minimalist new home."
-                },
-                {
-                    "scene_id": "emmas_support_system",
-                    "title": "A Supportive Ear",
-                    "description": "Emma opens up to a trusted friend or therapist about her ordeal.",
-                    "characters_involved": [
-                        "Emma",
-                        "Therapist/Friend (e.g., Olivia)"
-                    ],
-                    "setting": "Cozy, non-threatening environment",
-                    "time_of_day": "Afternoon",
-                    "location": "Therapist's Office/Coffee Shop",
-                    "lighting": "Comforting, Soft Lighting",
-                    "mood": "Emotional, Supportive",
-                    "props": [],
-                    "key_actions": [
-                        "Emma shares her story",
-                        "The listener offers words of encouragement and validation"
-                    ],
-                    "background_image_prompt": "",
-                    "background_animation": "",
-                    "scene_image_prompt": "",
-                    "scene_image_prompt_short": ""
-                },
-                {
-                    "scene_id": "justice_served",
-                    "title": "Justice Served",
-                    "description": "Liam and Alex face consequences for their actions, bringing Emma a sense of vindication.",
-                    "characters_involved": [
-                        "Emma",
-                        "Liam",
-                        "Alex",
-                        "Judge"
-                    ],
-                    "setting": "Stern, judicial atmosphere",
-                    "time_of_day": "Late Morning",
-                    "location": "Courtroom",
-                    "lighting": "Formal, Fluorescent Lighting",
-                    "mood": "Tense, Resolute",
-                    "props": [],
-                    "key_actions": [
-                        "The judge delivers the verdict",
-                        "Emma reacts to the outcome, feeling a sense of closure"
-                    ],
-                    "background_image_prompt": "",
-                    "background_animation": "",
-                    "scene_image_prompt": "",
-                    "scene_image_prompt_short": ""
-                },
-                {
-                    "scene_id": "confronting_the_past",
-                    "title": "Confronting the Past",
-                    "description": "Emma visits a significant location from her past, confronting memories and emotions.",
-                    "characters_involved": [
-                        "Emma"
-                    ],
-                    "setting": "Serenely beautiful, with a hint of nostalgia",
-                    "time_of_day": "Sunset",
-                    "location": "The Park where Emma first met Liam/A Significant Landmark",
-                    "lighting": "Warm, Golden Hour Lighting",
-                    "mood": "Melancholic, Liberating",
-                    "props": [],
-                    "key_actions": [
-                        "Emma reflects on past events",
-                        "She releases any lingering emotional baggage"
-                    ],
-                    "background_image_prompt": "",
-                    "background_animation": "",
-                    "scene_image_prompt": "",
-                    "scene_image_prompt_short": ""
-                },
-                {
-                    "scene_id": "sarahs_redemption",
-                    "title": "Sarah's Redemption",
-                    "description": "Sarah finds healing with Jason's help, as the friends look toward a brighter future together.",
-                    "characters_involved": [
-                        "Sarah",
-                        "Jason"
-                    ],
-                    "setting": "Comfortable, with elements of Jason's hobbies/interests",
-                    "time_of_day": "Evening",
-                    "location": "Jason's Home",
-                    "lighting": "Cozy, Warm Lighting",
-                    "mood": "Heartwarming, Optimistic",
-                    "props": [],
-                    "key_actions": [
-                        "Sarah and Jason share a heartfelt conversation",
-                        "They engage in a joint activity, symbolizing their renewed bond"
-                    ],
-                    "background_image_prompt": "",
-                    "background_animation": "",
-                    "scene_image_prompt": "",
-                    "scene_image_prompt_short": ""
-                },
-                {
-                    "scene_id": "a_brighter_future",
-                    "title": "A Brighter Future",
-                    "description": "Emma and her loved ones come together, embracing the promise of a new beginning.",
-                    "characters_involved": [
-                        "Emma",
-                        "Sarah",
-                        "Jason",
-                        "Olivia (and other supporting characters)"
-                    ],
-                    "setting": "Decorated with balloons and a few close friends/family",
-                    "time_of_day": "Late Afternoon",
-                    "location": "Emma's New Apartment (backyard/garden if applicable)",
-                    "lighting": "Vibrant, Late Afternoon Sunlight",
-                    "mood": "Joyful, Uplifting",
-                    "props": [],
-                    "key_actions": [
-                        "Emma's loved ones gather to celebrate her new start",
-                        "The group shares stories and laughter, looking forward to the future"
-                    ],
-                    "background_image_prompt": "",
-                    "background_animation": "",
-                    "scene_image_prompt": "",
-                    "scene_image_prompt_short": ""
+                    "chapter_id": "chapter3",
+                    "title": "Closure and New Beginnings",
+                    "description": "Emma ties up loose ends with supporting characters, embracing her newfound strength and the promise of a brighter future.",
+                    "scenes": [
+                        {
+                            "scene_id": "scene5",
+                            "title": "Farewell to the Past",
+                            "description": "Emma has a heart-to-heart with Sarah, marking a new chapter in their friendship.",
+                            "characters_involved_nicknames": [
+                                "emmat",
+                                "sarahk"
+                            ],
+                            "setting": "A picturesque park on a sunny day, symbolizing hope and renewal.",
+                            "time_of_day": "Afternoon",
+                            "location": "",
+                            "lighting": "Warm, golden, and uplifting.",
+                            "mood": "Bittersweet, with a focus on the promise of new beginnings",
+                            "props": [
+                                "A bouquet of flowers, representing the blossoming of their friendship."
+                            ],
+                            "key_actions": [
+                                "Emma and Sarah reflect on past struggles, celebrating Emma's growth and newfound strength.",
+                                "Their bond is strengthened as they look forward to supporting each other in the future."
+                            ],
+                            "background_image_prompt": "A serene park scene with lush greenery, vibrant flowers, and warm sunlight, capturing the essence of a hopeful new beginning.",
+                            "background_animation": "Leaves rustling, flowers swaying gently, and soft focus effects, emphasizing the heartwarming atmosphere.",
+                            "scene_image_prompt": "Two women sitting on a park bench, surrounded by nature's beauty, sharing a heartfelt moment as they embark on a new chapter in their lives.",
+                            "scene_image_prompt_short": "Women sharing a heartfelt moment in a picturesque park."
+                        }
+                    ]
                 }
             ],
             "props": []
         }
     ],
-    "avg_scene_count": "20-30 chapters",
-    "avg_scene_length": "3000-4000 words"
+    "act_count": "3",
+    "avg_chapter_count": "35-40 chapters",
+    "avg_chapter_length": "2,500-4,500 words",
+    "avg_chapters_per_act": "Act 1: 10-12 chapters (Setup & Inciting Incident), Act 2: 15-18 chapters (Rising Action & Twists), Act 3: 8-10 chapters (Climax & Resolution)"
 }

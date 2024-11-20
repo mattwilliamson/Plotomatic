@@ -1,18 +1,17 @@
+from typing import List, Generator, Optional
+
 # import torch
 import settings
 from model import *
 
-# from typing import Any, Dict, List, Optional, cast
-
 from llama_index_log_handler import callback_manager
-
 from llama_index.core.llms import ChatMessage
-
 from llama_index.llms.ollama import Ollama
 from llama_index.embeddings.ollama import OllamaEmbedding
-from typing import List
-from IPython.display import Markdown, display
 from llama_index.core.constants import DEFAULT_CONTEXT_WINDOW
+
+from IPython.display import Markdown, display, clear_output
+import ipywidgets as widgets
 
 # TODO: Nim
 
@@ -41,6 +40,25 @@ if settings.TEXT_MODEL_BACKEND == "ollama":
 
     # ollama.create(model=writer_model_tag, modelfile=modelfile)
 
+    # Mirostat acts as a "creativity control" for the model's responses. It helps balance between generating coherent, focused text and allowing for more diverse or exploratory outputs.
+    # Mirostat can be configured using three main parameters:
+    
+    # mirostat: This enables or disables the mirostat sampling.
+    #     0: Disabled (default)
+    #     1: Mirostat
+    #     2: Mirostat 2.0 (an enhanced version)
+    # mirostat_tau: Controls the balance between coherence and diversity.
+    #     Lower values (e.g., 3.0) result in more focused and coherent text.
+    #     Higher values allow for more diverse outputs.
+    #     Default value: 5.0
+    # mirostat_eta: Influences how quickly the algorithm responds to feedback from the generated text.
+    #     Lower values lead to slower adjustments.
+    #     Higher values make the algorithm more responsive.
+    #     Default value: 0.1
+
+
+
+
     llm = Ollama(
         model=settings.TEXT_MODEL,
         request_timeout=12000.0,
@@ -50,7 +68,7 @@ if settings.TEXT_MODEL_BACKEND == "ollama":
         keep_alive='48h',
         additional_kwargs={
             "num_predict": 4000,
-            # "mirostat": 2
+            "mirostat": 2
         },
     )
 
@@ -79,13 +97,31 @@ if settings.TEXT_MODEL_BACKEND == "ollama":
         request_timeout=12000.0,
         temperature=settings.TEMPERATURE,
         callback_manager=callback_manager,
-        context_window=20000,
+        context_window=40000,
         keep_alive='48h',
         additional_kwargs={
             "num_predict": 10000,
-            # "mirostat": 2
+            "mirostat": 2
         },
     )
+
+    llm_reviewer = llm_writer
+
+    # llm_reviewer = Ollama(
+    #     # model=settings.TEXT_MODEL,
+    #     # model=writer_model_tag,
+    #     # model='mistral-large',
+    #     model=settings.TEXT_MODEL_REVIEWER,
+    #     request_timeout=12000.0,
+    #     temperature=settings.TEMPERATURE,
+    #     callback_manager=callback_manager,
+    #     context_window=40000,
+    #     keep_alive='48h',
+    #     additional_kwargs={
+    #         "num_predict": 1000,
+    #         "mirostat": 2
+    #     },
+    # )
 
 elif settings.TEXT_MODEL_BACKEND == "nim":
     import os
@@ -135,29 +171,97 @@ def display_messages(messages: List[ChatMessage]):
     display(Markdown(output))
 
 
-def stream_llm_response(response, progress=None):
-    line_len = 0
-    for r in response:
-        if progress:
-            progress.value += 1
-        print(r.delta, end="")
-        line_len += len(r.delta)
-        if line_len > 120:
-            print()
-            line_len = 0
-        elif "\n" in r.delta:
-            line_len = 0
+def incremental_pretty_print(json_str):
+    """Attempt to pretty print incomplete JSON with approximate indentation."""
+    indent_level = 0
+    formatted_lines = []
+    tokens = json_str.splitlines(keepends=True)  # Split into lines for better control
 
-    if 'usage' in r.raw:
-        print(f"Token usage: {r.raw['usage']}")
-    
-    return r.message.content
+    for line in tokens:
+        # Process each character in the line
+        temp_line = ""
+        for char in line:
+            if char in "{[":
+                # Opening brace/bracket increases indent level
+                temp_line += char
+                indent_level += 1
+                temp_line += "\n" + "    " * indent_level  # Add new line and indent
+            elif char in "]}":
+                # Closing brace/bracket decreases indent level
+                temp_line += "\n" + "    " * (indent_level - 1) + char
+                indent_level = max(0, indent_level - 1)  # Avoid negative indent
+            elif char == ",":
+                # Commas add a newline at the current indentation level
+                temp_line += char + "\n" + "    " * indent_level
+            else:
+                temp_line += char
+        formatted_lines.append(temp_line)
+
+    return "".join(formatted_lines)
+
+def stream_llm_response(
+    response: Generator, 
+    progress: Optional[widgets.IntProgress] = None, 
+    json_mode: bool = True
+) -> str:
+    """
+    Stream LLM response and optionally pretty print JSON.
+
+    Args:
+        response (Generator): A generator yielding streamed chunks from the LLM.
+        progress (Optional[widgets.IntProgress]): A progress bar widget for tracking progress.
+        json_mode (bool): If True, assumes the response is JSON and formats it incrementally.
+
+    Returns:
+        str: The complete streamed content (JSON or plain text).
+    """
+    content_str = ""  # Used for either JSON or plain text
+
+    # Initialize the progress bar and JSON output
+    display_handle = display(Markdown("Streaming response..."), display_id=True)
+
+    for r in response:
+        # Append the streamed chunk
+        content_str += r.delta
+
+        # Update progress bar if provided
+        if progress:
+            progress.value += len(r.delta.split())
+            progress.value = min(progress.value, progress.max)
+            progress.description = f"{progress.value} words"
+
+        # Perform JSON formatting if json_mode is enabled
+        if json_mode:
+            try:
+                formatted_content = incremental_pretty_print(content_str)
+                content_type = "json"
+            except Exception:
+                formatted_content = content_str
+                content_type = "text"
+        else:
+            formatted_content = content_str
+            content_type = "text"
+
+        # Update the Markdown cell without clearing the progress bar
+        display_handle.update(Markdown(f"```{content_type}\n{formatted_content}\n```"))
+
+    # Finalize the display
+    if json_mode:
+        try:
+            parsed_json = json.loads(content_str)
+            formatted_content = json.dumps(parsed_json, indent=4)
+            display_handle.update(Markdown(f"```json\n{formatted_content}\n```"))
+        except json.JSONDecodeError:
+            display_handle.update(Markdown("Invalid JSON received."))
+
+    return unidecode(content_str)
 
 def stream_llm_completion(response, progress=None):
     line_len = 0
     for r in response:
         if progress:
-            progress.value += 1
+            progress.value += len(r.delta.split())
+            progress.description = f"{progress.value} words"
         print(r.delta, end="")
         line_len += len(r.delta)
         if line_len > 120:
@@ -167,9 +271,9 @@ def stream_llm_completion(response, progress=None):
             line_len = 0
 
     if 'usage' in r.raw:
-        print(f"Token usage: {r.raw['usage']}")
+        print(f"\n\nToken usage: {r.raw['usage']}")
 
-    return r.text
+    return unidecode(r.text)
 
 
 # # This is for llama

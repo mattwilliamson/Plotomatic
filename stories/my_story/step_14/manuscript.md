@@ -1,52 +1,30 @@
-# Beneath the Surface of Deceit
+# Shadows of the Heart
 
 
 
-# Chapter 1
+# Act 1: Act 1 - Unraveling Shadows
 
-_Introduce Dr. Emma Taylor's seemingly perfect life, hinting at underlying secrets and tensions._
+_Introduce Dr. Eliza Hartman's troubled past and her complex history with James Beckett, now her patient. Explore the early stages of their therapy sessions, hinting at the dark secrets they both keep. Establish the mysterious atmosphere, foreshadowing the thrills to come._
 
 <div style='page-break-after: always;'></div>
 
+## Chapter 1: Behind Closed Doors
 
-
----
-
-_Emma's daily routine, showcasing her successful psychology practice and loving relationship with Liam._
-
-
-
----
-
-_Subtle hints at Emma's growing desperation and the controlling nature of her husband, Liam._
+_Introduce Dr. Eliza Hartman's life as a psychologist, hinting at her troubled past. Show her professional demeanor and expertise in the field._
 
 
 
 ---
 
-_Emma's best friend, Sarah, expresses worries about Emma's relationship with Liam, revealing her own dark past._
+### Scene 1: A Typical Session
+
+_Eliza conducts a therapy session with Patient #1, showcasing her skills and composure._
 
 
 
 ---
 
-_A new client's case intrigues Emma, potentially mirroring her own life's mysteries._
+### Scene 2: A Glimpse of the Past
 
-
-
----
-
-_Liam's controlling behavior escalates, causing Emma to feel increasingly suffocated._
-
-
-
----
-
-_Sarah offers Emma a safe haven and encouragement to confront her marital issues._
-
-
-
----
-
-_Emma's professional composure falters in front of a client, hinting at her inner turmoil._
+_Eliza's thoughts drift to her past, revealing a fragmented memory of David Thompson._
 

@@ -15,11 +15,15 @@ TEXT_MODEL_BACKEND = "ollama"
 # TEXT_MODEL = "meta-llama/Llama-3.2-3B-Instruct"
 # TEXT_MODEL = "llama3.1"
 # TEXT_MODEL = "llama3.1:70b"
-TEXT_MODEL = "nemotron:70b"
 # TEXT_MODEL = "mistral-large" # 123b
 # TEXT_MODEL = "hermes3:70b"
 # TEXT_MODEL = "gemma2:27b"
 # TEXT_MODEL = "mistral-large" # 123b
+# TEXT_MODEL = "phi3.5"
+TEXT_MODEL = "nemotron:70b"
+
+# TEXT_MODEL_REVIEWER = "phi3.5"
+TEXT_MODEL_REVIEWER = "nemotron:70b"
 
 TEXT_CONTEXT_WINDOW = 100000 # 128k for llama3.1
 

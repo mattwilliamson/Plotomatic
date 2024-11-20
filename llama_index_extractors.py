@@ -104,7 +104,7 @@ Here is the content of the section:
 {context_str}
 
 List all of the scenes, including \
-    title, description, characters_involved, setting, time_of_day, location, lighting, mood, props, key_actions
+    title, description, characters_involved_nicknames, setting, time_of_day, location, lighting, mood, props, key_actions
 
 If something is not specified, you can leave it blank.
 
@@ -112,7 +112,7 @@ Example Scene:
 
 title: Finding the Map
 description: Pip stumbles upon a bottle washed ashore, containing an old map
-characters_involved: 
+characters_involved_nicknames: 
     - Pip
     - Sally
 setting: The icy shore near Pip's colony

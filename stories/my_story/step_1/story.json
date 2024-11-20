@@ -1,9 +1,13 @@
 {
-    "prompt": "psychological thriller novel that is a cross between Freida McFadden and Colleen Hoover",
+    "author": "Matt Williamson",
+    "prompt": "novel that is a cross between Freida McFadden and Colleen Hoover",
     "title": "",
     "has_video": false,
     "has_images": false,
     "visual_style": "",
+    "title_image_prompt": "",
+    "cover_image_prompt": "",
+    "tagline": "",
     "time_period": "",
     "location": "",
     "genre": "",
@@ -19,6 +23,8 @@
     "subplots": [],
     "emotional_arc": [],
     "acts": [],
-    "avg_scene_count": "",
-    "avg_scene_length": ""
+    "act_count": "3",
+    "avg_chapter_count": "",
+    "avg_chapter_length": "",
+    "avg_chapters_per_act": ""
 }

@@ -4,10 +4,12 @@ from pydantic import BaseModel
 import torch
 import difflib
 import random
-from IPython.display import Markdown, display
 import textwrap
 from llama_index.core.llms import ChatMessage
 import numpy as np
+import time
+import ipywidgets as widgets
+from IPython.display import display, clear_output, Markdown
 
 def chat_message_to_dict(message: ChatMessage) -> dict:
     # Use model_dump to get the dictionary representation and adjust the role
@@ -100,6 +102,143 @@ def set_torch_seed(seed: int):
         torch.backends.cudnn.benchmark = False
 
 
+class ProgressTracker:
+    def __init__(self, max_items: int, description: str = "Progress"):
+        """
+        Initialize the progress tracker.
+
+        Args:
+            max_items (int): The total number of items to process.
+        """
+        self._max = max_items
+        self._value = 0
+        self._description = description
+        self.start_time = time.time()
+
+        # Widgets for the progress bar and additional information
+        self.progress_bar = widgets.IntProgress(
+            value=self._value, min=0, max=self._max,
+            description=self._description,
+            layout=widgets.Layout(width="100%")
+        )
+        self.status_display = widgets.HTML(value="")
+        self.time_display = widgets.HTML(value="")
+
+        # Display widgets
+        display(self.progress_bar)
+        display(self.status_display)
+        display(self.time_display)
+
+    # Simulate widgets.IntProgress properties
+    @property
+    def value(self) -> int:
+        return self._value
+
+    @value.setter
+    def value(self, new_value: int):
+        if not (0 <= new_value <= self._max):
+            raise ValueError(f"value must be between 0 and {self._max}")
+        self._value = new_value
+        self.current_items = self._value  # Sync with current_items for display updates
+        self._update_display()
+
+    @property
+    def max(self) -> int:
+        return self._max
+
+    @max.setter
+    def max(self, new_max: int):
+        if new_max < 0:
+            raise ValueError("max must be a positive integer")
+        self._max = new_max
+        self.progress_bar.max = self._max  # Update the progress bar's maximum
+
+    @property
+    def description(self) -> str:
+        return self._description
+
+    @description.setter
+    def description(self, new_description: str):
+        self._description = new_description
+        self.progress_bar.description = self._description
+
+    def update(self, items_done: int = 1):
+        """
+        Update the progress tracker with the number of items completed.
+
+        Args:
+            items_done (int): The number of additional items completed.
+        """
+        self.value += items_done
+
+    def set_items_done(self, items_done: int):
+        """
+        Set the number of items done directly.
+
+        Args:
+            items_done (int): The total number of items completed so far.
+        """
+        self.value = items_done
+
+    def _update_display(self):
+        """
+        Update the progress bar and associated displays.
+        """
+        # Update the progress bar
+        self.progress_bar.value = self._value
+
+        # Update the status display
+        items_left = self._max - self._value
+        self.status_display.value = f"<b>{self._value} done / {self._max} total ({items_left} left)</b>"
+
+        # Update the time remaining display
+        elapsed_time = time.time() - self.start_time
+        if self._value > 0:
+            avg_time_per_item = elapsed_time / self._value
+            estimated_time_remaining = avg_time_per_item * items_left
+            self.time_display.value = (
+                f"<b>Time Remaining:</b> {self._format_time(estimated_time_remaining)}"
+            )
+        else:
+            self.time_display.value = "<b>Time Remaining:</b> Calculating..."
+
+    def _format_time(self, seconds: float) -> str:
+        """
+        Format time in seconds into a human-readable string.
+
+        Args:
+            seconds (float): The number of seconds.
+
+        Returns:
+            str: Formatted time as HH:MM:SS.
+        """
+        minutes, sec = divmod(int(seconds), 60)
+        hours, minutes = divmod(minutes, 60)
+        return f"{hours:02}:{minutes:02}:{sec:02}"
+
+    def finish(self):
+        """
+        Mark the progress tracker as complete.
+        """
+        self.value = self._max
+        self.time_display.value = "<b>Time Remaining:</b> Completed!"
+        self.progress_bar.bar_style = "success"
+
+    def reset(self):
+        """
+        Reset the progress tracker to its initial state.
+        """
+        self._value = 0
+        self.start_time = time.time()
+        self._update_display()
+
+        # Reset the progress bar and status displays
+        self.progress_bar.value = self._value
+        self.progress_bar.bar_style = ""  # Reset bar style to default
+        self.status_display.value = f"<b>0 done / {self._max} total ({self._max} left)</b>"
+        self.time_display.value = "<b>Time Remaining:</b> Calculating..."
+
+
 
 
 blank_story = Story(
@@ -124,12 +263,17 @@ blank_story = Story(
         Act(
             act_id="act1",
             props=[""],
-            scenes=[
-                Scene(
-                    scene_id="scene1",
-                    characters_involved=["character1"],
-                    props=[""],
-                    key_actions=[""],
+            chapters=[
+                Chapter(
+                    chapter_id="chapter1",
+                    scenes=[
+                        Scene(
+                            scene_id="scene1",
+                            characters_involved_nicknames=["character1"],
+                            props=[""],
+                            key_actions=[""],
+                        ),
+                    ],
                 ),
             ],
         ),
@@ -161,13 +305,18 @@ blank_story_dialog = StoryDialogue(
     act_dialogues=[
         ActDialogue(
             act_id="act1",
-            dialogues=[
-                SceneDialogue(
-                    scene_id="scene1",
-                    dialogues=[
-                        DialogueLine(
-                            character_nickname="character1",
-                            line="",
+            chapter_dialogues=[
+                ChapterDialogue(
+                    chapter_id="chapter1",
+                    scene_dialogues=[
+                        SceneDialogue(
+                            scene_id="scene1",
+                            dialogues=[
+                                DialogueLine(
+                                    character_nickname="character1",
+                                    line="",
+                                ),
+                            ],
                         ),
                     ],
                 ),
@@ -178,3 +327,4 @@ blank_story_dialog = StoryDialogue(
 
 # Associate the blank story and story dialog with each other
 blank_story.set_story_dialogue(blank_story_dialog)
+

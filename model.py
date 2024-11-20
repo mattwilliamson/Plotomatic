@@ -1,6 +1,7 @@
 import os
 import json
 from unidecode import unidecode
+import textwrap
 from json_repair import repair_json
 
 from typing import List, Optional, Any, Literal
@@ -8,11 +9,21 @@ from pydantic import BaseModel, Field, model_validator, PrivateAttr
 
 from IPython.display import display, Markdown
 
+
+def deindent(text: str) -> str:
+    """Remove leading whitespace from each line of text."""
+    # return textwrap.dedent(text)
+    lines = text.splitlines()
+    # Strip leading whitespace from each line
+    stripped_lines = [line.lstrip() for line in lines]
+    return "\n".join(stripped_lines).strip()
+
+
 class CharacterRelationship(BaseModel):
     """
     Represents a relationship between two characters in the story.
     """
-    character_name: Optional[str] = Field("", description='The related character')
+    character_nickname: Optional[str] = Field("", description='The related character')
     relationship_type: Optional[str] = Field("", description='Type of relationship, e.g., "friend", "enemy", "mentor"')
     description: Optional[str] = Field("", description="Further details about the relationship")
 
@@ -49,6 +60,28 @@ class Character(BaseModel):
     image_prompt: Optional[str] = Field("", description="Prompt for generating an image of the character")
     image_prompt_short: Optional[str] = Field("", description="Short prompt for generating an image of the character")
 
+    def markdown_summary(self) -> str:
+        """Generates a Markdown summary for a single character, including role, description, and internal conflict."""
+        markdown = deindent(f"""
+            ## Character: "{self.name}"
+            **Character Nickname**: "{self.nickname}"
+            **Role**: {self.role}
+            **Description**: {self.description}
+            **Personality**: {self.personality}
+            **Appearance**: {self.physical_appearance}
+            **Internal Conflict**: {self.internal_conflict or 'none'}
+        """)
+
+        if self.character_arc:
+            markdown += deindent(f"""
+                #### Character Arc:
+                - Initial State: {self.character_arc.initial_state}
+                - Final State: {self.character_arc.final_state}
+                - Key Moments: {', '.join(self.character_arc.key_moments)}
+            """)
+        return markdown
+
+
 
 class Prop(BaseModel):
     """
@@ -76,7 +109,7 @@ class Scene(BaseModel):
     scene_id: Optional[str] = Field("", description="Unique identifier for the scene")
     title: Optional[str] = Field("", description="Title of the scene")
     description: Optional[str] = Field("", description="Description of the scene")
-    characters_involved: Optional[List[str]] = Field(default_factory=list, description="List of character nicknames involved in the scene")
+    characters_involved_nicknames: Optional[List[str]] = Field(default_factory=list, description="List of character nicknames involved in the scene")
     setting: Optional[str] = Field("", description="Setting of the scene")
     time_of_day: Optional[str] = Field("", description="Time of day when the scene takes place")
     location: Optional[str] = Field("", description="Location of the scene")
@@ -90,6 +123,54 @@ class Scene(BaseModel):
     scene_image_prompt: Optional[str] = Field("", description="Prompt for generating an image of the scene")
     scene_image_prompt_short: Optional[str] = Field("", description="Short prompt for generating an image of the scene")
 
+    def markdown_summary(self) -> str:
+        """Generates a Markdown summary for a single scene, including setting, characters involved, and key actions."""
+        markdown = deindent(f"""
+            ##### Scene: "{self.title}"
+            **Scene ID**: {self.scene_id}
+            **Setting**: {self.setting}
+            **Time of Day**: {self.time_of_day}
+            **Location**: {self.location}
+            **Lighting**: {self.lighting}
+            **Mood**: {self.mood}
+            **Characters Involved (by nickname)**: {', '.join(self.characters_involved_nicknames)}
+            **Props**: {', '.join(self.props)}
+        """)
+
+        if self.key_actions:
+            markdown += "\n###### Key Actions:\n"
+            for action in self.key_actions:
+                markdown += f"- {action}\n"
+            markdown += "\n"
+
+        markdown += deindent(f"""
+            ###### Description:
+            {self.description}
+        """)
+
+        return markdown
+
+
+
+class Chapter(BaseModel):
+    """
+    Represents a chapter within an act, containing multiple scenes.
+    """
+    chapter_id: Optional[str] = Field("", description="Unique identifier for the chapter")
+    title: Optional[str] = Field("", description="Title of the chapter")
+    description: Optional[str] = Field("", description="Description of the chapter")
+    scenes: Optional[List[Scene]] = Field(default_factory=list, description="List of scenes in this chapter")
+
+    def markdown_summary(self, include_scenes: bool = True) -> str:
+        """Generates a Markdown summary for a chapter, optionally including details on each scene."""
+        markdown = f'#### Chapter: "{self.title}"\n\n'
+        markdown += f"**Chapter ID**: {self.chapter_id}\n"
+        markdown += f"Description:\n{self.description}\n\n"
+
+        if include_scenes:
+            for scene in self.scenes:
+                markdown += scene.markdown_summary()
+        return markdown
 
 
 class StoryBeat(BaseModel):
@@ -120,13 +201,29 @@ class EmotionalArc(BaseModel):
 
 class Act(BaseModel):
     """
-    Represents an act or chapter within the story, containing multiple scenes and props.
+    Represents an act within the story, containing multiple chapters and props.
     """
     act_id: Optional[str] = Field("", description="Unique identifier for the act")
-    title: Optional[str] = Field("", description="Title of the act or chapter")
+    title: Optional[str] = Field("", description="Title of the act")
     description: Optional[str] = Field("", description="Description of the act")
-    scenes: Optional[List[Scene]] = Field(default_factory=list, description="List of scenes in this act")
+    chapters: Optional[List[Chapter]] = Field(default_factory=list, description="List of chapters in this act")
     props: Optional[List[str]] = Field(default_factory=list, description="List of prop names used in this act")
+
+    def markdown_summary(self, include_chapters: bool = True, include_scenes: bool = True) -> str:
+        """Generates a Markdown summary for an act, optionally including details on chapters and scenes."""
+        markdown = deindent(f"""
+            ### Act: "{self.title}"
+            **Act ID**: {self.act_id}
+            Description:
+            {self.description}
+        """)
+
+        if include_chapters:
+            for chapter in self.chapters:
+                markdown += "\n"
+                markdown += chapter.markdown_summary(include_scenes=include_scenes)
+        return markdown
+
 
 class SceneDialogue(BaseModel):
     """
@@ -137,12 +234,23 @@ class SceneDialogue(BaseModel):
     dialogues: Optional[List[DialogueLine]] = Field(default_factory=list, description="List of dialogue lines in the scene for screenplays")
     content: Optional[str] = Field("", description="Content of the scene")
 
+
+class ChapterDialogue(BaseModel):
+    """
+    Represents dialogues for a chapter, containing dialogues for multiple scenes.
+    """
+    chapter_id: Optional[str] = Field("", description="Unique identifier of the chapter this dialogue belongs to")
+    scene_dialogues: List[SceneDialogue] = Field(default_factory=list, description="List of SceneDialog objects for the chapter")
+
+
+
 class ActDialogue(BaseModel):
     """
-    Represents dialogues for an act, containing dialogues for multiple scenes.
+    Represents dialogues for an act, containing dialogues for multiple chapters.
     """
     act_id: Optional[str] = Field("", description="Unique identifier of the act this dialogue belongs to")
-    scene_dialogues: List[SceneDialogue] = Field(default_factory=list, description="List of SceneDialog objects for the act")
+    chapter_dialogues: List[ChapterDialogue] = Field(default_factory=list, description="List of ChapterDialog objects for the act")
+
 
 class StoryDialogue(BaseModel):
     """
@@ -204,11 +312,15 @@ class Story(BaseModel):
     """
     Represents the overall story, including its structure, characters, plot, and acts.
     """
+    author: Optional[str] = Field("", description="Author of the story")
     prompt: Optional[str] = Field("", description="Prompt or inspiration for the story")
     title: Optional[str] = Field("", description="Title of the story")
     has_video: Optional[bool] = Field(False, description="Whether the story is animated")
     has_images: Optional[bool] = Field(False, description="Whether the story includes images")
     visual_style: Optional[str] = Field("", description="Visual style of the story, e.g., 'Anime', 'Realistic'")
+    title_image_prompt: Optional[str] = Field("", description="Prompt for generating an image of the title")
+    cover_image_prompt: Optional[str] = Field("", description="Prompt for generating a cover image")
+    tagline: Optional[str] = Field("", description="Tagline for the story")
     time_period: Optional[str] = Field("", description="Time period in which the story is set")
     location: Optional[str] = Field("", description="Location where the story takes place")
     genre: Optional[str] = Field("", description="Genre of the story, e.g., 'Fantasy', 'Sci-fi'")
@@ -224,8 +336,10 @@ class Story(BaseModel):
     subplots: Optional[List[Subplot]] = Field(default_factory=list, description="Subplots running alongside the main plot")
     emotional_arc: Optional[List[EmotionalArc]] = Field(default_factory=list, description="Track the emotional shifts in the story")
     acts: Optional[List[Act]] = Field(default_factory=list, description="Acts or chapters to organize the story structure")
-    avg_scene_count: Optional[str] = Field("", description="Average number of scenes per act")
-    avg_scene_length: Optional[str] = Field("", description="Average length of scenes in words")
+    act_count: Optional[str] = Field("3", description="Number of acts in the story")
+    avg_chapter_count: Optional[str] = Field("", description="Average number of scenes per act")
+    avg_chapter_length: Optional[str] = Field("", description="Average length of scenes in words")
+    avg_chapters_per_act: Optional[str] = Field("", description="Average number of chapters per act")
 
     # Private attribute to hold the reference to the associated StoryDialog
     _story_dialog: Optional['StoryDialogue'] = PrivateAttr(default=None)
@@ -248,6 +362,80 @@ class Story(BaseModel):
         """Get a list of valid character nicknames from the associated Story."""
         return [char.nickname or char.name.lower() for char in self.characters]
 
+    def markdown_overview(self) -> str:
+        """Generates a Markdown overview for the story, including title, genre, setting, themes, and other high-level details."""
+
+        markdown = deindent(f"""
+            # Story: {self.title}
+
+            **Medium**: {self.medium}
+            **Genre**: {self.genre}
+            **Visual** Style: {self.visual_style}
+            **Time Period**: {self.time_period}
+            **Location**: {self.location}
+            **Narrative Perspective**: {self.narrative_perspective}
+            **Conflict Type**: {self.conflict_type}
+            **Themes**: {', '.join(self.themes) if self.themes else 'None'}
+            **Motifs**: {', '.join(self.motifs) if self.motifs else 'None'}
+
+            ## Original User Prompt:
+            {self.prompt}
+
+            ## Plot Overview:
+            {self.plot_overview}
+        """)
+
+        # Story Beats
+        if self.story_beats:
+            markdown += "\n\n## Story Beats\n\n"
+            for beat in self.story_beats:
+                if beat.scene:
+                    markdown += f"- {beat.name}: {beat.description} (Scene: {beat.scene})\n"
+                else:
+                    markdown += f"- {beat.name}: {beat.description}\n"
+
+        # Subplots
+        if self.subplots:
+            markdown += "## Subplots\n\n"
+            for subplot in self.subplots:
+                markdown += deindent(f"""
+                    ### Subplot: "{subplot.title}"
+
+                    **Related Characters (nicknames)**: {', '.join(subplot.related_characters)}
+
+                    #### Description:
+                    {subplot.description}
+                """ + "\n\n")
+
+        # Emotional Arc
+        if self.emotional_arc:
+            markdown += "\n## Emotional Arcs\n\n"
+            for arc in self.emotional_arc:
+                markdown += f"- {arc.stage}: {arc.description}\n"
+
+        return markdown
+    
+    def markdown_full_summary(self, include_characters: bool = True, include_acts: bool = True, include_chapters: bool = True, include_scenes: bool = True) -> str:
+        """Generates a full Markdown summary for the entire story, including overview, characters, acts, chapters, and scenes."""
+        markdown = self.markdown_overview()
+        
+        # Characters
+        if include_characters:
+            markdown += "\n\n### Characters\n\n"
+            for character in self.characters:
+                markdown += character.markdown_summary() + "\n\n"
+        
+        # Acts, Chapters, and Scenes
+        if include_acts:
+            markdown += "\n\n## Acts, Chapters, and Scenes\n\n"
+            for act in self.acts:
+                markdown += act.markdown_summary(include_chapters=include_chapters, include_scenes=include_scenes) + "\n"
+
+        return markdown
+
+
+
+
     # @model_validator(mode='after')
     # def check_references(self) -> 'Story':
     #     """Check that the character nicknames in the scene are valid."""
@@ -258,7 +446,7 @@ class Story(BaseModel):
 
     #     for act in self.acts:
     #         for scene in act.scenes:
-    #             for character_involved in scene.characters_involved:
+    #             for character_involved in scene.characters_involved_nicknames:
     #                 if character_involved.lower() not in valid_character_nicknames:
     #                     raise ValueError(f"Invalid character_nickname: {character_involved} in scene {scene.scene_id}")
     #     return self
@@ -375,63 +563,172 @@ class Story(BaseModel):
 
 
 
-# if __name__ == "__main__":
-#     # Test the Story class
-#     from pprint import pprint
+example_story = Story(
+    prompt="A young wizard embarks on a quest to find a lost artifact.",
+    visual_style="Anime",
+    genre="Fantasy",
+    medium="Book",
+    title="The Wizard's Quest",
+    location="A magical realm",
+    plot_overview="A young wizard embarks on a dangerous quest to recover a lost artifact.",
+    time_period="Medieval",
+    narrative_perspective="Third-person",
+    conflict_type="Person vs. Person",
+    motifs=["Magic", "Journey"],
+    themes=["Courage", "Redemption"],
+    characters=[
+        Character(
+            nickname="erion",
+            name="Erion",
+            description="A courageous young wizard.",
+            personality="Brave but reckless.",
+            physical_appearance="Tall with messy black hair.",
+            role="Protagonist",
+            gender="Male",
+            age="Early 20s",
+            catch_phrase="By the power of the elements!",
+            relationships=[
+                CharacterRelationship(
+                    character_nickname="lyria",
+                    relationship_type="Friend",
+                    description="A close friend and mentor."
+                )
+            ],
+            internal_conflict="Struggles with self-doubt.",
+            character_arc=CharacterArc(
+                initial_state="Inexperienced and unsure.",
+                final_state="Confident and powerful.",
+                key_moments=["Defeats the dark sorcerer", "Finds the lost artifact"]
+            ),
+        ),
+        Character(
+            nickname="lyria",
+            name="Lyria",
+            description="A mysterious sorceress.",
+            personality="Calm and wise.",
+            physical_appearance="Slender with silver hair.",
+            role="Mentor",
+            gender="Female",
+            age="30s",
+            catch_phrase="Magic flows through all things.",
+            relationships=[
+                CharacterRelationship(
+                    character_nickname="erion",
+                    relationship_type="Mentor",
+                    description="Guides Erion on his quest."
+                )
+            ],
+            internal_conflict="Haunted by her past mistakes.",
+            character_arc=CharacterArc(
+                initial_state="Reserved and secretive.",
+                final_state="Open and trusting.",
+                key_moments=["Reveals her past", "Helps Erion in the final battle"]
+            ),
+        )
+    ],
+    acts=[
+        Act(
+            act_id="act1",
+            title="The Beginning",
+            description="The start of Erion's journey.",
+            props=["Magic Staff"],
+            chapters=[
+                Chapter(
+                    chapter_id="chapter1",
+                    title="Departure",
+                    description="Erion leaves his village.",
+                    scenes=[
+                        Scene(
+                            scene_id="scene1",
+                            title="The Beginning of the Quest",
+                            description="Erion sets out from his village.",
+                            characters_involved_nicknames=["erion"],
+                            setting="A small village on the edge of a vast forest.",
+                            time_of_day="Morning",
+                            location="Village",
+                            lighting="Bright",
+                            mood="Hopeful",
+                            props=["Magic Staff"],
+                            key_actions=["Erion begins his journey."]
+                        )
+                    ]
+                )
+            ]
+        )
+    ],
+    props=[
+        Prop(
+            name="Magic Staff",
+            description="A powerful staff imbued with magical energy.",
+            purpose="Helps Erion channel his magic.",
+            physical_appearance="A tall wooden staff with glowing runes."
+        )
+    ],
+    subplots=[
+        Subplot(
+            title="Lyria's Redemption",
+            description="Lyria seeks to atone for her past mistakes.",
+            related_characters=["lyria"]
+        )
+    ],
+    emotional_arc=[
+        EmotionalArc(
+            stage="Hopeful",
+            description="Erion feels hopeful as he begins his quest."
+        )
+    ],
+    story_beats=[
+        StoryBeat(
+            name="Inciting Incident",
+            description="Erion discovers the lost artifact's location.",
+            scene="scene1"
+        )
+    ]
+)
 
-#     print("Testing the Story class...")
+example_story_dialog = StoryDialogue(
+    act_dialogues=[
+        ActDialogue(
+            act_id="act1",
+            chapter_dialogues=[
+                ChapterDialogue(
+                    chapter_id="chapter1",
+                    scene_dialogues=[
+                        SceneDialogue(
+                            scene_id="scene1",
+                            dialogues=[
+                                DialogueLine(
+                                    character_nickname="erion",
+                                    line="By the power of the elements, I will find the artifact!"
+                                )
+                            ]
+                        )
+                    ]
+                )
+            ]
+        )
+    ]
+)
 
-#     example_story = Story(
-#         prompt="A young wizard embarks on a quest to find a lost artifact.",
-#         visual_style="Anime",
-#         genre="Fantasy",
-#         medium="Book",
-#         title="The Wizard's Quest",
-#         location="A magical realm",
-#         plot_overview="A young wizard embarks on a dangerous quest to recover a lost artifact.",
-#         characters=[
-#             Character(
-#                 name="Erion",
-#                 description="A courageous young wizard.",
-#                 personality="Brave but reckless.",
-#                 physical_appearance="Tall with messy black hair.",
-#                 gender="Male",
-#                 age="Early 20s",
-#                 catch_phrase="By the power of the elements!",
-#                 # image=placeholder_image  # Placeholder PIL image for the character
-#             ),
-#             Character(
-#                 name="Lyria",
-#                 description="A mysterious sorceress.",
-#                 personality="Calm and wise.",
-#                 physical_appearance="Slender with silver hair.",
-#                 gender="Female",
-#                 age="30s",
-#                 catch_phrase="Magic flows through all things.",
-#                 # image=placeholder_image  # Placeholder PIL image for the character
-#             )
-#         ],
-#         scenes=[
-#             Scene(
-#                 title="The Beginning of the Quest",
-#                 description="Erion sets out from his village.",
-#                 characters_involved=["Erion"],
-#                 setting="A small village on the edge of a vast forest.",
-#                 key_actions=["Erion begins his journey."],
-#                 # image=placeholder_image  # Placeholder PIL image for the scene
-#             )
-#         ],
-#         original_images=[
-#             # placeholder_image  # Placeholder original PIL image
-#         ],
-#         revised_images=[
-#             # placeholder_image  # Placeholder revised PIL image
-#         ]
-#     )
 
-#     # Make sure we can marhsal and unmarshal the data
-#     example_story_json = example_story.model_dump_json()
-#     example_story_parsed = Story.model_validate_json(example_story_json)
-#     pprint(example_story_parsed.model_dump())
+
+if __name__ == "__main__":
+    # Test the Story class
+    from pprint import pprint
+
+    print("Testing the Story class...")
+
+    # Associate the blank story and story dialog with each other
+    example_story.set_story_dialogue(example_story_dialog)
+
+    # Make sure we can marhsal and unmarshal the data
+    example_story_json = example_story.model_dump_json()
+    example_story_parsed = Story.model_validate_json(example_story_json)
+    pprint(example_story_parsed.model_dump())
+
+    print("\n\n--- MARKDOWN ---\n\n")
+
+    print(example_story.markdown_full_summary())
+
 
 

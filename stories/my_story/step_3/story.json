@@ -1,14 +1,18 @@
 {
-    "prompt": "psychological thriller novel that is a cross between Freida McFadden and Colleen Hoover",
-    "title": "Beneath the Surface of Deceit",
+    "author": "Matt Williamson",
+    "prompt": "novel that is a cross between Freida McFadden and Colleen Hoover",
+    "title": "Beneath the Facade",
     "has_video": false,
     "has_images": false,
-    "visual_style": "Ominous, Moody Book Cover Art - Dark, muted color palette with subtle, eerie textures and haunting typography",
-    "time_period": "Present Day",
-    "location": "Upper-Middle-Class Suburbia",
-    "genre": "Psychological Thriller/Romantic Suspense",
+    "visual_style": "Dark, Moody, and Psychologically Complex - think muted color palettes with flashes of intense emotional hues, reflecting the turmoil within",
+    "title_image_prompt": "",
+    "cover_image_prompt": "",
+    "tagline": "",
+    "time_period": "Contemporary",
+    "location": "A mix of upscale suburban settings and the eerie, isolated landscapes of the protagonist's past",
+    "genre": "Psychological Women's Fiction/Emotional Thriller",
     "medium": "Novel",
-    "plot_overview": "**Title:** \"Beneath the Surface of Deceit\"\n\n**Protagonist:**\nDr. Emma Taylor",
+    "plot_overview": "**Title:** \"The Shadows We Keep\"\n\n**Genre:** Psychological Women's Fiction, Emotional Thriller\n\n**Plot Idea (Crossing Freida McFadden's dark, twisty style with Colleen Hoover's emotional depth):**\n\nProtagonist Dr. Emma Taylor, a successful psychologist with a penchant for fixing broken people, has it all: a thriving practice, a handsome husband, and a beautiful home. However, her perfectly crafted facade begins to crumble when she meets her new patient, enigmatic and troubled Asher Black.\n\nAsher's presence awakens long-dormant demons from Emma's own dark past, which she's kept hidden behind a mask of professionalism. As their sessions progress, Emma finds herself inextricably drawn to Asher's mysterious pain, even as she suspects he might be manipulating her. The lines between doctor and patient blur, threatening to destroy everything Emma holds dear.\n\nMeanwhile, a series of eerie, unexplained events starts to unfold around Emma, echoing the traumatic incidents from her childhood that she's desperately tried to forget. It becomes clear that someone is watching her, waiting for the perfect moment to expose the secrets she's kept hidden for so long.\n\nAs tensions escalate and the stakes grow higher, Emma's world begins to unravel. She must confront the shadows of her own past and the true nature of her obsession with Asher. But will she be able to distinguish between reality and the lies she's told herself, or will the truth destroy everything she thought she knew about herself and those around her?\n\n**Twists and Turns:**\n\n1. **Asher's True Identity:** Mid-novel reveal that Asher is, in fact, a former victim of Emma's past, seeking closure and justice.\n2. **The Stalker's Revelation:** The person watching Emma is exposed as her own husband, hiding secrets of his own that threaten to upend their marriage.\n3. **Emma's Dark Past:** Through flashbacks and Asher's sessions, the depth of Emma's childhood trauma and its lasting impact on her life are slowly uncovered.\n\n**Themes (a la Colleen Hoover):**\n\n* The complexities of human emotions and relationships\n* Confronting and overcoming deep-seated traumas\n* The blurred lines between truth and deception in personal and professional relationships\n\n**Psychological Thriller Elements (inspired by Freida McFadden):**\n\n* Mind games and manipulation between characters\n* Unreliable narrators and unexpected plot twists\n* A gripping, suspenseful atmosphere that keeps readers guessing until the very end",
     "narrative_perspective": "",
     "conflict_type": "",
     "themes": [],
@@ -17,183 +21,173 @@
         {
             "nickname": "emmat",
             "name": "Dr. Emma Taylor",
-            "description": "A successful psychologist with a seemingly perfect life, hiding secrets of her own.",
-            "personality": "Introspective, empathetic, and guarded, with a growing sense of desperation.",
-            "physical_appearance": "Slender, with long, curly brown hair, expressive green eyes, and a subtle scar above her left eyebrow. Often dressed in elegant, understated attire.",
+            "description": "A successful psychologist with a dark past, struggling to maintain her facade.",
+            "personality": "Complex, guarded, empathetic, and intensely private.",
+            "physical_appearance": "Elegant, polished appearance with long, curly brown hair, expressive green eyes, and a fit physique, often dressed in tailored professional attire.",
             "role": "Protagonist",
             "gender": "Female",
             "race": "Caucasian",
-            "age": "Late 20s/Early 30s",
-            "catch_phrase": "",
+            "age": "Late 30s",
+            "catch_phrase": "The truth is in the shadows.",
             "animation_description": "",
-            "voice_description": "Soft-spoken, yet authoritative, with a hint of vulnerability.",
+            "voice_description": "Sophisticated, yet laced with underlying emotional depth.",
             "props": [],
             "relationships": [
                 {
-                    "character_name": "liam",
-                    "relationship_type": "Husband",
-                    "description": "Complex, loving, and potentially controlling."
+                    "character_nickname": "asher",
+                    "relationship_type": "Patient-Doctor, Complicated Attraction",
+                    "description": ""
                 },
                 {
-                    "character_name": "sarah",
-                    "relationship_type": "Best Friend/Confidant",
-                    "description": "Supportive, outgoing, and hiding secrets of her own."
+                    "character_nickname": "husband",
+                    "relationship_type": "Marriage, Deception",
+                    "description": ""
                 }
             ],
-            "internal_conflict": "Torn between maintaining her perfect facade and confronting the dark truths threatening to upend her life.",
+            "internal_conflict": "Torn between her professional ethics and personal desires, while confronting the traumas of her past.",
             "character_arc": null,
-            "image_prompt": "Ominous, moody book cover art style. A slender woman with long, curly brown hair and expressive green eyes, bearing a subtle scar above her left eyebrow. She's dressed in elegant, understated attire, set against a dark, muted background with eerie textures, hinting at the turmoil beneath her polished facade.",
-            "image_prompt_short": "Woman with curly brown hair, green eyes, and a subtle scar, in elegant attire, against a dark, textured backdrop."
+            "image_prompt": "Dark, moody style, full-body shot of a woman in her late 30s with elegant, curly brown hair and expressive green eyes. She wears tailored professional attire, conveying a sense of polished sophistication, yet hints of emotional depth linger beneath the surface.",
+            "image_prompt_short": "Polished woman with curly brown hair, green eyes, and a hint of inner turmoil."
         },
         {
-            "nickname": "liam",
-            "name": "Liam Taylor",
-            "description": "Emma's charming, successful husband with a hidden agenda.",
-            "personality": "Charismatic, calculating, and intensely possessive.",
-            "physical_appearance": "Tall, with chiseled features, piercing blue eyes, and a captivating smile. Always impeccably dressed.",
-            "role": "Husband/Antagonist",
-            "gender": "Male",
-            "race": "Caucasian",
-            "age": "Early 30s",
-            "catch_phrase": "",
-            "animation_description": "",
-            "voice_description": "Smooth, persuasive, with an undercurrent of menace.",
-            "props": [],
-            "relationships": [
-                {
-                    "character_name": "emmat",
-                    "relationship_type": "Wife",
-                    "description": "Controlling, yet deeply invested in their relationship."
-                },
-                {
-                    "character_name": "alex",
-                    "relationship_type": "Business Partner/Rival",
-                    "description": "Cordial, yet intensely competitive."
-                }
-            ],
-            "internal_conflict": "Struggles with the moral implications of his actions, walking a fine line between love and manipulation.",
-            "character_arc": null,
-            "image_prompt": "Ominous, moody book cover art style. A tall, chiseled man with piercing blue eyes and a captivating smile, dressed impeccably in a tailored suit. The background is a muted, dark color palette with subtle, eerie textures, suggesting the darkness beneath his charming exterior.",
-            "image_prompt_short": "Tall, chiseled man with piercing blue eyes, in a tailored suit, against a muted, dark backdrop with eerie textures."
-        },
-        {
-            "nickname": "sarah",
-            "name": "Sarah Lee",
-            "description": "Emma's vivacious, supportive best friend, concealing her own dark past.",
-            "personality": "Bubbly, loyal, and haunted by personal demons.",
-            "physical_appearance": "Petite, with short, spiky black hair, bright pink highlights, and expressive brown eyes. Often dressed in trendy, eclectic outfits.",
-            "role": "Best Friend/Confidant",
-            "gender": "Female",
-            "race": "Asian-American",
-            "age": "Late 20s",
-            "catch_phrase": "",
-            "animation_description": "",
-            "voice_description": "Bubbly, energetic, with a hint of sadness.",
-            "props": [],
-            "relationships": [
-                {
-                    "character_name": "emmat",
-                    "relationship_type": "Best Friend",
-                    "description": "Supportive, yet guarded about her own secrets."
-                },
-                {
-                    "character_name": "jason",
-                    "relationship_type": "Love Interest",
-                    "description": "Tentative, yet potentially redemptive."
-                }
-            ],
-            "internal_conflict": "Fears being judged for her past mistakes, making it difficult to open up to those closest to her.",
-            "character_arc": null,
-            "image_prompt": "Ominous, moody book cover art style. A petite woman with short, spiky black hair, bright pink highlights, and expressive brown eyes, wearing trendy, eclectic outfits. The dark, muted background with subtle, eerie textures contrasts with her vibrant appearance, hinting at her inner turmoil.",
-            "image_prompt_short": "Petite woman with spiky black hair, pink highlights, in eclectic attire, against a dark, textured backdrop."
-        },
-        {
-            "nickname": "alex",
-            "name": "Alexander 'Alex' Thompson",
-            "description": "Liam's cunning business partner, with a hidden vendetta against the Taylors.",
-            "personality": "Suave, intelligent, and ruthlessly ambitious.",
-            "physical_appearance": "Lean, with slicked-back blond hair, piercing gray eyes, and a charming, disarming smile. Always impeccably dressed in designer suits.",
-            "role": "Antagonist/Business Partner",
+            "nickname": "asher",
+            "name": "Asher Black",
+            "description": "An enigmatic patient with a troubled history, hiding secrets of his own.",
+            "personality": "Brooding, intense, and calculating, with a deep sense of pain and vulnerability.",
+            "physical_appearance": "Tall, lean build with unruly black hair, piercing blue eyes, and scars on his hands, often dressed in dark, casual clothing.",
+            "role": "Patient, Antagonist",
             "gender": "Male",
             "race": "Caucasian",
             "age": "Mid 30s",
-            "catch_phrase": "",
+            "catch_phrase": "Pain is the only truth I know.",
             "animation_description": "",
-            "voice_description": "Smooth, confident, with a hint of condescension.",
+            "voice_description": "Low, gravelly, and hypnotic, with an undercurrent of emotion.",
             "props": [],
             "relationships": [
                 {
-                    "character_name": "liam",
-                    "relationship_type": "Business Partner/Rival",
-                    "description": "Cordial, yet intensely competitive."
+                    "character_nickname": "emmat",
+                    "relationship_type": "Doctor-Patient, Complex Attraction",
+                    "description": ""
                 },
                 {
-                    "character_name": "emmat",
-                    "relationship_type": "Acquaintance/Adversary",
-                    "description": "Polite, yet suspicious of her intentions."
+                    "character_nickname": "husband",
+                    "relationship_type": "Unknown, Potentially Connected",
+                    "description": ""
                 }
             ],
-            "internal_conflict": "Struggles with the moral implications of his actions, walking a fine line between ambition and destruction.",
+            "internal_conflict": "Struggles to reconcile his past and present, seeking redemption and justice.",
             "character_arc": null,
-            "image_prompt": "Ominous, moody book cover art style. A lean man with slicked-back blond hair, piercing gray eyes, and a charming smile, dressed in a designer suit. The muted, dark background with eerie textures suggests the cunning nature beneath his polished appearance.",
-            "image_prompt_short": "Lean man with blond hair, gray eyes, in a designer suit, against a muted, dark backdrop with eerie textures."
+            "image_prompt": "Dark, moody style, full-body shot of a man in his mid-30s with unruly black hair, piercing blue eyes, and scars on his hands. He wears dark, casual clothing, exuding an air of mystery and intensity, as if pain and vulnerability simmer just beneath the surface.",
+            "image_prompt_short": "Brooding man with black hair, blue eyes, and scars, radiating intensity."
         },
         {
-            "nickname": "jason",
-            "name": "Jason Patel",
-            "description": "A kind-hearted, gentle soul who becomes Sarah's love interest, helping her heal.",
-            "personality": "Empathetic, soft-spoken, and genuinely caring.",
-            "physical_appearance": "Tall, with messy brown hair, warm, honey-colored eyes, and a comforting smile. Often dressed in casual, laid-back attire.",
-            "role": "Love Interest/Supporting Character",
+            "nickname": "husband",
+            "name": "Ryan Taylor",
+            "description": "Emma's charming yet deceptive husband, hiding secrets that threaten their marriage.",
+            "personality": "Charismatic, manipulative, and controlling, with a facade of warmth and concern.",
+            "physical_appearance": "Handsome, athletic build with short, blond hair, bright blue eyes, and a captivating smile, often dressed in upscale casual attire.",
+            "role": "Antagonist",
             "gender": "Male",
-            "race": "Indian-American",
-            "age": "Late 20s",
-            "catch_phrase": "",
+            "race": "Caucasian",
+            "age": "Late 30s",
+            "catch_phrase": "I'm just trying to protect you, Emma.",
             "animation_description": "",
-            "voice_description": "Softer, calming, with a hint of warmth.",
+            "voice_description": "Smooth, persuasive, and menacing, with an undercurrent of threat.",
             "props": [],
             "relationships": [
                 {
-                    "character_name": "sarah",
-                    "relationship_type": "Love Interest",
-                    "description": "Tentative, yet potentially redemptive."
+                    "character_nickname": "emmat",
+                    "relationship_type": "Marriage, Deception",
+                    "description": ""
                 },
                 {
-                    "character_name": "emmat",
-                    "relationship_type": "Acquaintance/Confidant",
-                    "description": "Supportive, yet cautious due to Sarah's influence."
+                    "character_nickname": "asher",
+                    "relationship_type": "Unknown, Potentially Connected",
+                    "description": ""
                 }
             ],
-            "internal_conflict": "Fears not being enough for Sarah, given her troubled past.",
+            "internal_conflict": "Torn between maintaining his facade and the risk of exposure, as his secrets begin to unravel.",
             "character_arc": null,
-            "image_prompt": "Ominous, moody book cover art style. A tall, gentle-looking man with messy brown hair and warm, honey-colored eyes, wearing casual, laid-back attire. The soft contrast with the dark, muted background and subtle, eerie textures conveys a sense of warmth and comfort.",
-            "image_prompt_short": "Tall, gentle man with brown hair, warm eyes, in casual attire, against a softly contrasting dark backdrop."
+            "image_prompt": "Dark, moody style, full-body shot of a handsome man in his late 30s with short, blond hair, bright blue eyes, and a captivating smile. He wears upscale casual attire, embodying charm and warmth, yet subtle hints of manipulation and control lurk beneath the facade.",
+            "image_prompt_short": "Charming man with blond hair, blue eyes, and a smile, hiding a menacing undercurrent."
         },
         {
-            "nickname": "detectivejames",
-            "name": "Detective James 'Jim' Mitchell",
-            "description": "A seasoned, no-nonsense investigator with a keen eye for deception.",
-            "personality": "Gruff, astute, and fiercely dedicated to justice.",
-            "physical_appearance": "Stocky, with short, graying hair, piercing brown eyes, and a weathered face. Often dressed in worn, comfortable clothing.",
-            "role": "Supporting Character/Investigator",
-            "gender": "Male",
-            "race": "African-American",
-            "age": "50s",
-            "catch_phrase": "",
+            "nickname": "sarahk",
+            "name": "Sarah Knight",
+            "description": "Emma's closest friend and confidant, providing a sounding board for her concerns.",
+            "personality": "Warm, empathetic, and non-judgmental, with a sharp insight into human nature.",
+            "physical_appearance": "Vibrant, curly red hair, bright hazel eyes, and a comforting smile, often dressed in colorful, bohemian attire.",
+            "role": "Supporting Character",
+            "gender": "Female",
+            "race": "Caucasian",
+            "age": "Late 30s",
+            "catch_phrase": "You can't pour from an empty cup, Emma.",
             "animation_description": "",
-            "voice_description": "Gravelly, authoritative, with a hint of world-weariness.",
+            "voice_description": "Warm, soothing, and encouraging, with a hint of playfulness.",
             "props": [],
             "relationships": [
                 {
-                    "character_name": "emmat",
-                    "relationship_type": "Investigator/Subject",
-                    "description": "Skeptical, yet intrigued by her potential innocence."
+                    "character_nickname": "emmat",
+                    "relationship_type": "Close Friendship",
+                    "description": ""
                 }
             ],
-            "internal_conflict": "Struggles with the personal toll of his job, questioning whether justice is truly served.",
+            "internal_conflict": "Balances her desire to support Emma with the need to respect her boundaries.",
             "character_arc": null,
-            "image_prompt": "Ominous, moody book cover art style. A stocky, seasoned man with short, graying hair, piercing brown eyes, and a weathered face, dressed in worn, comfortable clothing. The muted, dark background with eerie textures underscores his rugged, no-nonsense demeanor.",
-            "image_prompt_short": "Stocky, graying man with brown eyes, in worn attire, against a muted, dark backdrop with eerie textures."
+            "image_prompt": "Warm, vibrant style, full-body shot of a woman in her late 30s with curly red hair, bright hazel eyes, and a comforting smile. She wears colorful, bohemian attire, radiating warmth, empathy, and a deep understanding of those around her.",
+            "image_prompt_short": "Vibrant woman with red hair, hazel eyes, and a warm smile, exuding empathy."
+        },
+        {
+            "nickname": "lucyb",
+            "name": "Lucy Brooks",
+            "description": "A young, ambitious journalist investigating a series of unexplained events connected to Emma's past.",
+            "personality": "Determined, resourceful, and fiercely independent, with a strong sense of justice.",
+            "physical_appearance": "Short, spiky black hair, piercing brown eyes, and a small tattoo of a pen on her wrist, often dressed in edgy, modern attire.",
+            "role": "Supporting Character",
+            "gender": "Female",
+            "race": "African American",
+            "age": "Early 20s",
+            "catch_phrase": "The truth is out there, waiting to be uncovered.",
+            "animation_description": "",
+            "voice_description": "Confident, assertive, and quick-witted, with a hint of youthful enthusiasm.",
+            "props": [],
+            "relationships": [
+                {
+                    "character_nickname": "emmat",
+                    "relationship_type": "Investigator-Subject, Potential Ally",
+                    "description": ""
+                }
+            ],
+            "internal_conflict": "Navigates the challenges of her first major investigation while facing potential dangers and setbacks.",
+            "character_arc": null,
+            "image_prompt": "Edgy, modern style, full-body shot of a young woman in her early 20s with short, spiky black hair, piercing brown eyes, and a small tattoo of a pen on her wrist. She wears edgy, modern attire, embodying determination, resourcefulness, and a fierce pursuit of justice.",
+            "image_prompt_short": "Edgy young journalist with black hair, brown eyes, and a pen tattoo, radiating determination."
+        },
+        {
+            "nickname": "drlee",
+            "name": "Dr. Sophia Lee",
+            "description": "A seasoned psychologist and Emma's mentor, offering guidance and support during turbulent times.",
+            "personality": "Wise, compassionate, and astute, with a deep understanding of the human psyche.",
+            "physical_appearance": "Serene, silver hair, warm brown eyes, and a gentle smile, often dressed in elegant, understated attire.",
+            "role": "Supporting Character",
+            "gender": "Female",
+            "race": "Asian",
+            "age": "60s",
+            "catch_phrase": "Healing begins with self-awareness, Emma.",
+            "animation_description": "",
+            "voice_description": "Soothing, authoritative, and reassuring, with a hint of warmth.",
+            "props": [],
+            "relationships": [
+                {
+                    "character_nickname": "emmat",
+                    "relationship_type": "Mentorship",
+                    "description": ""
+                }
+            ],
+            "internal_conflict": "Balances her desire to help Emma with the need to maintain professional boundaries.",
+            "character_arc": null,
+            "image_prompt": "Serene, elegant style, full-body shot of a woman in her 60s with silver hair, warm brown eyes, and a gentle smile. She wears understated, elegant attire, conveying wisdom, compassion, and a deep understanding of the human psyche.",
+            "image_prompt_short": "Serene woman with silver hair, brown eyes, and a gentle smile, embodying wisdom."
         }
     ],
     "props": [],
@@ -201,6 +195,8 @@
     "subplots": [],
     "emotional_arc": [],
     "acts": [],
-    "avg_scene_count": "20-30 chapters",
-    "avg_scene_length": "3000-4000 words"
+    "act_count": "3",
+    "avg_chapter_count": "35-40 chapters",
+    "avg_chapter_length": "2,500-4,500 words",
+    "avg_chapters_per_act": "Act 1: 10-12 chapters (Setup & Inciting Incident), Act 2: 15-18 chapters (Rising Action & Twists), Act 3: 8-10 chapters (Climax & Resolution)"
 }
