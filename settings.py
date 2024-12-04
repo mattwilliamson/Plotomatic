@@ -1,6 +1,7 @@
 DEBUG = False
 
-STORY_DIR = "stories/my_story"
+STORY_DIR = "stories"
+# STORY_DIR = "stories/story"
 
 # EXECUTE_EXAMPLES = True
 EXECUTE_EXAMPLES = False

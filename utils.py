@@ -10,6 +10,9 @@ import numpy as np
 import time
 import ipywidgets as widgets
 from IPython.display import display, clear_output, Markdown
+from pathlib import Path
+import settings
+import os
 
 def chat_message_to_dict(message: ChatMessage) -> dict:
     # Use model_dump to get the dictionary representation and adjust the role
@@ -66,7 +69,7 @@ def merge_models(obj1: BaseModel, obj2: BaseModel) -> Story:
     update_recursive(obj_copy, obj2)
     return obj_copy
 
-def show_diff(story1: Story, story2: Story):
+def show_diff(story1: Story, story2: Story, return_diff=False):
     """Show the differences between two Story objects in a python notebook."""
     story1_json = story1.model_dump_json(indent=2, exclude_defaults=True)
     story2_json = story2.model_dump_json(indent=2, exclude_defaults=True)
@@ -80,6 +83,8 @@ def show_diff(story1: Story, story2: Story):
     diff_text = '\n'.join(diff)
     # display(Markdown(f'```json\n{story1_json}\n```'))
     # display(Markdown(f'```json\n{story2_json}\n```'))
+    if return_diff:
+        return diff_text
     display(Markdown(f'```diff\n{diff_text}\n```'))
 
 

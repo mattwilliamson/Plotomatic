@@ -2,7 +2,7 @@
 
 Transform your story ideas into immersive graphic novels, animations, and audio experiences—all from a single prompt!
 
-![Banner](assets/banner.jpeg)
+![Banner](./app/static/banner.jpg)
 
 ## :rocket: Write an Entire Graphic Novel with One Prompt!
 
@@ -18,7 +18,7 @@ Here are some examples of what Plot-o-matic can generate:
 Prompt: 
 > A video game: In a futuristic world, a team of rogue robot ninjas must overthrow their corrupt AI overlords to reclaim their freedom and save humanity.
 
-![Robot Ninja](./samples/kaito.cog.gif)
+![Robot Ninja](./app/static/kaito.cog.gif)
 
 ---
 
@@ -26,7 +26,7 @@ Prompt:
 Prompt:
 > 8-bit Video Game
 
-![8bit game](./samples/8_bit_fight_svd.gif)
+![8bit game](./app/static/8_bit_fight_svd.gif)
 
 ---
 
@@ -34,7 +34,7 @@ Prompt:
 Prompt:
 > Calm and authoritative, with a hint of warmth.
 
-[Sample Audio :headphones:](./samples/dr_elara.wav)
+[Sample Audio :headphones:](./app/static/dr_elara.wav)
 
 ---
 
@@ -42,7 +42,7 @@ Prompt:
 Prompt:
 > Tense and suspenseful.
 
-[Sample Music :musical_note:](./samples/tense_focused.wav)
+[Sample Music :musical_note:](./app/static/tense_focused.wav)
 
 ---
 
@@ -50,7 +50,7 @@ Prompt:
 Prompt:
 > A fantasy live-action movie: A blonde-haired, blue-eyed knight named Matt must journey to the center of the world to forge a magical weapon capable of defeating an ancient dragon and saving the princess and kingdom.
 
-[Sample Video :arrow_forward:](./samples/princess.mp4)
+[Sample Video :arrow_forward:](./app/static/princess.mp4)
 
 ---
 
@@ -81,6 +81,23 @@ We leverage a suite of AI tools to bring your stories to life:
 - [Parler-TTS](https://github.com/huggingface/parler-tts) for speech creation
 - [fish-speech](https://github.com/fishaudio/fish-speech) OR [CoquiTTS](https://github.com/coqui-ai/TTS) for speech cloning
 - [Musigen](https://huggingface.co/facebook/musicgen-large) for music
+
+
+# Run Plotomatic
+
+```sh
+conda create -n plotomatic python=3.12
+conda activate plotomatic
+```
+
+```sh
+pip install streamlit emoji
+streamlit run Plotomatic_App.py
+```
+
+Open http://localhost:8501 in your browser.
+
+
 
 
 ## :memo: **Step-by-Step Notebooks**

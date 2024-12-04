@@ -4,14 +4,15 @@ from typing import List, Generator, Optional
 import settings
 from model import *
 
-from llama_index_log_handler import callback_manager
+# from llama_index_log_handler import callback_manager
 from llama_index.core.llms import ChatMessage
 from llama_index.llms.ollama import Ollama
-from llama_index.embeddings.ollama import OllamaEmbedding
 from llama_index.core.constants import DEFAULT_CONTEXT_WINDOW
 
 from IPython.display import Markdown, display, clear_output
 import ipywidgets as widgets
+
+from json_repair import repair_json
 
 # TODO: Nim
 
@@ -72,22 +73,68 @@ if settings.TEXT_MODEL_BACKEND == "ollama":
         },
     )
 
+    llm_fast = Ollama(
+        model=settings.TEXT_MODEL_FAST,
+        request_timeout=12000.0,
+        temperature=settings.TEMPERATURE,
+        callback_manager=callback_manager,
+        context_window=DEFAULT_CONTEXT_WINDOW * 8,
+        keep_alive='48h',
+        additional_kwargs={
+            "num_predict": 4000,
+            "mirostat": 2
+        },
+    )
+
+    # llm_image_prompt = Ollama(
+    #     model=settings.TEXT_MODEL_IMAGE_PROMPT,
+    #     request_timeout=12000.0,
+    #     temperature=settings.TEMPERATURE,
+    #     callback_manager=callback_manager,
+    #     context_window=DEFAULT_CONTEXT_WINDOW * 8,
+    #     keep_alive='48h',
+    #     additional_kwargs={
+    #         "num_predict": 4000,
+    #         "mirostat": 2
+    #     },
+    # )
+
     llm_json = Ollama(
         model=settings.TEXT_MODEL,
         request_timeout=12000.0,
         temperature=settings.TEMPERATURE,
         callback_manager=callback_manager,
         json_mode=True,
-        context_window=DEFAULT_CONTEXT_WINDOW * 2,
-        additional_kwargs={"num_predict": 4000},
+        context_window=DEFAULT_CONTEXT_WINDOW * 4,
+        additional_kwargs={
+            "num_predict": 1000,
+            "mirostat": 2
+        },
         keep_alive='48h',
     )
 
-    embedding = OllamaEmbedding(
-        model_name=settings.TEXT_MODEL,
-        # base_url="http://localhost:11434",
-        ollama_additional_kwargs={"mirostat": 2},
-    )
+    # embedding = OllamaEmbedding(
+    #     model_name=settings.TEXT_MODEL,
+    #     # base_url="http://localhost:11434",
+    #     ollama_additional_kwargs={"mirostat": 2},
+    # )
+
+    # Working with mistral-large but context is too short
+    # llm_writer = Ollama(
+    #     # model=settings.TEXT_MODEL,
+    #     # model=writer_model_tag,
+    #     # model='mistral-large',
+    #     model=settings.TEXT_MODEL,
+    #     request_timeout=12000.0,
+    #     temperature=settings.TEMPERATURE,
+    #     callback_manager=callback_manager,
+    #     context_window=20000,
+    #     keep_alive='48h',
+    #     additional_kwargs={
+    #         "num_predict": 2000,
+    #         # "mirostat": 2
+    #     },
+    # )
 
     llm_writer = Ollama(
         # model=settings.TEXT_MODEL,
@@ -97,13 +144,30 @@ if settings.TEXT_MODEL_BACKEND == "ollama":
         request_timeout=12000.0,
         temperature=settings.TEMPERATURE,
         callback_manager=callback_manager,
-        context_window=40000,
+        context_window=25000,
         keep_alive='48h',
         additional_kwargs={
-            "num_predict": 10000,
-            "mirostat": 2
+            "num_predict": 6000,
+            # "mirostat": 2
         },
     )
+
+    # Bigger context
+    # llm_writer = Ollama(
+    #     # model=settings.TEXT_MODEL,
+    #     # model=writer_model_tag,
+    #     # model='mistral-large',
+    #     model=settings.TEXT_MODEL,
+    #     request_timeout=12000.0,
+    #     temperature=settings.TEMPERATURE,
+    #     callback_manager=callback_manager,
+    #     context_window=40000,
+    #     keep_alive='48h',
+    #     additional_kwargs={
+    #         "num_predict": 6000,
+    #         # "mirostat": 2
+    #     },
+    # )
 
     llm_reviewer = llm_writer
 
@@ -149,7 +213,7 @@ elif settings.TEXT_MODEL_BACKEND == "nim":
 # from nemoguardrails import LLMRails, RailsConfig
 
 
-def display_messages(messages: List[ChatMessage]):
+def display_messages(messages: List[ChatMessage], render_markdown=True):
     if not settings.DEBUG:
         return
     
@@ -164,8 +228,11 @@ def display_messages(messages: List[ChatMessage]):
             except json.JSONDecodeError:
                 output += f"```json\n{m.content}\n```\n\n"
         else:
-            output += "\n".join(["> "+  line for line in m.content.split("\n")])
-            output += "\n\n"
+            if render_markdown:
+                output += "\n".join(["> "+  line for line in m.content.split("\n")])
+                output += "\n\n"
+            else:
+                output += f"```text\n{m.content}\n```\n\n"
 
     output += "\n---\n\n"
     display(Markdown(output))
@@ -175,6 +242,7 @@ def incremental_pretty_print(json_str):
     """Attempt to pretty print incomplete JSON with approximate indentation."""
     indent_level = 0
     formatted_lines = []
+    json_str = repair_json(json_str)
     tokens = json_str.splitlines(keepends=True)  # Split into lines for better control
 
     for line in tokens:
@@ -202,6 +270,7 @@ def incremental_pretty_print(json_str):
 def stream_llm_response(
     response: Generator, 
     progress: Optional[widgets.IntProgress] = None, 
+    progress_overall: Optional[widgets.IntProgress] = None, 
     json_mode: bool = True
 ) -> str:
     """
@@ -220,15 +289,21 @@ def stream_llm_response(
     # Initialize the progress bar and JSON output
     display_handle = display(Markdown("Streaming response..."), display_id=True)
 
+    if progress_overall:
+        progress_overall_original = progress_overall.value
+
     for r in response:
         # Append the streamed chunk
         content_str += r.delta
 
         # Update progress bar if provided
         if progress:
-            progress.value += len(r.delta.split())
-            progress.value = min(progress.value, progress.max)
+            progress.value = len(content_str.split())
+            # progress.value = min(progress.value, progress.max)
             progress.description = f"{progress.value} words"
+            
+        if progress_overall:
+            progress_overall.value = progress_overall_original + len(content_str.split())
 
         # Perform JSON formatting if json_mode is enabled
         if json_mode:

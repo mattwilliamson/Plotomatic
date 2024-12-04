@@ -1,0 +1,5 @@
+[server]
+enableStaticServing = true
+headless = true
+port = 8501  # Default port
+enableCORS = false
