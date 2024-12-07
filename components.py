@@ -15,7 +15,7 @@ def selected_project_name():
     current_project = st.session_state[CURRENT_PROJECT_KEY]
 
     if current_project:
-        st.markdown(f"## Selected Project: `{current_project}`")
+        st.sidebar.markdown(f"## Selected Project: `{current_project}`")
 
 def project_selector():
     """Display a dropdown to select a project and update session state."""
@@ -29,7 +29,7 @@ def project_selector():
 
     current_project = st.session_state[CURRENT_PROJECT_KEY]
 
-    with st.form("load_project_form"):
+    with st.sidebar.form("load_project_form"):
         selected_project = st.selectbox(
             "Select a Project",
             st.session_state[PROJECT_LIST_KEY],
@@ -83,14 +83,15 @@ def view_diffs_and_manage_changes():
     if st.session_state.view_diffs_and_manage_changes:
         with st.form("diffs_and_changes_form"):
             if st.session_state.changed_files:
-                st.write("Changed files:")
-                selected_file = st.selectbox("Select a file to view diff", st.session_state.changed_files, key="diff_select")
-                if selected_file:
-                    diff_text = get_diff(repo, selected_file)
-                    if diff_text:
-                        st.code(diff_text, language='diff')
-                    else:
-                        st.write("No differences found.")
+                with st.expander("Diffs", expanded=True):
+                    st.write("Changed files:")
+                    selected_file = st.selectbox("Select a file to view diff", st.session_state.changed_files, key="diff_select")
+                    if selected_file:
+                        diff_text = get_diff(repo, selected_file)
+                        if diff_text:
+                            st.code(diff_text, language='diff')
+                        else:
+                            st.write("No differences found.")
             else:
                 st.write("No differences found.")
 

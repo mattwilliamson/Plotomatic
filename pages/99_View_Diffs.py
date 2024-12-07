@@ -13,8 +13,9 @@ def view_diffs():
         return
 
     pm = ProjectManager()
-    project_name = st.session_state.current_project
-    project_path = pm.open_project(project_name)
+    # project_name = st.session_state.current_project
+    # project_path = pm.open_project(project_name)
+    project_path = pm.get_current_project_path()
 
     if not project_path:
         st.error("Project path not found.")

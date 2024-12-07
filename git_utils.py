@@ -3,6 +3,7 @@
 from git import Repo
 from pathlib import Path
 import difflib
+from git.exc import InvalidGitRepositoryError
 
 def create_repo(project_path):
     """Create a Git repository in the given project path."""
@@ -61,3 +62,14 @@ def commit_changes(repo, message):
 def discard_changes(repo):
     """Discard changes in the repository."""
     repo.git.checkout('--', '.')
+
+# Function to get all commits from a repository
+def get_commits(repo_path):
+    repo = Repo(repo_path)
+    commits = list(repo.iter_commits('master'))
+    return commits
+
+
+# Function to get the diff for a specific commit
+def get_commit_diff(commit):
+    return commit.diff(create_patch=True)
