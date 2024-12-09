@@ -23,36 +23,101 @@ def deindent(text: str) -> str:
 
 class CharacterRelationship(BaseModel):
     """Represents a relationship between two characters in the story."""
-    character_nickname: Optional[str] = Field("", description='The related character')
-    relationship_type: Optional[str] = Field("", description='Type of relationship, e.g., "friend", "enemy", "mentor"')
-    description: Optional[str] = Field("", description="Further details about the relationship")
+    character_nickname: Optional[str] = Field(
+        "", 
+        description="Unique identifier of the related character. Used to link characters together in the story's relationship web"
+    )
+    relationship_type: Optional[str] = Field(
+        "", 
+        description='Nature of the connection between characters (e.g., "mentor/student", "siblings", "rivals", "romantic interest"). Defines how characters interact'
+    )
+    description: Optional[str] = Field(
+        "", 
+        description="Detailed explanation of the relationship dynamics, history, and how it evolves throughout the story"
+    )
 
 class CharacterArc(BaseModel):
     """Represents the development arc of a character over the course of the story."""
-    initial_state: Optional[str] = Field("", description='The character\'s initial state at the beginning of the story')
-    final_state: Optional[str] = Field("", description='The character\'s final state at the end of the story')
-    key_moments: Optional[List[str]] = Field(default_factory=list, description="Key moments that define this arc")
+    initial_state: Optional[str] = Field(
+        "", 
+        description="Character's starting emotional, psychological, or situational condition at the beginning of the story. Sets up potential for growth"
+    )
+    final_state: Optional[str] = Field(
+        "", 
+        description="Character's transformed state by the story's end. Shows how they've changed through their experiences and choices"
+    )
+    key_moments: Optional[List[str]] = Field(
+        default_factory=list, 
+        description="Pivotal scenes or decisions that mark significant steps in the character's development. Tracks their journey of change"
+    )
 
 class Character(BaseModel):
     """Represents a character in the story, including their attributes, relationships, and development."""
-    nickname: Optional[str] = Field("", description="Unique nickname used as an identifier for the character")
-    name: Optional[str] = Field("", description="Full name of the character")
-    description: Optional[str] = Field("", description="Description of the character")
-    personality: Optional[str] = Field("", description="Personality traits of the character")
-    role: Optional[str] = Field("", description="Role of the character in the story")
-    gender: Optional[str] = Field("", description="Gender of the character")
-    race: Optional[str] = Field("", description="Race or species of the character")
-    age: Optional[str] = Field("", description="Age of the character")
-    props: Optional[List[str]] = Field(default_factory=list, description="List of props associated with the character")
-    internal_conflict: Optional[str] = Field("", description="Internal conflict or struggle of the character")
-    character_arc: Optional[CharacterArc] = Field(None, description="Character development arc")
-    physical_appearance: Optional[str] = Field("", description="Physical appearance of the character")
-    catch_phrase: Optional[str] = Field("", description="Catchphrase of the character")
-    voice_description: Optional[str] = Field("", description="Description of character's voice")
+    nickname: Optional[str] = Field(
+        "", 
+        description="Unique identifier used to reference this character throughout the story system. Should be short and memorable"
+    )
+    name: Optional[str] = Field(
+        "", 
+        description="Character's complete name as it appears in the story. May include titles, middle names, or aliases"
+    )
+    description: Optional[str] = Field(
+        "", 
+        description="Comprehensive overview of the character, including their background, motivations, and significance to the story"
+    )
+    personality: Optional[str] = Field(
+        "", 
+        description="Key character traits, behavioral patterns, and psychological characteristics that define how the character acts and reacts"
+    )
+    role: Optional[str] = Field(
+        "", 
+        description="Character's narrative function in the story (e.g., 'Protagonist', 'Antagonist', 'Mentor', 'Comic Relief'). Guides their plot involvement"
+    )
+    gender: Optional[str] = Field(
+        "", 
+        description="Character's gender identity, relevant for pronouns and character dynamics. Can be traditional, non-binary, or unique to the story world"
+    )
+    race: Optional[str] = Field(
+        "", 
+        description="Character's ethnic, species, or racial identity. Important for world-building and character representation"
+    )
+    age: Optional[str] = Field(
+        "", 
+        description="Character's age or age range. Influences their perspective, capabilities, and relationships with other characters"
+    )
+    props: Optional[List[str]] = Field(
+        default_factory=list, 
+        description="Signature items, equipment, or possessions associated with the character. Important for characterization and plot functionality"
+    )
+    internal_conflict: Optional[str] = Field(
+        "", 
+        description="Character's primary psychological struggle, inner demons, or personal challenges they must overcome"
+    )
+    physical_appearance: Optional[str] = Field(
+        "", 
+        description="Detailed description of the character's visual attributes, including distinctive features, style, and physical characteristics"
+    )
+    catch_phrase: Optional[str] = Field(
+        "", 
+        description="Memorable quotes or repeated expressions that are characteristic of this character. Helps establish their unique voice"
+    )
+    voice_description: Optional[str] = Field(
+        "", 
+        description="Detailed description of how the character sounds, including accent, speech patterns, vocabulary, and vocal mannerisms"
+    )
+    image_prompt: Optional[str] = Field(
+        "", 
+        description="Comprehensive prompt for AI image generation to create a full portrait of the character, including all visual details"
+    )
+    image_prompt_short: Optional[str] = Field(
+        "", 
+        description="Condensed version of the image prompt focusing on the most distinctive visual elements for quick character sketches"
+    )
+    animation_description: Optional[str] = Field(
+        "", 
+        description="Guidelines for how the character moves, gestures, and expresses themselves in animated sequences. Includes signature poses and movements"
+    )
     relationships: Optional[List[CharacterRelationship]] = Field(default_factory=list, description="Relationships with other characters")
-    image_prompt: Optional[str] = Field("", description="Prompt for generating an image of the character")
-    image_prompt_short: Optional[str] = Field("", description="Short prompt for generating an image of the character")
-    animation_description: Optional[str] = Field("", description="Description of character animation")
 
     @field_validator('age', mode='before')
     @classmethod
@@ -82,30 +147,93 @@ class Character(BaseModel):
 
 class Prop(BaseModel):
     """Represents a prop in the story."""
-    name: Optional[str] = Field("", description="Name of the prop")
-    description: Optional[str] = Field("", description="Description of the prop")
-    purpose: Optional[str] = Field("", description="Purpose of the prop in the story")
-    physical_appearance: Optional[str] = Field("", description="Physical appearance of the prop")
-    animation_description: Optional[str] = Field("", description="Description of prop animation")
+    name: Optional[str] = Field(
+        "", 
+        description="Unique identifier for the prop. Should be concise but descriptive enough to distinguish it from other props"
+    )
+    description: Optional[str] = Field(
+        "", 
+        description="Comprehensive overview of the prop, including its history, significance, and how it affects the story"
+    )
+    purpose: Optional[str] = Field(
+        "", 
+        description="Narrative function of the prop, whether practical, symbolic, or both. Explains how it advances plot or reveals character"
+    )
+    physical_appearance: Optional[str] = Field(
+        "", 
+        description="Detailed visual description including size, material, condition, and any distinctive features or markings"
+    )
+    animation_description: Optional[str] = Field(
+        "", 
+        description="Specific instructions for how the prop moves, behaves, or interacts when animated. Includes special effects or transformations"
+    )
 
 class Scene(BaseModel):
     """Represents a scene in the story, including setting, characters, and dialogue."""
-    scene_id: Optional[str] = Field("", description="Unique identifier for the scene")
-    title: Optional[str] = Field("", description="Title of the scene")
-    description: Optional[str] = Field("", description="Description of the scene")
-    characters_involved_nicknames: Optional[List[str]] = Field(default_factory=list, description="List of character nicknames involved in the scene")
-    narrative_perspective: Optional[str] = Field("", description="Narrative perspective of the scene")
-    setting: Optional[str] = Field("", description="Setting of the scene")
-    time_of_day: Optional[str] = Field("", description="Time of day when the scene takes place")
-    location: Optional[str] = Field("", description="Location of the scene")
-    lighting: Optional[str] = Field("", description="Lighting description for the scene")
-    mood: Optional[str] = Field("", description="Mood of the scene")
-    props: Optional[List[str]] = Field(default_factory=list, description="List of props used in the scene")
-    key_actions: Optional[List[str]] = Field(default_factory=list, description="Key actions that take place in the scene")
-    background_image_prompt: Optional[str] = Field("", description="Prompt for generating an image of the character")
-    background_animation: Optional[str] = Field("", description="Description of scene animation of background")
-    scene_image_prompt: Optional[str] = Field("", description="Prompt for generating an image of the scene")
-    scene_image_prompt_short: Optional[str] = Field("", description="Short prompt for generating an image of the scene")
+    scene_id: Optional[str] = Field(
+        "", 
+        description="Unique identifier for tracking and referencing this scene within the story structure. Format typically includes act and chapter numbers"
+    )
+    title: Optional[str] = Field(
+        "", 
+        description="Descriptive name that captures the scene's main event or purpose. Used for organization and quick reference"
+    )
+    description: Optional[str] = Field(
+        "", 
+        description="Detailed overview of what happens in the scene, including key events, character interactions, and their significance to the plot"
+    )
+    characters_involved_nicknames: Optional[List[str]] = Field(
+        default_factory=list, 
+        description="List of character identifiers present in the scene. Used to track character appearances and ensure continuity"
+    )
+    narrative_perspective: Optional[str] = Field(
+        "", 
+        description="Point of view used in this specific scene. May differ from overall story perspective for dramatic effect"
+    )
+    setting: Optional[str] = Field(
+        "", 
+        description="Physical and temporal context where the scene takes place. Includes both location and relevant environmental details"
+    )
+    time_of_day: Optional[str] = Field(
+        "", 
+        description="Specific time when the scene occurs. Important for maintaining timeline consistency and setting mood"
+    )
+    location: Optional[str] = Field(
+        "", 
+        description="Specific place where the scene unfolds. Should include both broad setting and particular spot within it"
+    )
+    lighting: Optional[str] = Field(
+        "", 
+        description="Description of natural or artificial light sources and their effects. Crucial for mood and visual storytelling"
+    )
+    mood: Optional[str] = Field(
+        "", 
+        description="Emotional atmosphere and tone of the scene. Guides pacing, dialogue, and character interactions"
+    )
+    props: Optional[List[str]] = Field(
+        default_factory=list, 
+        description="Objects that play a role in the scene. Includes both significant story items and environmental details"
+    )
+    key_actions: Optional[List[str]] = Field(
+        default_factory=list, 
+        description="Important events, decisions, or movements that occur during the scene. Drives plot forward and affects character development"
+    )
+    background_image_prompt: Optional[str] = Field(
+        "", 
+        description="Detailed prompt for AI generation of the scene's setting. Should capture atmosphere, lighting, and key environmental elements"
+    )
+    background_animation: Optional[str] = Field(
+        "", 
+        description="Instructions for animating the scene's background elements. Includes environmental motion and atmospheric effects"
+    )
+    scene_image_prompt: Optional[str] = Field(
+        "", 
+        description="Comprehensive prompt for generating an image of the scene's key moment, including characters, actions, and setting"
+    )
+    scene_image_prompt_short: Optional[str] = Field(
+        "", 
+        description="Condensed version of the scene prompt focusing on the most visually important elements for quick sketches"
+    )
 
     _chapter: Optional['Chapter'] = PrivateAttr(default=None)
 
@@ -173,10 +301,22 @@ class Scene(BaseModel):
 
 class Chapter(BaseModel):
     """Represents a chapter within an act, containing multiple scenes."""
-    chapter_id: Optional[str] = Field("", description="Unique identifier for the chapter")
-    title: Optional[str] = Field("", description="Title of the chapter")
-    description: Optional[str] = Field("", description="Description of the chapter")
-    scenes: Optional[List[Scene]] = Field(default_factory=list, description="List of scenes in this chapter")
+    chapter_id: Optional[str] = Field(
+        "", 
+        description="Unique identifier for the chapter. Used for organization and cross-referencing within the story structure"
+    )
+    title: Optional[str] = Field(
+        "", 
+        description="Meaningful name that reflects the chapter's main theme or event. Should intrigue readers while providing context"
+    )
+    description: Optional[str] = Field(
+        "", 
+        description="Summary of the chapter's content, including its purpose in the overall narrative and key plot developments"
+    )
+    scenes: Optional[List[Scene]] = Field(
+        default_factory=list, 
+        description="Ordered collection of scenes that make up the chapter. Each advances the plot while maintaining narrative flow"
+    )
 
     _act: Optional['Act'] = PrivateAttr(default=None)
 
@@ -225,34 +365,91 @@ class Chapter(BaseModel):
 
 class StoryBeat(BaseModel):
     """Represents a significant moment or turning point in the story."""
-    name: Optional[str] = Field("", description='Name of the story beat, e.g., "Inciting Incident", "Climax"')
-    description: Optional[str] = Field("", description='Explanation of the beat\'s importance in the story')
-    scene: Optional[str] = Field("", description="Link to a scene if applicable")
+    name: Optional[str] = Field(
+        "", 
+        description='Descriptive title for this plot point (e.g., "Inciting Incident", "Midpoint Reversal", "Climactic Battle"). Identifies its role in story structure'
+    )
+    description: Optional[str] = Field(
+        "", 
+        description="Detailed explanation of what happens at this point and why it's significant to the overall narrative"
+    )
+    scene: Optional[str] = Field(
+        "", 
+        description="Reference to the specific scene where this beat occurs. Helps track dramatic structure across the story"
+    )
 
 class Subplot(BaseModel):
     """Represents a subplot that runs alongside the main plot of the story."""
-    title: Optional[str] = Field("", description='Title of the subplot')
-    description: Optional[str] = Field("", description="Description of the subplot")
-    related_characters: Optional[List[str]] = Field(default_factory=list, description="Characters involved in this subplot")
+    title: Optional[str] = Field(
+        "", 
+        description="Distinctive name for this secondary storyline that reflects its theme or central conflict"
+    )
+    description: Optional[str] = Field(
+        "", 
+        description="Comprehensive overview of the subplot, including its arc, resolution, and how it enhances the main story"
+    )
+    related_characters: Optional[List[str]] = Field(
+        default_factory=list, 
+        description="Characters primarily involved in this subplot. Helps track character engagement across different story threads"
+    )
 
 class EmotionalArc(BaseModel):
     """Represents an emotional stage or shift within the story."""
-    stage: Optional[str] = Field("", description='The emotional stage, e.g., "Hopeful", "Despair", "Triumphant"')
-    description: Optional[str] = Field("", description="Further explanation of this emotional stage")
+    stage: Optional[str] = Field(
+        "", 
+        description='Name of the emotional phase (e.g., "Hope", "Despair", "Triumph"). Maps the story\'s emotional journey'
+    )
+    description: Optional[str] = Field(
+        "", 
+        description="Detailed explanation of this emotional state, its impact on characters, and how it affects audience engagement"
+    )
 
 class Act(BaseModel):
     """Represents an act within the story, containing multiple chapters and props."""
-    act_id: Optional[str] = Field("", description="Unique identifier for the act")
-    title: Optional[str] = Field("", description="Title of the act")
-    description: Optional[str] = Field("", description="Description of the act")
-    purpose: Optional[str] = Field("", description="Purpose or goal of the act")
-    conflicts: Optional[str] = Field("", description="Main conflicts in the act")
-    turning_point: Optional[str] = Field("", description="Turning point in the act")
-    mood: Optional[str] = Field("", description="Mood of the act")
-    transformation: Optional[str] = Field("", description="Transformation or change that occurs in the act")
-    key_events: Optional[str] = Field(default_factory=list, description="Key events in the act")
-    chapters: Optional[List[Chapter]] = Field(default_factory=list, description="List of chapters in this act")
-    props: Optional[List[str]] = Field(default_factory=list, description="List of prop names used in this act")
+    act_id: Optional[str] = Field(
+        "", 
+        description="Unique identifier for the act. Used for organization and tracking within the larger story structure"
+    )
+    title: Optional[str] = Field(
+        "", 
+        description="Descriptive name that captures the act's main theme or narrative purpose. Often reflects major story phases"
+    )
+    description: Optional[str] = Field(
+        "", 
+        description="Comprehensive overview of the act's content, including its role in the overall story arc and major developments"
+    )
+    purpose: Optional[str] = Field(
+        "", 
+        description="Act's primary narrative function and how it advances the overall story. Guides pacing and plot development"
+    )
+    conflicts: Optional[str] = Field(
+        "", 
+        description="Major tensions and challenges that drive this section of the story. Includes both external and internal conflicts"
+    )
+    turning_point: Optional[str] = Field(
+        "", 
+        description="Crucial moment that changes the story's direction. Often represents a major character decision or revelation"
+    )
+    mood: Optional[str] = Field(
+        "", 
+        description="Overall emotional tone and atmosphere of the act. Helps maintain consistent pacing and reader engagement"
+    )
+    transformation: Optional[str] = Field(
+        "", 
+        description="How characters or situations change during this act. Tracks character development and plot progression"
+    )
+    key_events: Optional[str] = Field(
+        default_factory=list, 
+        description="Major plot points and significant moments that occur during this act. Forms the act's dramatic structure"
+    )
+    chapters: Optional[List[Chapter]] = Field(
+        default_factory=list, 
+        description="Ordered collection of chapters that comprise this act. Each advances the story while maintaining narrative flow"
+    )
+    props: Optional[List[str]] = Field(
+        default_factory=list, 
+        description="Important objects and items featured in this act. Tracks prop usage for continuity and symbolic significance"
+    )
 
     @field_validator('key_events', mode='before')
     @classmethod
@@ -305,56 +502,141 @@ class Act(BaseModel):
                 markdown += chapter.markdown_summary(include_scenes=include_scenes)
         return markdown
 
+class CoverDesign(BaseModel):
+    """Represents the design elements for the book's cover."""
+    cover_image_prompt: Optional[str] = Field(
+        "", 
+        description="Detailed prompt for AI image generation to create the cover artwork. Should include style, mood, composition, and key visual elements"
+    )
+    title_image_prompt: Optional[str] = Field(
+        "", 
+        description="Prompt for generating stylized text or artwork of the book's title. Should specify font style, effects, and integration with cover art"
+    )
+    background_color: Optional[str] = Field(
+        "", 
+        description="Primary background color for the cover in hex code or color name. Should complement the cover artwork and maintain readability"
+    )
+    text_color: Optional[str] = Field(
+        "", 
+        description="Color for title and author text in hex code or color name. Must provide sufficient contrast with background for optimal readability"
+    )
+    back_cover_tagline: Optional[str] = Field(
+        "", 
+        description="Short, compelling hook (1-2 sentences) that captures the essence of the story and appears prominently on the back cover"
+    )
+    back_cover_blurb: Optional[str] = Field(
+        "", 
+        description="Engaging summary (2-3 paragraphs) that introduces key characters, central conflict, and stakes without revealing major plot twists"
+    )
+
 class Story(BaseModel):
     """Represents the overall story, including its structure, characters, plot, and acts."""
-    author: Optional[str] = Field("", description="Author of the story")
-    # author_email: Optional[EmailStr] = Field(None, description="Author's email address")
-    author_email: Optional[str] = Field(None, description="Author's email address")
-    prompt: Optional[str] = Field("", description="Prompt or inspiration for the story")
-    title: Optional[str] = Field("", description="Title of the story")
-    has_video: Optional[bool] = Field(False, description="Whether the story is animated")
-    has_images: Optional[bool] = Field(False, description="Whether the story includes images")
-    narrative_style: Optional[str] = Field("", description="Narrative style of the author")
-    cover_image_prompt: Optional[str] = Field("", description="Prompt for generating a cover image")
-    title_image_prompt: Optional[str] = Field("", description="Prompt for generating an image of the title")
-    cover_background_color: Optional[str] = Field("", description="Background color")
-    cover_text_color: Optional[str] = Field("", description="Font color that contrasts with the cover background color")
-    back_cover_tagline: Optional[str] = Field("", description="Tagline for the back cover of the book")
-    back_cover_blurb: Optional[str] = Field("", description="Blurb for the back cover of the book")
-    tagline: Optional[str] = Field("", description="Tagline for the story")
-    time_period: Optional[str] = Field("", description="Time period in which the story is set")
-    location: Optional[str] = Field("", description="Location where the story takes place")
-    genre: Optional[str] = Field("", description="Genre of the story, e.g., 'Fantasy', 'Sci-fi'")
-    medium: Optional[str] = Field("", description="Medium of the story, e.g., 'Book', 'Film'")
-    plot_overview: Optional[str] = Field("", description="Overview of the plot")
-    narrative_perspective: Optional[str] = Field("", description="Narrative perspective, e.g., 'First-person', 'Third-person'")
-    conflict_type: Optional[str] = Field("", description="Type of conflict in the story")
-    themes: Optional[List[str]] = Field(default_factory=list, description="Central themes in the story")
-    motifs: Optional[List[str]] = Field(default_factory=list, description="Recurring motifs or symbols in the story")
-    characters: Optional[List[Character]] = Field(default_factory=list, description="List of characters in the story")
-    props: Optional[List[Prop]] = Field(default_factory=list, description="List of props in the story")
-    story_beats: Optional[List[StoryBeat]] = Field(default_factory=list, description="List of key narrative beats in the story")
-    subplots: Optional[List[Subplot]] = Field(default_factory=list, description="Subplots running alongside the main plot")
-    emotional_arc: Optional[List[EmotionalArc]] = Field(default_factory=list, description="Track the emotional shifts in the story")
-    acts: Optional[List[Act]] = Field(default_factory=list, description="Acts or chapters to organize the story structure")
-    act_count: Optional[str] = Field("", description="Number of acts in the story")
-    avg_chapter_count: Optional[str] = Field("", description="Average number of scenes per act")
-    avg_chapter_length: Optional[str] = Field("", description="Average length of scenes in words")
-    avg_chapters_per_act: Optional[str] = Field("", description="Average number of chapters per act")
-    secret_knowledge: Optional[str] = Field("", description="Unique details that drive the story behind the scenes")
-    visual_style: Optional[str] = Field("", description="Visual style of the story, e.g., 'Anime', 'Realistic'")
+    author: Optional[str] = Field(
+        "", 
+        description="Full name of the story's creator/writer"
+    )
+    author_email: Optional[str] = Field(
+        None, 
+        description="Contact email address for the author, used for notifications and communication"
+    )
+    prompt: Optional[str] = Field(
+        "", 
+        description="Original creative prompt or inspiration that sparked the story idea. Can include themes, concepts, or specific elements to incorporate"
+    )
+    title: Optional[str] = Field(
+        "", 
+        description="Main title of the story. Should be memorable, relevant to the plot, and capture the story's essence"
+    )
+    has_video: Optional[bool] = Field(
+        False, 
+        description="Indicates if the story includes animated sequences or video elements. Affects production and presentation planning"
+    )
+    has_images: Optional[bool] = Field(
+        False, 
+        description="Indicates if the story includes illustrations, photographs, or other static visual elements"
+    )
+    narrative_style: Optional[str] = Field(
+        "", 
+        description="Author's distinctive writing approach, including tone, voice, and stylistic choices (e.g., 'Minimalist', 'Descriptive', 'Stream of consciousness')"
+    )
+    tagline: Optional[str] = Field(
+        "", 
+        description="Short, catchy phrase that encapsulates the story's main appeal or unique selling point. Used in marketing and promotion"
+    )
+    time_period: Optional[str] = Field(
+        "", 
+        description="Historical or fictional era when the story takes place. Influences setting details, technology level, and social context"
+    )
+    location: Optional[str] = Field(
+        "", 
+        description="Primary geographical or fictional setting where the story unfolds. Includes specific places, environments, or world-building elements"
+    )
+    genre: Optional[str] = Field(
+        "", 
+        description="Primary and secondary genre categories that define the story's conventions and reader expectations (e.g., 'Fantasy/Romance', 'Hard Sci-fi')"
+    )
+    medium: Optional[str] = Field(
+        "", 
+        description="Primary format or platform for story delivery (e.g., 'Novel', 'Graphic Novel', 'Interactive Fiction', 'Screenplay')"
+    )
+    plot_overview: Optional[str] = Field(
+        "", 
+        description="Comprehensive summary of the main storyline, including major plot points, character arcs, and narrative structure"
+    )
+    narrative_perspective: Optional[str] = Field(
+        "", 
+        description="Point of view used to tell the story (e.g., 'First-person present', 'Third-person limited', 'Multiple viewpoints')"
+    )
+    conflict_type: Optional[str] = Field(
+        "", 
+        description="Primary source of tension driving the story (e.g., 'Person vs. Nature', 'Person vs. Society', 'Person vs. Self')"
+    )
+    themes: Optional[List[str]] = Field(
+        default_factory=list, 
+        description="Core ideas, messages, or universal concepts explored throughout the story (e.g., 'Redemption', 'Coming of age', 'Power of friendship')"
+    )
+    motifs: Optional[List[str]] = Field(
+        default_factory=list, 
+        description="Recurring symbols, images, or elements that reinforce themes and add depth to the narrative"
+    )
+    characters: Optional[List[Character]] = Field(
+        default_factory=list, 
+        description="Collection of all characters that appear in the story, including protagonists, antagonists, and supporting cast. Each character has their own detailed profile"
+    )
+    props: Optional[List[Prop]] = Field(
+        default_factory=list, 
+        description="Significant objects, items, or artifacts that play important roles in the story. Includes physical descriptions and narrative purpose"
+    )
+    story_beats: Optional[List[StoryBeat]] = Field(
+        default_factory=list, 
+        description="Sequential list of major plot points and turning points that drive the story forward. Maps the story's dramatic structure and pacing"
+    )
+    subplots: Optional[List[Subplot]] = Field(
+        default_factory=list, 
+        description="Secondary storylines that weave through the main plot, adding complexity and depth. Often explore supporting characters or parallel themes"
+    )
+    emotional_arc: Optional[List[EmotionalArc]] = Field(
+        default_factory=list, 
+        description="Progression of emotional states and tonal shifts throughout the story. Charts how the audience should feel at each stage of the narrative"
+    )
+    acts: Optional[List[Act]] = Field(
+        default_factory=list, 
+        description="Major structural divisions of the story, each with its own dramatic purpose, conflict, and resolution. Typically follows traditional act structure (e.g., three-act, five-act)"
+    )
+    secret_knowledge: Optional[str] = Field(
+        "", 
+        description="Hidden information, plot twists, or background details known only to the author that influence character decisions and plot development"
+    )
+    visual_style: Optional[str] = Field(
+        "", 
+        description="Overall aesthetic approach for visual elements, defining the look and feel of illustrations, animations, or adaptations"
+    )
+    cover_design: Optional[CoverDesign] = Field(
+        default_factory=CoverDesign, 
+        description="Complete visual design specification for the story's cover, including artwork direction, typography, color scheme, and marketing copy"
+    )
 
     _story_dialogue: Optional['StoryDialogue'] = PrivateAttr(default=None)
-
-    @field_validator('avg_chapters_per_act', mode='before')
-    @classmethod
-    def avg_chapters_per_act_to_string(cls, value):
-        return str(value)
-    
-    @field_validator('act_count', mode='before')
-    @classmethod
-    def act_count_to_string(cls, value):
-        return str(value)
     
     @field_validator('conflict_type', mode='before')
     @classmethod

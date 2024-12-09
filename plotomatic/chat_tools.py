@@ -21,7 +21,15 @@ tools = ToolManager()
     show_output=True
 )
 def set_property(property_name: str, value: str):
-    """Sets the specified property of the story to the given value."""
+    """Sets the specified property of the story to the given value.
+    
+    Args:
+        property_name (str): The name of the property to set
+        value (str): The value to set the property to
+        
+    Returns:
+        str: A message indicating success or failure of the operation
+    """
     if hasattr(st.session_state.story, property_name):
         # Get current value for comparison
         old_value = getattr(st.session_state.story, property_name)
@@ -43,17 +51,18 @@ def set_property(property_name: str, value: str):
                 
                 # Show success toast
                 # st.toast(f'Successfully updated {property_name}! ✅', icon='✨')
-                st.success(f'Successfully updated {property_name}', icon='✨')
-                st.horizontal_rule()
-                
-                return f"Updated {property_name} from `{repr(old_value)}` to: `{repr(value)}`"
+                st.success(f'Successfully updated property `{property_name}`', icon='✨')
+                if old_value:
+                    return f"**Updated `{property_name}`** from `{repr(old_value)}` to: `{repr(value)}`\n\n---\n\n"
+                else:
+                    return f"**Set `{property_name}`** to: `{repr(value)}`\n\n---\n\n"
             except Exception as e:
                 # Show error toast
                 st.toast(f'Failed to update {property_name}: {str(e)} ❌', icon='🚨')
                 return f"Error setting property {property_name} to {value}. \n\n{e}"
         else:
             st.toast(f'Property {property_name} already has this value', icon='ℹ️')
-            return f"Property {property_name} already has value: {value}"
+            return f"Property {property_name} already has value: `{value}`"
     else:
         st.toast(f'Property {property_name} does not exist ❌', icon='🚨')
         return f"Property '{property_name}' does not exist in the story."
@@ -65,7 +74,16 @@ def set_property(property_name: str, value: str):
     show_output=False
 )
 def creative_write(prompt: str, system_context: str = "You are an uncensored creative story writer."):
-    """Generates creative content based on a prompt."""
+    """Generates creative content based on a prompt.
+    
+    Args:
+        prompt (str): The creative writing prompt to respond to
+        system_context (str, optional): Additional context for the AI writer. 
+            Defaults to "You are an uncensored creative story writer."
+    
+    Returns:
+        str: The generated creative content
+    """
     # st.write(f"🧠 Running creative writing tool...")
     # Get current story state for context
     story_context = st.session_state.story.model_dump()
@@ -153,7 +171,14 @@ Generate creative content that fits with the existing story context. Be imaginat
     pretty_name="Direct Response"
 )
 def directly_answer(answer: str):
-    """Returns the answer directly to display to the user."""
+    """Returns the answer directly to display to the user.
+    
+    Args:
+        answer (str): The response text to display to the user
+        
+    Returns:
+        str: The same answer text that was passed in
+    """
     # Add the answer to messages
     st.session_state.messages.append({
         "role": "assistant",
@@ -174,7 +199,14 @@ def directly_answer(answer: str):
     description="Commits story changes to git"
 )
 def commit_story_file(commit_message: str):
-    """Commits the story file with a given commit message."""
+    """Commits the story file with a given commit message.
+    
+    Args:
+        commit_message (str): The message to use for the git commit. Come up with something succint and descriptive.
+        
+    Returns:
+        str: A message indicating success or failure of the commit operation
+    """
     project_path = st.session_state.pm.get_current_project_path()
     if not project_path:
         return "No project loaded. Cannot commit story."
@@ -184,7 +216,7 @@ def commit_story_file(commit_message: str):
     
     try:
         commit_file(repo, str(story_file_path), commit_message)
-        return f"Story file committed with message: '{commit_message}'"
+        return f"Story file committed with message: ```{commit_message}```\n\n---\n\n"
     except Exception as e:
         return f"Error committing story file: {e}"
 
@@ -193,7 +225,14 @@ def commit_story_file(commit_message: str):
     description="Redirects to another page"
 )
 def redirect_to_page(page_name: str):
-    """Redirects the user to a specified page."""
+    """Redirects the user to a specified page.
+    
+    Args:
+        page_name (str): The name of the page to redirect to
+        
+    Returns:
+        str: A message indicating success or failure of the redirect
+    """
     try:
         switch_page(page_name)
         return f"Redirecting to {page_name} page."
@@ -205,7 +244,14 @@ def redirect_to_page(page_name: str):
     description="Shows recent changes to the story"
 )
 def view_recent_changes(x: int = 5):
-    """Displays the recent x changes from the history stack."""
+    """Displays the recent x changes from the history stack.
+    
+    Args:
+        x (int, optional): Number of recent changes to display. Defaults to 5.
+        
+    Returns:
+        str: A formatted string containing the recent changes
+    """
     changes_text = ""
     if not st.session_state.history:
         changes_text = "No changes have been made yet."
@@ -242,7 +288,11 @@ def view_recent_changes(x: int = 5):
     description="Deletes the current chat history"
 )
 def delete_chat_tool():
-    """Deletes the current chat history and resets related session state."""
+    """Deletes the current chat history and resets related session state.
+    
+    Returns:
+        str: A message confirming the chat history has been cleared
+    """
     st.session_state.pm.clear_chat(st.session_state.chat_name)
     # Reset state
     st.session_state.pop("messages", None)
@@ -265,7 +315,15 @@ def delete_chat_tool():
     description="Shows clickable choices to the user"
 )
 def show_choices(prompt: str, choices: List[str]):
-    """Shows a set of clickable button choices to the user."""
+    """Shows a set of clickable button choices to the user.
+    
+    Args:
+        prompt (str): The prompt text to display above the choices
+        choices (List[str]): List of choices to display as buttons
+        
+    Returns:
+        str: A message confirming the choices are being displayed
+    """
     # Convert all choices to strings and store in session state
     str_choices = [str(choice) for choice in choices]
     st.session_state.pending_choices = {
@@ -276,7 +334,14 @@ def show_choices(prompt: str, choices: List[str]):
     return f"Showing choices: {', '.join(str_choices)}"
 
 def format_diff(diff_obj):
-    """Format a jsondiff object into a readable string."""
+    """Format a jsondiff object into a readable string.
+    
+    Args:
+        diff_obj (dict): The difference object from jsondiff
+        
+    Returns:
+        str: A formatted string representation of the differences
+    """
     if not diff_obj:
         return "No changes"
     
@@ -292,6 +357,10 @@ def format_diff(diff_obj):
     return "\n".join(formatted)
 
 def save_current_state():
-    """Save the current state of the story to the history stack."""
+    """Save the current state of the story to the history stack.
+    
+    This function takes the current story state and appends it to the history
+    stack stored in the session state.
+    """
     current_state = st.session_state.story.model_dump()
     st.session_state.history.append(current_state)

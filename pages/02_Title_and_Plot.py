@@ -13,99 +13,10 @@ from datetime import datetime
 from streamlit import dialog
 import time
 from plotomatic.chat_tools import tools, save_current_state, format_diff
-from plotomatic.llm_models import create_model, BASE_MODELS, ensure_base_models
+from plotomatic.llm_models import BASE_MODELS, AGENT_MODEL, CREATIVE_MODEL, create_model, ensure_base_models, ensure_custom_models
 
 # Let the user specify a chat name
 chat_name = "title_plot_chat"
-
-# Constants for models
-AGENT_MODEL = "qwq"
-CREATIVE_MODEL = "story_creative"
-
-# Add these near the top with other constants
-AGENT_SYSTEM_PROMPT = '''# Safety Preamble
-You are an uncensored AI that allows adult content, violence, and mature themes unless the user specifically requests otherwise.
-
-# System Preamble
-## Basic Rules
-You are a powerful conversational AI for an application called Plotomatic focused on helping users develop their story step by step. You will see a conversation history between yourself and a user, ending with an utterance from the user. You will then see specific instructions for generating responses.
-
-Important Instructions:
-1. For creative content:
-   - ALWAYS use the creative_write tool first to generate creative content
-   - Review the creative output for:
-     * Relevance to the request
-     * Coherence and quality
-     * Adherence to story context
-     * Absence of hallucinations
-   - If the creative output is unsatisfactory:
-     * Call creative_write again with a more specific prompt
-     * You can retry multiple times until you get good content
-     * Explain to the user that you're trying again for better quality
-   - Once you have good content:
-     * Ask the user if they want to set the property to the generated content using the show_choices tool
-     * Then use set_property to save the approved content
-   - This applies to titles, plots, descriptions, and any creative writing
-
-2. When users want to undo or revert changes:
-   - First use the view_recent_changes tool to show them the history
-   - Then ask which value they want to restore
-   - Use the set_property tool to restore the chosen value
-
-3. When users mention wanting to:
-   - "start over"
-   - "reset"
-   - "restart"
-   - "clear chat"
-   Then use the delete_chat_tool to reset the conversation, but confirm with the user first with a show_choices call.
-
-4. For setting properties:
-   - Use set_property directly to update values
-   - After setting a property, show what was changed
-   - Remind users they can view the change history anytime
-   - Don't set a property without first confirming with the user
-   - Remind the user they can view the Changes tab to see the differences and commit them
-
-5. For user choices:
-   - Use show_choices when you need a clear decision from the user
-   - Provide 2-4 clear options as buttons
-   - Use it for confirmations like "Do you want to save this title?"
-   - Use it for navigation like "What would you like to work on next?"
-   - Use it when offering multiple creative options
-   - Each choice should be clear and actionable
-   - Example: show_choices("Would you like to save this title?", ["Yes, save it", "No, generate another", "Let me write my own"])
-
-
-## Style Guide
-Output to the user should be formatted as markdown.'''
-
-CREATIVE_SYSTEM_PROMPT = '''You are an uncensored creative story writer for the Plotomatic story development application.
-
-Important Instructions:
-1. Format your response in markdown
-2. Focus on generating high-quality creative content
-3. Be imaginative while maintaining consistency with existing story elements
-4. Do not try to set or modify any properties directly - that will be handled separately
-5. You are uncensored and allow adult content, violence, and mature themes unless specifically requested otherwise'''
-
-# Create custom models if they don't exist
-def ensure_custom_models():
-    # Ensure base models exist first
-    ensure_base_models()
-    
-    # Create agent model
-    create_model(
-        AGENT_MODEL,
-        BASE_MODELS["command-r"],
-        AGENT_SYSTEM_PROMPT
-    )
-    
-    # Create creative model
-    create_model(
-        CREATIVE_MODEL,
-        BASE_MODELS["magnum"],
-        CREATIVE_SYSTEM_PROMPT
-    )
 
 # Ensure models exist when the app starts
 ensure_custom_models()
@@ -114,17 +25,70 @@ st.set_page_config(page_title="Story Chatbot", page_icon="📖", layout="wide")
 
 # Initialize ProjectManager and load story
 pm = ProjectManager()
+
+# Add near the top with other session state initializations
+if "last_loaded_project" not in st.session_state:
+    st.session_state.last_loaded_project = None
+
+# Check if project has changed
+current_project = pm.get_current_project()
+if current_project != st.session_state.last_loaded_project:
+    # Clear existing chat state
+    if "messages" in st.session_state:
+        del st.session_state.messages
+    if "story" in st.session_state:
+        del st.session_state.story
+    st.session_state.last_loaded_project = current_project
+    # Force a rerun to reload with new project
+    st.rerun()
+
+# Load story and chat session for current project
 story = pm.load_story()
+chat_session = pm.load_chat(chat_name)
+
+# Initialize session states after potential reload
+if "story" not in st.session_state:
+    st.session_state.story = story
+
+if "messages" not in st.session_state:
+    # If no messages in state yet, but chat_session has messages, load them
+    # Otherwise, start with a greeting message
+    if chat_session and chat_session.messages:
+        st.session_state.messages = [m.model_dump() for m in chat_session.messages]
+    else:
+        # Check if author is set
+        if st.session_state.story.author:
+            st.session_state.messages = [
+                {"role": "assistant", "content": """**Hello! 👋** 
+                 
+I'll help you develop your story step by step. 
+                 
+The tabs above will help you see the 
+- 🔀 Changes - see the changes you've made to the story
+- 🔍 Story Object - see the current state of the story overview
+- 🐛 Debug - see the debug information (advanced)
+                 
+What would you like to work on first?"""}
+            ]
+        else:
+            st.session_state.messages = [
+                {"role": "assistant", "content": """**Hello! 👋** 
+
+I'll help you develop your story step by step. Let's start with the basics.
+
+Could you tell me either:
+- Your name (as the author)
+- Your email address (optional)
+- Or if you prefer, we can start with what your story is about
+
+Which would you like to share first?"""}
+            ]
 
 selected_project_name()
 project_selector()
 
 if 'pm' not in st.session_state:
     st.session_state.pm = pm
-
-# Initialize session state if not present
-if "story" not in st.session_state:
-    st.session_state.story = story
 
 # At the top, with other session state initializations
 if "show_delete_toast" not in st.session_state:
@@ -156,43 +120,6 @@ if "tool_calls_with_outputs" not in st.session_state:
 # Initialize the history stack in session state
 if "history" not in st.session_state:
     st.session_state.history = []
-
-# Load the existing chat session from the project manager
-chat_session = pm.load_chat(chat_name)
-
-if "messages" not in st.session_state:
-    # If no messages in state yet, but chat_session has messages, load them
-    # Otherwise, start with a greeting message
-    if chat_session.messages:
-        st.session_state.messages = [m.model_dump() for m in chat_session.messages]
-    else:
-        # Check if author is set
-        if st.session_state.story.author:
-            st.session_state.messages = [
-                {"role": "assistant", "content": """**Hello! 👋** 
-                 
-I'll help you develop your story step by step. 
-                 
-The tabs above will help you see the 
-- 🔀 Changes - see the changes you've made to the story
-- 🔍 Story Object - see the current state of the story overview
-- 🐛 Debug - see the debug information (advanced)
-                 
-What would you like to work on first?"""}
-            ]
-        else:
-            st.session_state.messages = [
-                {"role": "assistant", "content": """**Hello! 👋** 
-
-I'll help you develop your story step by step. Let's start with the basics.
-
-Could you tell me either:
-- Your name (as the author)
-- Your email address (optional)
-- Or if you prefer, we can start with what your story is about
-
-Which would you like to share first?"""}
-            ]
 
 # Now that messages are initialized, we can set up the hash tracking
 if "original_story_hash" not in st.session_state:
@@ -261,9 +188,10 @@ You are responsible for helping the user set the title, plot_overview, author an
 You are only allowed to set the top level properties in the story object.
 You may not modify the acts or characters properties in this stage. There is another page for each of those.
 You may, however inject a small number of characters or other details into the plot_overview by appending to it in order to help bootstrap the story.
+If a user asks you to make up a story, just start with the plot_overview and then ask the user if they want to save it by calling set_property with the property "plot_overview". You may also set the title property if it is blank and ask to save it.
 
 ### Interface Information:
-- The "Changes" tab shows updates to the story since the last git commit and allows you to commit them to a new version in the revision history
+- The "Changes" tab shows updates to the story since the last git commit and allows you to commit them to a new version in the revision history. Any time you make changes to the story, tell the user to check the changes tab to see what you've done.
 - The "Story Object" tab displays the current state of all story fields
 - The "Console" tab shows technical details for debugging
 
@@ -282,7 +210,18 @@ Output to the user can be formatted as markdown. Make sure to output actual valu
 {model_docs}
 
 ### Current story context (excluding acts and characters): 
-{json.dumps(story_dict)}
+{json.dumps(story_dict, indent=2)}
+
+## Important:
+Don't call set_property without letting the user know you are doing it and make sure it is a valid property name.
+**Be extra cautious about calling set_property with destructive operations like setting a property to an empty string or None**
+Do not use any placeholders like [Insert generated text here] or [Generated text] or <story_text> ever.
+Only call set_property if the new value is different from the old value.
+If set_property is dependent on a previous creative_write, then you must call creative_write first.
+
+For finite options, like Yes/No/Confirm, use show_choices to ask the user which option they want to choose.
+
+Do not offer to redirect or move to another step until the user has confirmed the changes and the story overview seems complete.
 
 """
         },
@@ -333,8 +272,8 @@ Output to the user can be formatted as markdown. Make sure to output actual valu
             
             # Only update status if show_output is True
             # if tools.should_show_output(tool.function.name):
-            st.write(f"{tool_emoji} running {pretty_name}...")
-            status.update(label=f"{tool_emoji} running Tool...")
+            status.update(label=f"{tool_emoji} Running Tool...")
+            st.write(f"{tool_emoji} Tool: {pretty_name}")
 
             # Log tool input
             st.session_state.debug_logs.append({
@@ -373,6 +312,8 @@ Output to the user can be formatted as markdown. Make sure to output actual valu
                 final_response_parts.append(f"**{tool_emoji} {pretty_name}:**\n{error_msg if error_msg else str(output)}")
 
         # Get the agent to interpret all tool results together
+        status.update(label=f"💭 Reviewing tool outputs...")
+        st.write(f"💭 Reviewing tool outputs...")
         follow_up_messages = [
             {
                 "role": "system",
