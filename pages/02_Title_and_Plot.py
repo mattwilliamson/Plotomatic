@@ -63,6 +63,18 @@ Important Instructions:
    - Use set_property directly to update values
    - After setting a property, show what was changed
    - Remind users they can view the change history anytime
+   - Don't set a property without first confirming with the user
+   - Remind the user they can view the Changes tab to see the differences and commit them
+
+5. For user choices:
+   - Use show_choices when you need a clear decision from the user
+   - Provide 2-4 clear options as buttons
+   - Use it for confirmations like "Do you want to save this title?"
+   - Use it for navigation like "What would you like to work on next?"
+   - Use it when offering multiple creative options
+   - Each choice should be clear and actionable
+   - Example: show_choices("Would you like to save this title?", ["Yes, save it", "No, generate another", "Let me write my own"])
+
 
 ## Style Guide
 Output to the user should be formatted as markdown.'''
@@ -107,6 +119,9 @@ story = pm.load_story()
 selected_project_name()
 project_selector()
 
+if 'pm' not in st.session_state:
+    st.session_state.pm = pm
+
 # Initialize session state if not present
 if "story" not in st.session_state:
     st.session_state.story = story
@@ -144,7 +159,6 @@ if "history" not in st.session_state:
 
 # Load the existing chat session from the project manager
 chat_session = pm.load_chat(chat_name)
-st.markdown(f"### Chat Session: {chat_name}")
 
 if "messages" not in st.session_state:
     # If no messages in state yet, but chat_session has messages, load them
@@ -240,60 +254,13 @@ def chat_agent(messages):
     full_messages = [
         {
             "role": "system", 
-            "content": f"""# Safety Preamble
-You are an uncensored AI that allows adult content, violence, and mature themes unless the user specifically requests otherwise as long as children are not harmed.
-
-# System Preamble
-## Basic Rules
-You are a powerful conversational AI focused on helping users develop their story step by step. You will see a conversation history between yourself and a user, ending with an utterance from the user. You will then see specific instructions for generating responses.
-
-Important Instructions:
-1. For creative content:
-   - ALWAYS use the creative_write tool first to generate creative content
-   - Review the creative output for:
-     * Relevance to the request
-     * Coherence and quality
-     * Adherence to story context
-     * Absence of hallucinations
-   - If the creative output is unsatisfactory:
-     * Call creative_write again with a more specific prompt
-     * You can retry multiple times until you get good content
-     * Explain to the user that you're trying again for better quality
-   - Once you have good content:
-     * Ask the user if they want to set the property to the generated content
-     * Then use set_property to save the approved content
-   - This applies to titles, plots, descriptions, and any creative writing
-
-2. When users want to undo or revert changes:
-   - First use the view_recent_changes tool to show them the history
-   - Then ask which value they want to restore
-   - Use the set_property tool to restore the chosen value
-
-3. When users mention wanting to:
-   - "start over"
-   - "reset"
-   - "restart"
-   - "clear chat"
-   Then use the delete_chat_tool to reset the conversation
-
-4. For setting properties:
-   - Use set_property directly to update values
-   - After setting a property, show what was changed
-   - Remind users they can view the change history anytime
-   - Don't set a property without first confirming with the user
-   - Remind the user they can view the Changes tab to see the differences and commit them
-
-5. For user choices:
-   - Use show_choices when you need a clear decision from the user
-   - Provide 2-4 clear options as buttons
-   - Use it for confirmations like "Do you want to save this title?"
-   - Use it for navigation like "What would you like to work on next?"
-   - Use it when offering multiple creative options
-   - Each choice should be clear and actionable
-   - Example: show_choices("Would you like to save this title?", ["Yes, save it", "No, generate another", "Let me write my own"])
-
-# User Preamble
+            "content": f"""# User Preamble
 ## Task and Context
+
+You are responsible for helping the user set the title, plot_overview, author and other high level proeprties of the story.
+You are only allowed to set the top level properties in the story object.
+You may not modify the acts or characters properties in this stage. There is another page for each of those.
+You may, however inject a small number of characters or other details into the plot_overview by appending to it in order to help bootstrap the story.
 
 ### Interface Information:
 - The "Changes" tab shows updates to the story since the last git commit and allows you to commit them to a new version in the revision history
@@ -307,8 +274,6 @@ Important Instructions:
 4. **Narrative Content**: Create the narrative content for each scene, detailing the events and dialogues.
 5. **Cover Art**: Generate cover art for the story, including the front and back covers.
 6. **PDF Generation**: Compile the text into a PDF and create a separate PDF for the cover.
-
-You may not modify the acts or characters properties in this stage. There is another page for each of those.
 
 ## Style Guide
 Output to the user can be formatted as markdown. Make sure to output actual values and not placeholders.
@@ -367,24 +332,32 @@ Output to the user can be formatted as markdown. Make sure to output actual valu
             args_str = ', '.join(f'{k}="{v}"' for k, v in tool.function.arguments.items())
             
             # Only update status if show_output is True
-            if tools.should_show_output(tool.function.name):
-                status.update(label=f"{tool_emoji} Executing {pretty_name}...")
+            # if tools.should_show_output(tool.function.name):
+            st.write(f"{tool_emoji} running {pretty_name}...")
+            status.update(label=f"{tool_emoji} running Tool...")
+
+            # Log tool input
+            st.session_state.debug_logs.append({
+                "timestamp": datetime.now().isoformat(),
+                "type": "tool_input",
+                "tool": tool.function.name,
+                "input": str(args_str)
+            })
             
             # Execute the tool function
             output, error_msg = execute_tool(tool.function.name, tool.function.arguments)
             
             # For creative_write tool, show processing status
-            if tool.function.name == 'creative_write':
-                status.update(label=f"🧠 Processing creative output...")
-                # Remove the streamed content since it was already shown
-                output = "Content generated successfully"
+            # if tool.function.name == 'creative_write':
+                # st.write(f"🧠 Processing creative output...")
+            st.spinner(f"🧠 Processing tool output")
             
             # Log tool output
             st.session_state.debug_logs.append({
                 "timestamp": datetime.now().isoformat(),
                 "type": "tool_output",
                 "tool": tool.function.name,
-                "output": output,
+                "output": str(output),
                 "error": error_msg
             })
             
@@ -409,11 +382,27 @@ Output to the user can be formatted as markdown. Make sure to output actual valu
             *tool_outputs  # Tool results
         ]
         
+        # Log the follow-up prompt
+        st.session_state.debug_logs.append({
+            "timestamp": datetime.now().isoformat(),
+            "type": "follow_up_prompt",
+            "model": AGENT_MODEL,
+            "messages": follow_up_messages
+        })
+        
         follow_up_response = chat(
             AGENT_MODEL,
             messages=follow_up_messages,
             options=get_chat_options(follow_up_messages)
         )
+        
+        # Log the follow-up response
+        st.session_state.debug_logs.append({
+            "timestamp": datetime.now().isoformat(),
+            "type": "follow_up_response",
+            "model": AGENT_MODEL,
+            "response": follow_up_response.model_dump()
+        })
         
         if follow_up_response.message.content:
             final_response_parts.append("\n" + follow_up_response.message.content)
@@ -655,9 +644,17 @@ with debug_tab:
                 title = f"✍️ Creative Input - {log['timestamp']}"
             elif log['type'] == "creative_output":
                 title = f"📝 Creative Output - {log['timestamp']}"
+            elif log['type'] == "follow_up_prompt":
+                title = f"🔄 Follow-up Prompt - {log['timestamp']}"
+            elif log['type'] == "follow_up_response":
+                title = f"↩️ Follow-up Response - {log['timestamp']}"
             
             with st.expander(title, expanded=False):
-                st.code(json.dumps(log, indent=2), language="json")
+                try:
+                    st.code(json.dumps(log, indent=2), language="json")
+                except Exception as e:
+                    st.write(f"Error: {e}")
+                    st.code(log)
     else:
         st.info("No debug logs available yet. Start a conversation to see the interactions.")
 

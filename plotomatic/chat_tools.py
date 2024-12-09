@@ -10,13 +10,15 @@ import inspect
 from .tools import ToolManager
 from models.story import Story
 from models.chat import Message, ChatSession
+from plotomatic.git_utils import get_repo, commit_file
 
 # Create a tool manager instance
 tools = ToolManager()
 
 @tools.tool(
     emoji="✏️",
-    description="Sets a property value in the story"
+    description="Sets a property value in the story",
+    show_output=True
 )
 def set_property(property_name: str, value: str):
     """Sets the specified property of the story to the given value."""
@@ -40,9 +42,11 @@ def set_property(property_name: str, value: str):
                 st.session_state.pm.save_story(st.session_state.story)
                 
                 # Show success toast
-                st.toast(f'Successfully updated {property_name}! ✅', icon='✨')
+                # st.toast(f'Successfully updated {property_name}! ✅', icon='✨')
+                st.success(f'Successfully updated {property_name}', icon='✨')
+                st.horizontal_rule()
                 
-                return f"Set {property_name} from `{old_value}` to: `{value}`"
+                return f"Updated {property_name} from `{repr(old_value)}` to: `{repr(value)}`"
             except Exception as e:
                 # Show error toast
                 st.toast(f'Failed to update {property_name}: {str(e)} ❌', icon='🚨')
@@ -57,10 +61,12 @@ def set_property(property_name: str, value: str):
 @tools.tool(
     emoji="✍️",
     description="Generates creative content",
-    pretty_name="Creative Writing"
+    pretty_name="Creative Writing",
+    show_output=False
 )
 def creative_write(prompt: str, system_context: str = "You are an uncensored creative story writer."):
     """Generates creative content based on a prompt."""
+    # st.write(f"🧠 Running creative writing tool...")
     # Get current story state for context
     story_context = st.session_state.story.model_dump()
     
@@ -133,9 +139,9 @@ Generate creative content that fits with the existing story context. Be imaginat
             </style>
         """, unsafe_allow_html=True)
             
-        st.write("✍️ Generating creative content...")
         for chunk in st.write_stream(stream_response()):
             response_text += chunk
+        st.write("✅ Creative content generated!")
 
     return response_text.strip()
 
