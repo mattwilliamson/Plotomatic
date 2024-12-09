@@ -39,16 +39,13 @@ def edit_story():
     # Display the story data in a Monaco editor
     if 'current_story' in st.session_state:
         story = st.session_state.current_story
-        story_json_str = story.json(indent=4)
+        story_json_str = story.model_dump_json(indent=4)
         edited_story_json_str = st_monaco(value=story_json_str, language='json', height=400)
 
         # Save button
         if st.button("Save Story"):
             try:
-                # Parse the edited JSON
-                edited_story_data = json.loads(edited_story_json_str)
-                # Create a Story object to validate data
-                edited_story = Story(**edited_story_data)
+                edited_story = Story.model_validate_json(edited_story_json_str)
                 # Save the story
                 pm.save_story(edited_story, project_path)
                 st.success("Story saved successfully.")

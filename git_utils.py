@@ -73,3 +73,8 @@ def get_commits(repo_path):
 # Function to get the diff for a specific commit
 def get_commit_diff(commit):
     return commit.diff(create_patch=True)
+
+def commit_file(repo, file_path, message):
+    """Commit a specific file in the repository with a given message."""
+    repo.index.add([file_path])
+    repo.index.commit(message)
