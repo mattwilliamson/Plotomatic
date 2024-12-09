@@ -3,6 +3,8 @@
 can't select different project and update chat. it updates both. need to update all the project manager stuff to use session variables so it updates properly.
 the creative llm doesn't have context and needs to be made generic
 
+chat bot to fix plot holes
+
 start with a create project
 use git to update story - need some functions to commit and list commits and show diffs
 use pydantic model to allow editing directly

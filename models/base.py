@@ -3,9 +3,9 @@ from unidecode import unidecode
 from json_repair import repair_json
 from typing import Any
 
-class StoryModel(BaseModel):
+class BaseModel(BaseModel):
     @classmethod
-    def model_validate_json(cls, json_data: str | bytes | bytearray, *, strict: bool | None = None, context: Any | None = None) -> "StoryModel":
+    def model_validate_json(cls, json_data: str | bytes | bytearray, *, strict: bool | None = None, context: Any | None = None) -> "BaseModel":
         """Parse JSON into a StoryModel instance, removing non-ASCII characters."""
         json_data = json_data.strip()
         json_data = unidecode(json_data)

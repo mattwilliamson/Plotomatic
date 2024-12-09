@@ -1,14 +1,14 @@
 from typing import List, Optional
 from pydantic import Field, PrivateAttr, model_validator
 
-from .base import StoryModel
+from .base import BaseModel
 
-class DialogueLine(StoryModel):
+class DialogueLine(BaseModel):
     """Represents a line of dialogue spoken by a character in a scene."""
     character_nickname: Optional[str] = Field("", description='Nickname of the character speaking the line')
     line: Optional[str] = Field("", description='The line of dialogue')
 
-class SceneDialogue(StoryModel):
+class SceneDialogue(BaseModel):
     """Represents the dialogues for a specific scene."""
     scene_id: Optional[str] = Field("", description="Unique identifier of the scene this dialogue belongs to")
     notes: Optional[str] = Field("", description="Notes or comments about the scene")
@@ -47,7 +47,7 @@ class SceneDialogue(StoryModel):
             raise ValueError("Parent chapter dialogue not set")
         return self._chapter_dialogue._act_dialogue
 
-class ChapterDialogue(StoryModel):
+class ChapterDialogue(BaseModel):
     """Represents dialogues for a chapter, containing dialogues for multiple scenes."""
     chapter_id: Optional[str] = Field("", description="Unique identifier of the chapter this dialogue belongs to")
     scene_dialogues: List[SceneDialogue] = Field(default_factory=list, description="List of SceneDialogue objects for the chapter")
@@ -68,7 +68,7 @@ class ChapterDialogue(StoryModel):
             self.scene_dialogues.append(new_scene_dialogue)
         return self.scene_dialogues[index]
 
-class ActDialogue(StoryModel):
+class ActDialogue(BaseModel):
     """Represents dialogues for an act, containing dialogues for multiple chapters."""
     act_id: Optional[str] = Field("", description="Unique identifier of the act this dialogue belongs to")
     chapter_dialogues: List[ChapterDialogue] = Field(default_factory=list, description="List of ChapterDialogue objects for the act")
@@ -89,7 +89,7 @@ class ActDialogue(StoryModel):
             self.chapter_dialogues.append(new_chapter_dialogue)
         return self.chapter_dialogues[index]
 
-class StoryDialogue(StoryModel):
+class StoryDialogue(BaseModel):
     """Represents the dialogues for the entire story, organized by acts and scenes."""
     act_dialogues: List[ActDialogue] = Field(default_factory=list, description="List of ActDialogue objects for the story")
 

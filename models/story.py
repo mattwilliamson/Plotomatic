@@ -5,7 +5,7 @@ from pydantic import Field, PrivateAttr, field_validator, EmailStr
 from IPython.display import display, Markdown
 from pathlib import Path
 
-from .base import StoryModel
+from .base import BaseModel
 from .dialog import StoryDialogue
 import settings
 
@@ -21,19 +21,19 @@ def deindent(text: str) -> str:
     stripped_lines = [line.lstrip() for line in lines]
     return "\n".join(stripped_lines).strip()
 
-class CharacterRelationship(StoryModel):
+class CharacterRelationship(BaseModel):
     """Represents a relationship between two characters in the story."""
     character_nickname: Optional[str] = Field("", description='The related character')
     relationship_type: Optional[str] = Field("", description='Type of relationship, e.g., "friend", "enemy", "mentor"')
     description: Optional[str] = Field("", description="Further details about the relationship")
 
-class CharacterArc(StoryModel):
+class CharacterArc(BaseModel):
     """Represents the development arc of a character over the course of the story."""
     initial_state: Optional[str] = Field("", description='The character\'s initial state at the beginning of the story')
     final_state: Optional[str] = Field("", description='The character\'s final state at the end of the story')
     key_moments: Optional[List[str]] = Field(default_factory=list, description="Key moments that define this arc")
 
-class Character(StoryModel):
+class Character(BaseModel):
     """Represents a character in the story, including their attributes, relationships, and development."""
     nickname: Optional[str] = Field("", description="Unique nickname used as an identifier for the character")
     name: Optional[str] = Field("", description="Full name of the character")
@@ -80,7 +80,7 @@ class Character(StoryModel):
             """)
         return markdown
 
-class Prop(StoryModel):
+class Prop(BaseModel):
     """Represents a prop in the story."""
     name: Optional[str] = Field("", description="Name of the prop")
     description: Optional[str] = Field("", description="Description of the prop")
@@ -88,7 +88,7 @@ class Prop(StoryModel):
     physical_appearance: Optional[str] = Field("", description="Physical appearance of the prop")
     animation_description: Optional[str] = Field("", description="Description of prop animation")
 
-class Scene(StoryModel):
+class Scene(BaseModel):
     """Represents a scene in the story, including setting, characters, and dialogue."""
     scene_id: Optional[str] = Field("", description="Unique identifier for the scene")
     title: Optional[str] = Field("", description="Title of the scene")
@@ -171,7 +171,7 @@ class Scene(StoryModel):
 
         return markdown
 
-class Chapter(StoryModel):
+class Chapter(BaseModel):
     """Represents a chapter within an act, containing multiple scenes."""
     chapter_id: Optional[str] = Field("", description="Unique identifier for the chapter")
     title: Optional[str] = Field("", description="Title of the chapter")
@@ -223,24 +223,24 @@ class Chapter(StoryModel):
                 markdown += scene.markdown_summary()
         return markdown
 
-class StoryBeat(StoryModel):
+class StoryBeat(BaseModel):
     """Represents a significant moment or turning point in the story."""
     name: Optional[str] = Field("", description='Name of the story beat, e.g., "Inciting Incident", "Climax"')
     description: Optional[str] = Field("", description='Explanation of the beat\'s importance in the story')
     scene: Optional[str] = Field("", description="Link to a scene if applicable")
 
-class Subplot(StoryModel):
+class Subplot(BaseModel):
     """Represents a subplot that runs alongside the main plot of the story."""
     title: Optional[str] = Field("", description='Title of the subplot')
     description: Optional[str] = Field("", description="Description of the subplot")
     related_characters: Optional[List[str]] = Field(default_factory=list, description="Characters involved in this subplot")
 
-class EmotionalArc(StoryModel):
+class EmotionalArc(BaseModel):
     """Represents an emotional stage or shift within the story."""
     stage: Optional[str] = Field("", description='The emotional stage, e.g., "Hopeful", "Despair", "Triumphant"')
     description: Optional[str] = Field("", description="Further explanation of this emotional stage")
 
-class Act(StoryModel):
+class Act(BaseModel):
     """Represents an act within the story, containing multiple chapters and props."""
     act_id: Optional[str] = Field("", description="Unique identifier for the act")
     title: Optional[str] = Field("", description="Title of the act")
@@ -305,10 +305,11 @@ class Act(StoryModel):
                 markdown += chapter.markdown_summary(include_scenes=include_scenes)
         return markdown
 
-class Story(StoryModel):
+class Story(BaseModel):
     """Represents the overall story, including its structure, characters, plot, and acts."""
     author: Optional[str] = Field("", description="Author of the story")
-    author_email: Optional[EmailStr] = Field(None, description="Author's email address")
+    # author_email: Optional[EmailStr] = Field(None, description="Author's email address")
+    author_email: Optional[str] = Field(None, description="Author's email address")
     prompt: Optional[str] = Field("", description="Prompt or inspiration for the story")
     title: Optional[str] = Field("", description="Title of the story")
     has_video: Optional[bool] = Field(False, description="Whether the story is animated")

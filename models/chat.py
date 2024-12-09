@@ -1,16 +1,16 @@
 from datetime import datetime
-from typing import List
+from typing import List, Optional
 from pydantic import BaseModel, Field
 
 class Message(BaseModel):
-    role: str
-    content: str
-    show_user: bool = False
+    role: str = Field("", description="Role of the message sender")
+    content: str = Field("", description="Content of the message")
+    show_user: Optional[bool] = Field(False, description="Whether to show the user in the UI")
     timestamp: datetime = Field(default_factory=datetime.now)
 
 class ChatSession(BaseModel):
-    project: str
-    messages: List[Message] = []
+    project: str = Field("", description="Project name")
+    messages: List[Message] = Field(default_factory=list, description="List of messages in the chat session")
 
     @classmethod
     def load_from_file(cls, path):

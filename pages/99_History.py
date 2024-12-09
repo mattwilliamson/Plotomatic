@@ -1,6 +1,6 @@
 import streamlit as st
 from streamlit_timeline import timeline
-from git_utils import get_repo, get_commits
+from plotomatic.git_utils import get_repo, get_commits
 from project_manager import ProjectManager
 from git import NULL_TREE
 import json

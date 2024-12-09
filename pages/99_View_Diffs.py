@@ -3,7 +3,7 @@
 import streamlit as st
 import os
 from project_manager import ProjectManager
-from git_utils import get_repo, get_changed_files, get_diff, commit_changes, discard_changes
+from plotomatic.git_utils import get_repo, get_changed_files, get_diff, commit_changes, discard_changes
 
 def view_diffs():
     st.title("View Diffs")

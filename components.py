@@ -2,7 +2,7 @@
 
 import streamlit as st
 from project_manager import ProjectManager, CURRENT_PROJECT_KEY, PROJECT_LIST_KEY
-from git_utils import get_repo, get_changed_files, get_diff, commit_changes, discard_changes
+from plotomatic.git_utils import get_repo, get_changed_files, get_diff, commit_changes, discard_changes
 from git import InvalidGitRepositoryError
 
 

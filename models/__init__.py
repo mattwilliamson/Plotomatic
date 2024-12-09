@@ -1,4 +1,4 @@
-from .base import StoryModel
+from .base import BaseModel
 from .story import (
     Story, Act, Chapter, Scene, Character, CharacterArc,
     CharacterRelationship, Prop, StoryBeat, Subplot, EmotionalArc
@@ -10,7 +10,7 @@ from .dialog import (
 from .chat import Message, ChatSession
 
 __all__ = [
-    'StoryModel',
+    'BaseModel',
     'Story', 'Act', 'Chapter', 'Scene',
     'Character', 'CharacterArc', 'CharacterRelationship',
     'Prop', 'StoryBeat', 'Subplot', 'EmotionalArc',

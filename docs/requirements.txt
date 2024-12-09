@@ -14,3 +14,6 @@ dagre
 
 ollama
 jsondiff
+
+pydantic
+pydantic[email]
