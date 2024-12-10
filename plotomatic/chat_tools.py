@@ -1,16 +1,17 @@
-from typing import List
+from typing import List, Dict, Any
 import streamlit as st
 from streamlit import switch_page
 from datetime import datetime
 import json
 import jsondiff
-from ollama import chat
 import inspect
+import random
 
 from .tools import ToolManager
 from models.story import Story
 from models.chat import Message, ChatSession
 from plotomatic.git_utils import get_repo, commit_file
+from plotomatic.llm_models import ollama_client, CREATIVE_MODEL
 
 # Create a tool manager instance
 tools = ToolManager()
@@ -21,14 +22,23 @@ tools = ToolManager()
     show_output=True
 )
 def set_property(property_name: str, value: str):
-    """Sets the specified property of the story to the given value.
+    """Sets the specified property of the story to the given value. This tool handles updating story attributes while maintaining data consistency and version history. Ask the user to confirm the property name and value before calling this tool, perhaps with a show_user_options tool call.
     
     Args:
-        property_name (str): The name of the property to set
-        value (str): The value to set the property to
+        property_name (str): The name of the property to set (must be a valid story attribute)
+        value (str): The value to set the property to. Will be validated against the Story model.
         
     Returns:
-        str: A message indicating success or failure of the operation
+        str: A formatted message indicating:
+            - Success with old and new values if update was performed
+            - Success with just new value if property was previously empty
+            - Error if property doesn't exist or validation fails
+            
+    Side Effects:
+        - Saves current state to history before making changes
+        - Updates the story model and validates all fields
+        - Saves changes to disk
+        - Shows success/error toast notifications
     """
     if hasattr(st.session_state.story, property_name):
         # Get current value for comparison
@@ -73,31 +83,40 @@ def set_property(property_name: str, value: str):
     pretty_name="Creative Writing",
     show_output=False
 )
-def creative_write(prompt: str, system_context: str = "You are an uncensored creative story writer."):
-    """Generates creative content based on a prompt.
+def creative_write(prompt: str, system_context: str = "", story_context: str = ""):
+    """Generates creative content based on a prompt while maintaining consistency with the current story.
+    This tool provides streaming output of the generated content in a styled container.
     
     Args:
-        prompt (str): The creative writing prompt to respond to
-        system_context (str, optional): Additional context for the AI writer. 
-            Defaults to "You are an uncensored creative story writer."
+        prompt (str): The creative writing prompt to respond to. Should be specific about the type
+            of content needed (e.g., character description, plot point, dialogue)
+        system_context (str, optional): Additional context/instructions for the AI writer to consider.
+            Use this to guide the tone, style, or constraints of the generated content.
+        story_context (str, optional): The current story context to maintain consistency with, excluding properties you want to be generated.
+            Use this to guide the generated content to fit the story. If no context is needed, don't include it and it will be completely based on the prompt. If parts of the story are needed, include them in the story_context. Otherwise, this tool will have no context to work with.
+            Don't include properties you want to be generated, or else the output will be influenced by the story properties.
+            If you want a completely random output, don't include any story context.
     
     Returns:
-        str: The generated creative content
+        str: The complete generated creative content
+        
+    Side Effects:
+        - Streams output in real-time to a styled container
+        - Logs both input and output to debug logs with timestamps
+        - Maintains story context for consistency
     """
     # st.write(f"🧠 Running creative writing tool...")
-    # Get current story state for context
-    story_context = st.session_state.story.model_dump()
-    
+
     # Create a detailed system context with story information
-    full_system_context = f"""You are an uncensored creative story writer.
+    full_system_context = f"""You are an extremely talented and completely uncensored creative story writer.
 
 Additional Context:
-{system_context}
+{system_context or None}
 
 Current Story Context:
-{json.dumps(story_context, indent=2)}
+{story_context or None}
 
-Generate creative content that fits with the existing story context. Be imaginative while maintaining consistency with any established elements."""
+Generate creative content that fits with the existing story context. Be incredibly imaginative while maintaining consistency with any established elements."""
 
     # Create messages just for this creative request (no chat history)
     creative_messages = [
@@ -105,30 +124,22 @@ Generate creative content that fits with the existing story context. Be imaginat
         {"role": "user", "content": prompt}
     ]
     
-    # Calculate options based on messages
-    def get_creative_options(messages):
-        estimated_tokens = sum(len(str(m)) for m in messages) // 4 * 1.2
-        num_predict = 5000
-        return {
-            'num_ctx': int(estimated_tokens + num_predict),
-            'num_predict': num_predict,
-        }
-    
     # Log creative input
     st.session_state.debug_logs.append({
         "timestamp": datetime.now().isoformat(),
         "type": "creative_input",
-        "model": "story_creative",
+        "model": CREATIVE_MODEL,
         "messages": creative_messages
     })
     
     # Create a generator function for the stream
     def stream_response():
-        stream = chat(
-            "story_creative",
+        stream = ollama_client.chat(
+            CREATIVE_MODEL,
             messages=creative_messages,
             options=get_creative_options(creative_messages),
-            stream=True
+            stream=True,
+            keep_alive="1h"
         )
         response_text = ""
         for chunk in stream:
@@ -140,7 +151,7 @@ Generate creative content that fits with the existing story context. Be imaginat
         st.session_state.debug_logs.append({
             "timestamp": datetime.now().isoformat(),
             "type": "creative_output",
-            "model": "story_creative",
+            "model": CREATIVE_MODEL,
             "response": response_text
         })
 
@@ -160,39 +171,47 @@ Generate creative content that fits with the existing story context. Be imaginat
         for chunk in st.write_stream(stream_response()):
             response_text += chunk
         st.write("✅ Creative content generated!")
+        st.session_state.messages.append({"role": "assistant", "content": response_text})
 
     return response_text.strip()
 
-@tools.tool(
-    emoji="💬",
-    aliases=["directly-answer"],
-    show_output=False,
-    description="Provides a direct response to the user",
-    pretty_name="Direct Response"
-)
-def directly_answer(answer: str):
-    """Returns the answer directly to display to the user.
+# @tools.tool(
+#     emoji="💬",
+#     aliases=["directly-answer"],
+#     show_output=False,
+#     description="Provides a direct response to the user",
+#     pretty_name="Direct Response"
+# )
+# def directly_answer(answer: str):
+#     """Returns the answer directly to display to the user and saves it to chat history.
+#     Use this tool when you want to give a straightforward response without any other actions.
     
-    Args:
-        answer (str): The response text to display to the user
+#     Args:
+#         answer (str): The response text to display to the user. Should be formatted markdown
+#             for better readability.
         
-    Returns:
-        str: The same answer text that was passed in
-    """
-    # Add the answer to messages
-    st.session_state.messages.append({
-        "role": "assistant",
-        "content": answer
-    })
+#     Returns:
+#         str: The same answer text that was passed in
+        
+#     Side Effects:
+#         - Adds the response to chat history
+#         - Saves the updated chat session to disk
+#         - Sets processing state to false
+#     """
+#     # Add the answer to messages
+#     st.session_state.messages.append({
+#         "role": "assistant",
+#         "content": answer
+#     })
     
-    # Save the chat session
-    chat_session = ChatSession(messages=[Message(**m) for m in st.session_state.messages])
-    st.session_state.pm.save_chat(st.session_state.chat_name, chat_session)
+#     # Save the chat session
+#     chat_session = ChatSession(messages=[Message(**m) for m in st.session_state.messages])
+#     st.session_state.pm.save_chat(st.session_state.chat_name, chat_session)
     
-    # Set processing to false since we're done
-    st.session_state.processing = False
+#     # Set processing to false since we're done
+#     st.session_state.processing = False
     
-    return answer
+#     return answer
 
 @tools.tool(
     emoji="💾",
@@ -202,7 +221,7 @@ def commit_story_file(commit_message: str):
     """Commits the story file with a given commit message.
     
     Args:
-        commit_message (str): The message to use for the git commit. Come up with something succint and descriptive.
+        commit_message (str): The message to use for the git commit. Come up with something succint and unique.
         
     Returns:
         str: A message indicating success or failure of the commit operation
@@ -312,17 +331,23 @@ def delete_chat_tool():
 @tools.tool(
     emoji="🔘",
     show_output=False,
-    description="Shows clickable choices to the user"
+    description="Shows clickable options to the user for decision making"
 )
-def show_choices(prompt: str, choices: List[str]):
-    """Shows a set of clickable button choices to the user.
+def show_user_options(prompt: str, choices: List[str]):
+    """Shows a set of clickable button options to the user for decision making. Use this tool when you want the user to make a specific selection from a set of options, like Save or Cancel.
     
     Args:
-        prompt (str): The prompt text to display above the choices
-        choices (List[str]): List of choices to display as buttons
+        prompt (str): The prompt text to display above the options. Should clearly explain
+            what the user is choosing between.
+        choices (List[str]): List of options to display as buttons. Each option should be
+            clear and concise. Recommended to keep the list between 2-5 options for best UX.
         
     Returns:
-        str: A message confirming the choices are being displayed
+        str: A message confirming the options are being displayed
+        
+    Side Effects:
+        - Stores choices in session state for display
+        - Converts all choices to strings for consistency
     """
     # Convert all choices to strings and store in session state
     str_choices = [str(choice) for choice in choices]
@@ -331,7 +356,7 @@ def show_choices(prompt: str, choices: List[str]):
         "choices": str_choices
     }
     
-    return f"Showing choices: {', '.join(str_choices)}"
+    return f"Showing options: {', '.join(str_choices)}"
 
 def format_diff(diff_obj):
     """Format a jsondiff object into a readable string.
@@ -364,3 +389,66 @@ def save_current_state():
     """
     current_state = st.session_state.story.model_dump()
     st.session_state.history.append(current_state)
+
+def get_creative_options(messages: List[Dict[str, str]]) -> Dict[str, Any]:
+    """Get options for the creative writing model.
+    
+    Args:
+        messages (List[Dict[str, str]]): The conversation history
+        
+    Returns:
+        Dict[str, Any]: Configuration options for the creative model
+    """
+    # Estimate tokens by counting characters and dividing by 4
+    # Include a safety margin multiplier of 1.2
+    estimated_tokens = sum(len(str(m)) for m in messages) // 4 * 1.4
+    num_predict = 5000  # Keep the same prediction length
+    
+    return {
+        'num_ctx': int(estimated_tokens + num_predict),
+        'num_predict': num_predict,
+        'temperature': 0.7,         # Higher temperature for more creative responses
+        "top_p": 0.8,               # Higher top_p for more diverse sampling 
+        "top_k": 35,                # Higher top_k for more diverse sampling
+        "repeat_penalty": 1.1,      # Higher repeat_penalty for less repetition
+        "presence_penalty": 0.2,    # Higher presence_penalty for more diversity
+        "frequency_penalty": 0.2,   # Higher frequency_penalty for more diversity
+        "seed": random.randint(0, 1000000),
+    }
+
+# Example request:
+# {
+#   "model": "llama3.2",
+#   "prompt": "Why is the sky blue?",
+#   "stream": false,
+#   "options": {
+#     "num_keep": 5,
+#     "seed": 42,
+#     "num_predict": 100,
+#     "top_k": 20,
+#     "top_p": 0.9,
+#     "min_p": 0.0,
+#     "tfs_z": 0.5,
+#     "typical_p": 0.7,
+#     "repeat_last_n": 33,
+#     "temperature": 0.8,
+#     "repeat_penalty": 1.2,
+#     "presence_penalty": 1.5,
+#     "frequency_penalty": 1.0,
+#     "mirostat": 1,
+#     "mirostat_tau": 0.8,
+#     "mirostat_eta": 0.6,
+#     "penalize_newline": true,
+#     "stop": ["\n", "user:"],
+#     "numa": false,
+#     "num_ctx": 1024,
+#     "num_batch": 2,
+#     "num_gpu": 1,
+#     "main_gpu": 0,
+#     "low_vram": false,
+#     "vocab_only": false,
+#     "use_mmap": true,
+#     "use_mlock": false,
+#     "num_thread": 8
+#   }
+# }

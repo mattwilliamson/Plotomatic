@@ -6,8 +6,7 @@ class Message(BaseModel):
     role: str = Field("", description="Role of the message sender")
     content: str = Field("", description="Content of the message")
     show_user: Optional[bool] = Field(False, description="Whether to show the user in the UI")
-    timestamp: datetime = Field(default_factory=datetime.now)
-
+    timestamp: str = Field(default_factory=lambda: datetime.now().isoformat(), description="Timestamp of the message")
 class ChatSession(BaseModel):
     project: str = Field("", description="Project name")
     messages: List[Message] = Field(default_factory=list, description="List of messages in the chat session")

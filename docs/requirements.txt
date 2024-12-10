@@ -13,7 +13,9 @@ streamlit-react-flow
 dagre
 
 ollama
-jsondiff
+jsondiff # Might not be used
+json-repair>=2.0.0
 
 pydantic
 pydantic[email]
+pygments

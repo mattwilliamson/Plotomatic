@@ -1,6 +1,5 @@
 import streamlit as st
-from ollama import chat, ChatResponse
-import ollama
+from plotomatic.llm_models import ollama_client
 from project_manager import ProjectManager
 from models.story import Story
 from models.chat import Message, ChatSession
@@ -14,6 +13,12 @@ from streamlit import dialog
 import time
 from plotomatic.chat_tools import tools, save_current_state, format_diff
 from plotomatic.llm_models import BASE_MODELS, AGENT_MODEL, CREATIVE_MODEL, create_model, ensure_base_models, ensure_custom_models
+import logging
+from streamlit.logger import get_logger
+import random
+
+# Get a logger instance
+logger = get_logger('plotomatic')
 
 # Let the user specify a chat name
 chat_name = "title_plot_chat"
@@ -50,39 +55,122 @@ chat_session = pm.load_chat(chat_name)
 if "story" not in st.session_state:
     st.session_state.story = story
 
+few_shots = [
+    # Fist show_user_options
+    {
+        "role": "assistant", 
+        "content": """I'm ready when you are.""", 
+        "tool_calls": [{
+            "function": {
+                "name": "show_user_options",
+                "arguments": {
+                    "prompt": "Are you ready to start?",
+                    "choices": ["I'm ready!", "Not yet."]
+                }
+            }
+        }]
+    },
+
+    # User says they are ready
+    {
+        "role": "user",
+        "content": "I'm ready!"
+    },
+
+    # Show an example of how to prompt and save a property
+    {
+        "role": "assistant", 
+        "content": "I see there is a title set already.", 
+        "tool_calls": [{
+                "function": {
+                    "name": "show_user_options",
+                    "arguments": {
+                        "prompt": "Would you like me to erase the title and start over?",
+                        "choices": ["Yes, erase it", "No, keep it"]
+                    }
+                }
+            }
+        ]
+    },
+
+    # User says they want to start over
+    {
+        "role": "user",
+        "content": "Yes, erase it"
+    },
+
+    # Set the title to an empty string
+    {
+        "role": "assistant",
+        "content": "",
+        "tool_calls": [{
+            "function": {
+                "name": "set_property",
+                "arguments": {
+                    "property_name": "title",
+                    "value": ""
+                }
+            }
+        }]
+    },
+
+    # Ask how they want to start
+    {"role": "assistant", "content": """Your title is now empty. Let's do this.""", 
+        "tool_calls": [{
+                "function": {
+                    "name": "show_user_options",
+                    "arguments": {
+                        "prompt": "How do you want to start?",
+                        "choices": ["Ask me some questions", "Make up a story"]
+                    }
+                }
+            }
+        ]
+    },
+
+    # User says they want to ask questions
+    {
+        "role": "user",
+        "content": "Ask me some questions"
+    },
+]
+
 if "messages" not in st.session_state:
     # If no messages in state yet, but chat_session has messages, load them
     # Otherwise, start with a greeting message
     if chat_session and chat_session.messages:
         st.session_state.messages = [m.model_dump() for m in chat_session.messages]
     else:
-        # Check if author is set
-        if st.session_state.story.author:
-            st.session_state.messages = [
-                {"role": "assistant", "content": """**Hello! 👋** 
-                 
-I'll help you develop your story step by step. 
-                 
-The tabs above will help you see the 
-- 🔀 Changes - see the changes you've made to the story
-- 🔍 Story Object - see the current state of the story overview
-- 🐛 Debug - see the debug information (advanced)
-                 
-What would you like to work on first?"""}
-            ]
-        else:
-            st.session_state.messages = [
-                {"role": "assistant", "content": """**Hello! 👋** 
+        st.session_state.messages = [
+            {
+                "role": "assistant", 
+                "content": """**Hello! 👋** 
+                
+I'm your Plotomatic story development assistant. 
+I'll help you build your story piece by piece.
+                
+The tabs above will help you see the:
+- 💬 **Assistant** - hey, that's me!
+- 🔀 **Changes** - review the changes you've made to the story
+- 🔍 **Story Object** - inspect the current state of the story overview
+- 🐛 **Debug** - advanced tracing information
 
-I'll help you develop your story step by step. Let's start with the basics.
+Do you have a story idea in mind? 
 
-Could you tell me either:
-- Your name (as the author)
-- Your email address (optional)
-- Or if you prefer, we can start with what your story is about
+Tell me about it or I'll make one up.""",
+    },
+]
 
-Which would you like to share first?"""}
-            ]
+        # # Check if author is set
+        # if st.session_state.story.author:
+        #                 # Ask the first question
+        #     {
+        #         "role": "assistant",
+        #         "content": "Who's name should I set as the author?"
+        #     },
+        #     few_shots.append({"role": "user", "content": story.author})
+        #     few_shots.append({"role": "assistant", "content": "Do you have an idea in mind? Tell me about it or I'll make one up."})
+
 
 selected_project_name()
 project_selector()
@@ -132,27 +220,37 @@ if "original_chat_hash" not in st.session_state:
 def get_chat_options(messages):
     # Estimate tokens by counting characters and dividing by 4
     # Include a safety margin multiplier of 1.2
-    estimated_tokens = sum(len(str(m)) for m in messages) // 4 * 1.2
-    num_predict = 5000  # Keep the same prediction length
-    
+    estimated_tokens = sum(len(str(m)) for m in messages) // 4 * 1.4
+    num_predict = 2000  # Keep the same prediction length
+    # https://github.com/ollama/ollama/blob/main/docs/modelfile.md#valid-parameters-and-values
+    # https://github.com/ollama/ollama/blob/main/docs/api.md
+
     return {
         'num_ctx': int(estimated_tokens + num_predict),
         'num_predict': num_predict,
-        'temperature': 0.1  # Set temperature for agent LLM
+        "temperature": 0.4,             # 0.2 to 0.4    - A lower temperature ensures that responses are more deterministic and coherent. This helps the assistant provide clear and reliable answers without unnecessary creativity that could lead to confusion.
+        "top_p": 0.5,                   # 0.3 to 0.5    - A smaller top_k value restricts the assistant to a few of the highest probability tokens at each step. This focus on the most likely options helps maintain coherence and ensures that the assistant's responses are aligned with user expectations, particularly important in structured tasks like function calls.
+        "top_k": 10,                     # 5 and 10      - A lower top_k focuses on the most probable responses, enhancing clarity while still allowing for some diversity in word choice.
+        # "repeat_penalty": 1.0,          # 0.0 to 0.2    - A very low repeat penalty allows the model to repeat necessary information when relevant, which is crucial for function calls and maintaining context.
+        # "presence_penalty": 0.3,        # 0.0 to 0.3    - Keeping this low ensures that the assistant can refer back to previously mentioned concepts or topics, which is helpful in maintaining a coherent conversation.
+        # "frequency_penalty": 0.3,       # 0.0 to 0.3    - A low frequency penalty allows for the use of common phrases and terms, which can enhance clarity and make the assistant's responses more relatable and understandable.
+        "mirostat_tau": 2.0,        # 1.0 to 2.0    - Setting this parameter within this range can help balance coherence and diversity in outputs, allowing for adjustments based on user feedback while keeping responses focused.
+        "mirostat_eta": 1.0,        # 0.5 to 1.0    - A moderate learning rate allows the model to adjust its outputs based on previous interactions, enhancing its ability to follow function calls accurately while maintaining coherence.
+        "mirostat": 1,              # 0 or 1        - Enabling Mirostat allows for dynamic control over the perplexity of the generated text, which helps in avoiding both "boredom traps" (excessive repetitions) and "confusion traps" (incoherence). This is particularly useful for applications requiring coherent outputs, such as function calls in an assistant. By maintaining an appropriate level of perplexity, Mirostat can help ensure that the generated text remains relevant and consistent.
+        # "min_p": 0.1,               # 0.0 to 0.1    - Setting min_p to a very low value allows for a broader range of responses while still maintaining coherence. This ensures that the assistant can explore options without being overly constrained, which is useful for function calls.
+        "tfs_z": 0.3,               # 0.3 to 0.5    - TFS (Top-p Sampling with Temperature) z values in this range help control the diversity of the output while keeping it coherent. A lower value encourages more deterministic outputs, which is essential for an assistant focused on function calls.
+        "typical_p": 0.5,           # 0.5 to 0.7    - This range allows the model to generate responses that are typical or expected, enhancing coherence in its outputs. A typical_p value around 0.5 to 0.7 helps ensure that the assistant's responses are relevant and aligned with user queries.
+        # "repeat_last_n": 33,        # 10 to 20      - Setting repeat_last_n to a lower value helps prevent excessive repetition in responses, which can detract from coherence. This range allows the model to maintain some context from previous interactions without becoming too repetitive.
+        'seed': random.randint(0, 1000000),
     }
-
-def get_creative_options(messages):
-    # Estimate tokens by counting characters and dividing by 4
-    # Include a safety margin multiplier of 1.2
-    estimated_tokens = sum(len(str(m)) for m in messages) // 4 * 1.2
-    num_predict = 5000  # Keep the same prediction length
-    
-    return {
-        'num_ctx': int(estimated_tokens + num_predict),
-        'num_predict': num_predict,
-        'temperature': 1.0  # Set temperature for creative LLM
-    }
-
+    # "repeat_penalty": 1.2,
+    # "presence_penalty": 1.5,
+    # "frequency_penalty": 1.0,
+#     "mirostat_tau": 0.8,
+#     "mirostat_eta": 0.6,
+#     "min_p": 0.0,
+#     "tfs_z": 0.5,
+#     "repeat_last_n": 33,
 def execute_tool(tool_name, arguments):
     """Executes a tool function and returns the output and any error message."""
     function_to_call = tools.get_tool(tool_name)
@@ -173,18 +271,22 @@ def chat_agent(messages):
     story_dict = story.model_dump()
     story_dict.pop('acts', None)
     story_dict.pop('characters', None)
+    story_dict.pop('cover_design', None)
     
     # Generate model documentation
     model_docs = generate_model_docs(Story)
+    
+    logger.info("Starting chat agent")
     
     # Construct full messages with enhanced system context
     full_messages = [
         {
             "role": "system", 
             "content": f"""# User Preamble
+
 ## Task and Context
 
-You are responsible for helping the user set the title, plot_overview, author and other high level proeprties of the story.
+You are responsible for helping the user set the title, plot_overview, author and other high level properties of the story.
 You are only allowed to set the top level properties in the story object.
 You may not modify the acts or characters properties in this stage. There is another page for each of those.
 You may, however inject a small number of characters or other details into the plot_overview by appending to it in order to help bootstrap the story.
@@ -203,11 +305,20 @@ If a user asks you to make up a story, just start with the plot_overview and the
 5. **Cover Art**: Generate cover art for the story, including the front and back covers.
 6. **PDF Generation**: Compile the text into a PDF and create a separate PDF for the cover.
 
+### Important Rules:
+ - If tool calls depend on each other, you may use a placeholder in the final response to indicate where the output of the dependent tool should go. Replace the placeholder with the actual output of the dependent tool as soon as it is available.
+ - Use as many tools as you need.
+ - The final response to the user must be a markdown formatted response
+ - show_user_options will end the conversation
+
 ## Style Guide
 Output to the user can be formatted as markdown. Make sure to output actual values and not placeholders.
 
 ### Story Model Structure:
 {model_docs}
+
+### Project name:
+{current_project}
 
 ### Current story context (excluding acts and characters): 
 {json.dumps(story_dict, indent=2)}
@@ -219,12 +330,18 @@ Do not use any placeholders like [Insert generated text here] or [Generated text
 Only call set_property if the new value is different from the old value.
 If set_property is dependent on a previous creative_write, then you must call creative_write first.
 
-For finite options, like Yes/No/Confirm, use show_choices to ask the user which option they want to choose.
+## Tool Output Validation Rules
+After each tool call, you MUST:
+ - Validate that the output matches what you needed
+ - If the output is not satisfactory, call it again with a more specific prompt
+ - If you need to retry a tool call, explain to the user why you're doing so
+ - If it seems like the output is good, then ask the user if they approve or solicit a change with a show_user_options tool call e.g. "Would you like to save this title?" or "Would you like to try another plot overview?"
 
-Do not offer to redirect or move to another step until the user has confirmed the changes and the story overview seems complete.
+Remember: Quality is more important than speed. Don't hesitate to retry tool calls if the output isn't exactly what you need.
 
 """
         },
+        *few_shots,
         *messages
     ]
     
@@ -236,130 +353,123 @@ Do not offer to redirect or move to another step until the user has confirmed th
         "messages": full_messages
     })
     
-    response: ChatResponse = chat(
-        AGENT_MODEL,
-        messages=full_messages,
-        tools=list(tools.available_functions.values()),  # Use registered tools
-        options=get_chat_options(full_messages)
-    )
-
-    # Log the agent output
-    st.session_state.debug_logs.append({
-        "timestamp": datetime.now().isoformat(),
-        "type": "agent_output",
-        "model": AGENT_MODEL,
-        "response": response.model_dump()
-    })
-
-    # Create a list to collect all outputs
+    # Initialize variables for the loop
     tool_outputs = []
     final_response_parts = []
-
-    # Add assistant's initial response if any
-    if response.message.content:
-        final_response_parts.append(response.message.content)
-
-    # Handle tool calls
-    if response.message.tool_calls:
-        for tool in response.message.tool_calls:
-            # Get the emoji and pretty name for the tool
-            tool_emoji = tools.get_emoji(tool.function.name)
-            tool_metadata = tools.get_metadata(tool.function.name)
-            pretty_name = tool_metadata.get('pretty_name', tool.function.name)
-            
-            # Format arguments for display
-            args_str = ', '.join(f'{k}="{v}"' for k, v in tool.function.arguments.items())
-            
-            # Only update status if show_output is True
-            # if tools.should_show_output(tool.function.name):
-            status.update(label=f"{tool_emoji} Running Tool...")
-            st.write(f"{tool_emoji} Tool: {pretty_name}")
-
-            # Log tool input
-            st.session_state.debug_logs.append({
-                "timestamp": datetime.now().isoformat(),
-                "type": "tool_input",
-                "tool": tool.function.name,
-                "input": str(args_str)
-            })
-            
-            # Execute the tool function
-            output, error_msg = execute_tool(tool.function.name, tool.function.arguments)
-            
-            # For creative_write tool, show processing status
-            # if tool.function.name == 'creative_write':
-                # st.write(f"🧠 Processing creative output...")
-            st.spinner(f"🧠 Processing tool output")
-            
-            # Log tool output
-            st.session_state.debug_logs.append({
-                "timestamp": datetime.now().isoformat(),
-                "type": "tool_output",
-                "tool": tool.function.name,
-                "output": str(output),
-                "error": error_msg
-            })
-            
-            # Add tool result to collection for LLM context
-            tool_outputs.append({
-                "role": "tool",
-                "name": tool.function.name,
-                "content": error_msg if error_msg else str(output)
-            })
-            
-            # Only add formatted tool output to final response if show_output is True
-            if tools.should_show_output(tool.function.name):
-                final_response_parts.append(f"**{tool_emoji} {pretty_name}:**\n{error_msg if error_msg else str(output)}")
-
-        # Get the agent to interpret all tool results together
-        status.update(label=f"💭 Reviewing tool outputs...")
-        st.write(f"💭 Reviewing tool outputs...")
-        follow_up_messages = [
-            {
-                "role": "system",
-                "content": "Review the tool outputs and provide a clear response to the user in markdown format. If there were any errors, explain them and suggest next steps. If it is a story property, offer to save it to the story object. If the user had you save any properties, suggest what properties they might want to save next. If the tool output doesn't satisfy the request, then try it again."
-            },
-            *messages,  # Original conversation
-            *tool_outputs  # Tool results
-        ]
+    continue_processing = True
+    max_iterations = 10  # Prevent infinite loops
+    iteration = 0
+    
+    while continue_processing and iteration < max_iterations:
+        iteration += 1
         
-        # Log the follow-up prompt
-        st.session_state.debug_logs.append({
-            "timestamp": datetime.now().isoformat(),
-            "type": "follow_up_prompt",
-            "model": AGENT_MODEL,
-            "messages": follow_up_messages
-        })
-        
-        follow_up_response = chat(
+        # Get response from the model
+        response = ollama_client.chat(
             AGENT_MODEL,
-            messages=follow_up_messages,
-            options=get_chat_options(follow_up_messages)
+            messages= [*full_messages, *tool_outputs],  # Include previous tool outputs
+            tools=list(tools.available_functions.values()),
+            options=get_chat_options(full_messages),
+            keep_alive="1h"
         )
-        
-        # Log the follow-up response
+
+        # Log the agent output
         st.session_state.debug_logs.append({
             "timestamp": datetime.now().isoformat(),
-            "type": "follow_up_response",
+            "type": "agent_output",
             "model": AGENT_MODEL,
-            "response": follow_up_response.model_dump()
+            "response": response.model_dump()
         })
-        
-        if follow_up_response.message.content:
-            final_response_parts.append("\n" + follow_up_response.message.content)
 
-    # Combine all parts into a single response
-    final_response = "\n\n".join(final_response_parts)
-    
-    # Add single consolidated message to session state
-    st.session_state.messages.append({
-        "role": "assistant",
-        "content": final_response
-    })
-    
-    # Save the chat session
-    chat_session = ChatSession(messages=[Message(**m) for m in st.session_state.messages])
-    pm.save_chat(chat_name, chat_session)
+        # Check if there are no tool calls or only terminal tools
+        if not response.message.tool_calls:
+            continue_processing = False
+        else:
+            # Check if only terminal tools remain
+            terminal_tools = {'show_user_options',}
+            remaining_tools = {tool.function.name for tool in response.message.tool_calls}
+            if remaining_tools.issubset(terminal_tools):
+                continue_processing = False
+
+        # Process tool calls if any
+        if response.message.tool_calls:
+            for tool in response.message.tool_calls:
+                # Get tool metadata
+                tool_emoji = tools.get_emoji(tool.function.name)
+                tool_metadata = tools.get_metadata(tool.function.name)
+                pretty_name = tool_metadata.get('pretty_name', tool.function.name)
+                
+                # Format arguments for display
+                args_str = ', '.join(f'{k}="{v}"' for k, v in tool.function.arguments.items())
+                
+                status.update(label=f"Running Tool...")
+                st.write(f"{tool_emoji} Tool: **{pretty_name}**")
+
+                # Log tool input
+                st.session_state.debug_logs.append({
+                    "timestamp": datetime.now().isoformat(),
+                    "type": "tool_input",
+                    "tool": tool.function.name,
+                    "input": str(args_str)
+                })
+                
+                # Execute the tool function
+                output, error_msg = execute_tool(tool.function.name, tool.function.arguments)
+                
+                st.spinner(f"🧠 Processing tool output")
+                
+                # Log tool output
+                st.session_state.debug_logs.append({
+                    "timestamp": datetime.now().isoformat(),
+                    "type": "tool_output",
+                    "tool": tool.function.name,
+                    "output": str(output),
+                    "error": error_msg
+                })
+                
+                # Add tool result to collection for LLM context with validation reminder
+                tool_outputs.append({
+                    "role": "tool",
+                    "name": tool.function.name,
+                    "content": f"""# Tool Results
+
+**IMPORTANT:**
+If this tool output is not exactly what you needed, you need to call the same tool again with possibly different parameters. 
+If it seems good, then you can ask the user if they approve or solicit a change with a show_user_options tool call.
+Show the user exactly what properties and values you intend to set.
+Confirm with the user using show_user_options that they approve of the values you are setting.
+
+## Tool: {tool.function.name}
+
+## Parameters: {args_str}
+
+## Output: 
+
+{error_msg if error_msg else str(output)}
+"""
+                })
+
+                # Get the agent to interpret all tool results together
+                status.update(label=f"💭 Reviewing tool outputs...")
+                st.write(f"💭 Reviewing tool outputs...")
+                
+                # Only add formatted tool output to final response if show_output is True
+                if tools.should_show_output(tool.function.name):
+                    final_response_parts.append(f"**{tool_emoji} {pretty_name}:**\n{error_msg if error_msg else str(output)}")
+
+        # Add the final response if we're stopping
+        if not continue_processing and response.message.content:
+            st.session_state.messages.append({
+                "role": "assistant",
+                "content": response.message.content
+            })
+            
+            # Save the chat session
+            chat_session = ChatSession(messages=[Message(**m) for m in st.session_state.messages])
+            st.session_state.pm.save_chat(chat_name, chat_session)
+
+    # If we hit max iterations, add a warning
+    if iteration >= max_iterations:
+        st.warning("Maximum number of tool call iterations reached")
     
     # Set processing to false since we're done
     st.session_state.processing = False
@@ -395,8 +505,8 @@ def generate_model_docs(model: Type[BaseModel], indent: int = 0) -> str:
         field_type = field.annotation.__name__ if hasattr(field.annotation, '__name__') else str(field.annotation)
         
         # Handle Optional types
-        if str(field.annotation).startswith("typing.Optional"):
-            field_type = f"Optional[{field_type.replace('Optional[', '').replace(']', '')}]"
+        # if str(field.annotation).startswith("typing.Optional"):
+        #     field_type = f"Optional[{field_type.replace('Optional[', '').replace(']', '')}]"
         
         # For nested models, recursively generate docs
         if hasattr(field.annotation, 'model_fields'):
