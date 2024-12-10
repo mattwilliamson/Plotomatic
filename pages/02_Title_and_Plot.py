@@ -70,7 +70,7 @@ few_shots = [
                 "name": "show_user_options",
                 "arguments": {
                     "prompt": "Are you ready to start?",
-                    "choices": ["I'm ready!", "Not yet."]
+                    "options": ["I'm ready!", "Not yet."]
                 }
             }
         }]
@@ -91,7 +91,7 @@ few_shots = [
                     "name": "show_user_options",
                     "arguments": {
                         "prompt": "Would you like me to erase the title and start over?",
-                        "choices": ["Yes, erase it", "No, keep it"]
+                        "options": ["Yes, erase it", "No, keep it"]
                     }
                 }
             }
@@ -126,7 +126,7 @@ few_shots = [
                     "name": "show_user_options",
                     "arguments": {
                         "prompt": "How do you want to start?",
-                        "choices": ["Ask me some questions", "Make up a story"]
+                        "options": ["Ask me some questions", "Make up a story"]
                     }
                 }
             }
@@ -226,21 +226,22 @@ def get_chat_options(messages):
     # Estimate tokens by counting characters and dividing by 4
     # Include a safety margin multiplier of 1.2
     estimated_tokens = sum(len(str(m)) for m in messages) // 4 * 1.4
-    num_predict = 2000  # Keep the same prediction length
+    num_predict = 5000  # Keep the same prediction length
     # https://github.com/ollama/ollama/blob/main/docs/modelfile.md#valid-parameters-and-values
     # https://github.com/ollama/ollama/blob/main/docs/api.md
 
     return {
-        'num_ctx': int(estimated_tokens + num_predict),
+        # 'num_ctx': int(estimated_tokens + num_predict),
+        'num_ctx': 6000,
         'num_predict': num_predict,
-        "temperature": 0.4,             # 0.2 to 0.4    - A lower temperature ensures that responses are more deterministic and coherent. This helps the assistant provide clear and reliable answers without unnecessary creativity that could lead to confusion.
-        "top_p": 0.5,                   # 0.3 to 0.5    - A smaller top_k value restricts the assistant to a few of the highest probability tokens at each step. This focus on the most likely options helps maintain coherence and ensures that the assistant's responses are aligned with user expectations, particularly important in structured tasks like function calls.
-        "top_k": 10,                     # 5 and 10      - A lower top_k focuses on the most probable responses, enhancing clarity while still allowing for some diversity in word choice.
-        "mirostat_tau": 2.0,        # 1.0 to 2.0    - Setting this parameter within this range can help balance coherence and diversity in outputs, allowing for adjustments based on user feedback while keeping responses focused.
-        "mirostat_eta": 1.0,        # 0.5 to 1.0    - A moderate learning rate allows the model to adjust its outputs based on previous interactions, enhancing its ability to follow function calls accurately while maintaining coherence.
+        "temperature": 0.5,             # 0.2 to 0.4    - A lower temperature ensures that responses are more deterministic and coherent. This helps the assistant provide clear and reliable answers without unnecessary creativity that could lead to confusion.
+        # "top_p": 0.4,                   # 0.3 to 0.5    - A smaller top_k value restricts the assistant to a few of the highest probability tokens at each step. This focus on the most likely options helps maintain coherence and ensures that the assistant's responses are aligned with user expectations, particularly important in structured tasks like function calls.
+        # "top_k": 7,                     # 5 and 10      - A lower top_k focuses on the most probable responses, enhancing clarity while still allowing for some diversity in word choice.
+        # "mirostat_tau": 0.8,        # 1.0 to 2.0    - Setting this parameter within this range can help balance coherence and diversity in outputs, allowing for adjustments based on user feedback while keeping responses focused.
+        # "mirostat_eta": 0.6,        # 0.5 to 1.0    - A moderate learning rate allows the model to adjust its outputs based on previous interactions, enhancing its ability to follow function calls accurately while maintaining coherence.
         "mirostat": 1,              # 0 or 1        - Enabling Mirostat allows for dynamic control over the perplexity of the generated text, which helps in avoiding both "boredom traps" (excessive repetitions) and "confusion traps" (incoherence). This is particularly useful for applications requiring coherent outputs, such as function calls in an assistant. By maintaining an appropriate level of perplexity, Mirostat can help ensure that the generated text remains relevant and consistent.
-        "tfs_z": 0.3,               # 0.3 to 0.5    - TFS (Top-p Sampling with Temperature) z values in this range help control the diversity of the output while keeping it coherent. A lower value encourages more deterministic outputs, which is essential for an assistant focused on function calls.
-        "typical_p": 0.5,           # 0.5 to 0.7    - This range allows the model to generate responses that are typical or expected, enhancing coherence in its outputs. A typical_p value around 0.5 to 0.7 helps ensure that the assistant's responses are relevant and aligned with user queries.
+        # "tfs_z": 0.3,               # 0.3 to 0.5    - TFS (Top-p Sampling with Temperature) z values in this range help control the diversity of the output while keeping it coherent. A lower value encourages more deterministic outputs, which is essential for an assistant focused on function calls.
+        # "typical_p": 0.5,           # 0.5 to 0.7    - This range allows the model to generate responses that are typical or expected, enhancing coherence in its outputs. A typical_p value around 0.5 to 0.7 helps ensure that the assistant's responses are relevant and aligned with user queries.
         # "repeat_penalty": 1.0,          # 0.0 to 0.2    - A very low repeat penalty allows the model to repeat necessary information when relevant, which is crucial for function calls and maintaining context.
         # "presence_penalty": 0.3,        # 0.0 to 0.3    - Keeping this low ensures that the assistant can refer back to previously mentioned concepts or topics, which is helpful in maintaining a coherent conversation.
         # "frequency_penalty": 0.3,       # 0.0 to 0.3    - A low frequency penalty allows for the use of common phrases and terms, which can enhance clarity and make the assistant's responses more relatable and understandable.
@@ -248,24 +249,50 @@ def get_chat_options(messages):
         # "repeat_last_n": 33,        # 10 to 20      - Setting repeat_last_n to a lower value helps prevent excessive repetition in responses, which can detract from coherence. This range allows the model to maintain some context from previous interactions without becoming too repetitive.
         'seed': random.randint(0, 1000000),
     }
+    # Defaults
+    # "num_keep": 5,
+    # "seed": 42,
+    # "num_predict": 100,
+    # "top_k": 20,
+    # "top_p": 0.9,
+    # "min_p": 0.0,
+    # "tfs_z": 0.5,
+    # "typical_p": 0.7,
+    # "repeat_last_n": 33,
+    # "temperature": 0.8,
     # "repeat_penalty": 1.2,
     # "presence_penalty": 1.5,
     # "frequency_penalty": 1.0,
-#     "mirostat_tau": 0.8,
-#     "mirostat_eta": 0.6,
-#     "min_p": 0.0,
-#     "tfs_z": 0.5,
-#     "repeat_last_n": 33,
+    # "mirostat": 1,
+    # "mirostat_tau": 0.8,
+    # "mirostat_eta": 0.6,
+    # "penalize_newline": true,
+    # "stop": ["\n", "user:"],
+    # "numa": false,
+    # "num_ctx": 1024,
+    # "num_batch": 2,
+    # "num_gpu": 1,
+    # "main_gpu": 0,
+    # "low_vram": false,
+    # "vocab_only": false,
+    # "use_mmap": true,
+    # "use_mlock": false,
+    # "num_thread": 8
 def execute_tool(tool_name, arguments):
     """Executes a tool function and returns the output and any error message."""
+    logger.info(f"execute_tool: {tool_name} {arguments}")
     function_to_call = tools.get_tool(tool_name)
+
     if function_to_call:
         try:
             output = function_to_call(**arguments)
+            logger.info(f"execute_tool output: {output}")
             return output, None
         except Exception as e:
+            logger.info(f"execute_tool error: {e}")
             return None, f"Error executing {tool_name}: {str(e)}"
     else:
+        logger.info(f"Tool {tool_name} not found or invalid arguments")
         return None, f"Tool {tool_name} not found or invalid arguments"
 
 def chat_agent(messages):
@@ -287,7 +314,7 @@ def chat_agent(messages):
     full_messages = [
         {
             "role": "system", 
-            "content": f"""# User Preamble
+            "content": AGENT_SYSTEM_PROMPT + f"""# User Preamble
 
 ## Task and Context
 
@@ -339,7 +366,6 @@ If set_property is dependent on a previous creative_write, then you must call cr
 After each tool call, you MUST:
  - Validate that the output matches what you needed
  - If the output is not satisfactory, call it again with a more specific prompt
- - If you need to retry a tool call, explain to the user why you're doing so
  - If it seems like the output is good, then ask the user if they approve or solicit a change with a show_user_options tool call e.g. "Would you like to save this title?" or "Would you like to try another plot overview?"
 
 Remember: Quality is more important than speed. Don't hesitate to retry tool calls if the output isn't exactly what you need.
@@ -367,6 +393,7 @@ Remember: Quality is more important than speed. Don't hesitate to retry tool cal
     
     while continue_processing and iteration < max_iterations:
         iteration += 1
+        logger.info(f"ChatAgent Iteration {iteration}")
         
         # Get response from the model
         response = ollama_client.chat(
@@ -375,7 +402,6 @@ Remember: Quality is more important than speed. Don't hesitate to retry tool cal
             tools=list(tools.available_functions.values()),
             options=get_chat_options(full_messages),
             keep_alive="1h", 
-            system=AGENT_SYSTEM_PROMPT
         )
 
         # Log the agent output
@@ -388,12 +414,15 @@ Remember: Quality is more important than speed. Don't hesitate to retry tool cal
 
         # Check if there are no tool calls or only terminal tools
         if not response.message.tool_calls:
+            logger.info("No tool calls")
             continue_processing = False
         else:
             # Check if only terminal tools remain
             terminal_tools = {'show_user_options',}
             remaining_tools = {tool.function.name for tool in response.message.tool_calls}
+            logger.info(f"Remaining tools: {remaining_tools}")
             if remaining_tools.issubset(terminal_tools):
+                logger.info("Only terminal tools remain")
                 continue_processing = False
 
         # Process tool calls if any
@@ -403,6 +432,9 @@ Remember: Quality is more important than speed. Don't hesitate to retry tool cal
                 tool_emoji = tools.get_emoji(tool.function.name)
                 tool_metadata = tools.get_metadata(tool.function.name)
                 pretty_name = tool_metadata.get('pretty_name', tool.function.name)
+                
+                logger.info(f"Tool: {tool.function.name}")
+                logger.info(f"Tool Arguments: {tool.function.arguments}")
                 
                 # Format arguments for display
                 args_str = ', '.join(f'{k}="{v}"' for k, v in tool.function.arguments.items())
@@ -423,6 +455,10 @@ Remember: Quality is more important than speed. Don't hesitate to retry tool cal
                 
                 st.spinner(f"🧠 Processing tool output")
                 
+                logger.info(f"Tool Output: {output}")
+                if error_msg:
+                    logger.info(f"Error Message: {error_msg}")
+                
                 # Log tool output
                 st.session_state.debug_logs.append({
                     "timestamp": datetime.now().isoformat(),
@@ -438,12 +474,6 @@ Remember: Quality is more important than speed. Don't hesitate to retry tool cal
                     "name": tool.function.name,
                     "content": f"""# Tool Results
 
-**IMPORTANT:**
-If this tool output is not exactly what you needed, you need to call the same tool again with possibly different parameters. 
-If it seems good, then you can ask the user if they approve or solicit a change with a show_user_options tool call.
-Show the user exactly what properties and values you intend to set.
-Confirm with the user using show_user_options that they approve of the values you are setting.
-
 ## Tool: {tool.function.name}
 
 ## Parameters: {args_str}
@@ -454,9 +484,25 @@ Confirm with the user using show_user_options that they approve of the values yo
 """
                 })
 
+                tool_outputs.append({
+                    "role": "user",
+                    "name": tool.function.name,
+                    "content": f"""If any tool outputs are not exactly what you needed, try it again. 
+If it seems good, then you can ask the user if they approve or solicit a change with a show_user_options tool call.
+Show the user exactly what properties and values you intend to set.
+Confirm with the user using show_user_options that they approve of the values you are setting. 
+
+Give your final response in markdown format to the user if you can. Otherwise get clarification from the user or execute tools to gather more information.
+"""})
+                
+                # TODO: Set all properties we have info for
+
                 # Get the agent to interpret all tool results together
                 status.update(label=f"💭 Reviewing tool outputs...")
                 st.write(f"💭 Reviewing tool outputs...")
+                logger.info(f"Reviewing tool outputs...")
+
+                # TODO: Might need to reset tools once final response is generated
                 
                 # Only add formatted tool output to final response if show_output is True
                 if tools.should_show_output(tool.function.name):
@@ -464,23 +510,38 @@ Confirm with the user using show_user_options that they approve of the values yo
 
         # Add the final response if we're stopping
         if not continue_processing and response.message.content:
-            st.session_state.messages.append({
+            logger.info(f"Adding final response to messages...")
+            logger.info(f"Final response: {response.message.content}")
+
+            message_data = {
                 "role": "assistant",
                 "content": response.message.content
-            })
+            }
+            
+            # Add tool calls if present
+            if response.message.tool_calls:
+                message_data["tool_calls"] = [
+                    {"function": tool.function.model_dump()} 
+                    for tool in response.message.tool_calls
+                ]
+            
+            st.session_state.messages.append(message_data)
             
             # Save the chat session
+            logger.info(f"Saving chat session...")
             chat_session = ChatSession(messages=[Message(**m) for m in st.session_state.messages])
             st.session_state.pm.save_chat(chat_name, chat_session)
 
     # If we hit max iterations, add a warning
     if iteration >= max_iterations:
+        logger.info("Maximum number of tool call iterations reached")
         st.warning("Maximum number of tool call iterations reached")
     
     # Set processing to false since we're done
     st.session_state.processing = False
     
     # Force a rerun to update the UI
+    logger.info(f"chat_agent rerun")
     st.rerun()
     
     return response
@@ -488,6 +549,7 @@ Confirm with the user using show_user_options that they approve of the values yo
 def process_message():
     """Process the message when the user hits enter or clicks send."""
     if prompt := st.session_state.chat_input:
+        logger.info(f"Processing message: {prompt}")
         st.session_state.messages.append({"role": "user", "content": prompt})
         # Clear any pending choices since user typed a message instead
         st.session_state.pending_choices = None
@@ -531,6 +593,7 @@ def get_thinking_emoji():
 # Replace the handle_input function with:
 def handle_input():
     if prompt := st.session_state.chat_input:
+        logger.info(f"User input: {prompt}")
         st.session_state.messages.append({"role": "user", "content": prompt})
         st.session_state.processing = True
         st.rerun()
@@ -596,30 +659,44 @@ with chat_tab:
     chat_container = st.container(border=True)
     with chat_container:
         # Display messages
-        for msg in st.session_state.messages:
+        for i, msg in enumerate(st.session_state.messages):
+            logger.info(f"chat_container displaying Message {i}: {msg}")
+
             with st.chat_message(msg["role"]):
                 st.markdown(msg["content"])
+                
+                # Check if this is the last assistant message and has show_user_options tool calls
+                is_last_assistant = (msg["role"] == "assistant" and 
+                                   i == len(st.session_state.messages) - 1)
+                
+                logger.info(f"is_last_assistant: {is_last_assistant}")
+                
+                if is_last_assistant and msg.get("tool_calls"):
+                    # Look for show_user_options tool calls
+                    for tool_call in msg["tool_calls"]:
+                        logger.info(f"chat_container tool_call: {tool_call}")
+                        
+                        if tool_call["function"]["name"] == "show_user_options":
+                            logger.info(f"chat_container tool_call.function.arguments: {tool_call['function']['arguments']}")
+                            
+                            args = tool_call["function"]["arguments"]
+                            st.markdown(f"**{args['prompt']}**")
+                            
+                            num_choices = len(args['choices'])
 
-        # Show choices if any are pending
-        if st.session_state.pending_choices:
-            st.markdown(f"**{st.session_state.pending_choices['prompt']}**")
-            num_choices = len(st.session_state.pending_choices['choices'])
-            if num_choices > 0:
-                cols = st.columns(max(1, num_choices))
-                for i, choice in enumerate(st.session_state.pending_choices['choices']):
-                    with cols[i]:
-                        # Convert choice to string to ensure it's a valid button label
-                        if st.button(str(choice), use_container_width=True): # , type="primary"
-                            # Add the choice as a user message
-                            st.session_state.messages.append({
-                                "role": "user",
-                                "content": str(choice)
-                            })
-                            # Clear the pending choices
-                            st.session_state.pending_choices = None
-                            # Set processing to true to get LLM response
-                            st.session_state.processing = True
-                            st.rerun()
+                            logger.info(f"chat_container num_choices: {num_choices}")
+                            
+                            if num_choices > 0:
+                                cols = st.columns(max(1, num_choices))
+                                for i, choice in enumerate(args['choices']):
+                                    with cols[i]:
+                                        if st.button(str(choice), use_container_width=True):
+                                            st.session_state.messages.append({
+                                                "role": "user",
+                                                "content": str(choice)
+                                            })
+                                            st.session_state.processing = True
+                                            # st.rerun()
 
         # Process any pending message
         if st.session_state.processing:

@@ -85,13 +85,11 @@ def set_property(property_name: str, value: str):
 )
 def creative_write(prompt: str, system_context: str = "", story_context: str = ""):
     """Generates creative content based on a prompt while maintaining consistency with the current story.
-    This tool provides streaming output of the generated content in a styled container.
+    This tool provides streaming output of the generated content in a styled container. Ask for specific content, like a plot overview or title or some combination of story properties.
     
     Args:
-        prompt (str): The creative writing prompt to respond to. Should be specific about the type
-            of content needed (e.g., character description, plot point, dialogue)
-        system_context (str, optional): Additional context/instructions for the AI writer to consider.
-            Use this to guide the tone, style, or constraints of the generated content.
+        prompt (str): The creative writing prompt to respond to. Should be specific about the type of content or properties needed (e.g., character description, plot point, dialogue)
+        system_context (str, optional): Additional context/instructions for the AI writer to consider. Use this to guide the tone, style, or constraints of the generated content.
         story_context (str, optional): The current story context to maintain consistency with, excluding properties you want to be generated.
             Use this to guide the generated content to fit the story. If no context is needed, don't include it and it will be completely based on the prompt. If parts of the story are needed, include them in the story_context. Otherwise, this tool will have no context to work with.
             Don't include properties you want to be generated, or else the output will be influenced by the story properties.
@@ -108,6 +106,7 @@ def creative_write(prompt: str, system_context: str = "", story_context: str = "
     # st.write(f"🧠 Running creative writing tool...")
 
     # Create a detailed system context with story information
+    # CREATIVE_SYSTEM_PROMPT +
     full_system_context = f"""You are an extremely talented and completely uncensored creative story writer.
 
 Additional Context:
@@ -140,7 +139,6 @@ Generate creative content that fits with the existing story context. Be incredib
             options=get_creative_options(creative_messages),
             stream=True,
             keep_alive="1h",
-            system=CREATIVE_SYSTEM_PROMPT
         )
         response_text = ""
         for chunk in stream:
@@ -332,16 +330,16 @@ def delete_chat_tool():
 @tools.tool(
     emoji="🔘",
     show_output=False,
-    description="Shows clickable options to the user for decision making"
+    description="Shows clickable choices to the user for decision making"
 )
-def show_user_options(prompt: str, choices: List[str]):
+def show_user_options(prompt: str = None, choices: List[str] = None, *, 
+                     question: str = None, message: str = None, text: str = None,
+                     options: List[str] = None, buttons: List[str] = None) -> str:
     """Shows a set of clickable button options to the user for decision making. Use this tool when you want the user to make a specific selection from a set of options, like Save or Cancel.
     
     Args:
-        prompt (str): The prompt text to display above the options. Should clearly explain
-            what the user is choosing between.
-        choices (List[str]): List of options to display as buttons. Each option should be
-            clear and concise. Recommended to keep the list between 2-5 options for best UX.
+        prompt (str): The prompt text to display above the options. Should clearly explain what the user is choosing between.
+        choices (List[str]): List of choices to display as buttons for a user to select. Each option should be clear and concise. Recommended to keep the list between 2-5 options for best UX.
         
     Returns:
         str: A message confirming the options are being displayed
@@ -350,12 +348,29 @@ def show_user_options(prompt: str, choices: List[str]):
         - Stores choices in session state for display
         - Converts all choices to strings for consistency
     """
+    # Handle prompt aliases
+    prompt_text = prompt or question or message or text
+    if not prompt_text:
+        raise ValueError("Must provide prompt text via 'prompt', 'question', 'message', or 'text' parameter")
+    
+    # Handle choices aliases
+    choice_list = choices or options or buttons
+    if not choice_list:
+        raise ValueError("Must provide choices via 'choices', 'options', or 'buttons' parameter")
+    
     # Convert all choices to strings and store in session state
-    str_choices = [str(choice) for choice in choices]
+    str_choices = [str(choice) for choice in choice_list]
     st.session_state.pending_choices = {
-        "prompt": prompt,
+        "prompt": prompt_text,
         "choices": str_choices
     }
+    st.session_state.needs_rerun = True
+
+    import streamlit.components.v1 as components
+    for choice in str_choices:
+        components.html(
+            f"<script>console.log('{choice}');</script>"
+        )
     
     return f"Showing options: {', '.join(str_choices)}"
 
@@ -402,11 +417,12 @@ def get_creative_options(messages: List[Dict[str, str]]) -> Dict[str, Any]:
     """
     # Estimate tokens by counting characters and dividing by 4
     # Include a safety margin multiplier of 1.2
-    estimated_tokens = sum(len(str(m)) for m in messages) // 4 * 1.4
+    # estimated_tokens = sum(len(str(m)) for m in messages) // 4 * 1.4
     num_predict = 5000  # Keep the same prediction length
     
     return {
-        'num_ctx': int(estimated_tokens + num_predict),
+        # 'num_ctx': int(estimated_tokens + num_predict),
+        'num_ctx': 6000,
         'num_predict': num_predict,
         'temperature': 0.9,         # 0.8 to 1.0 A higher temperature increases randomness in the output, allowing for more creative and unexpected ideas. This encourages the model to explore a wider range of vocabulary and narrative possibilities.
         "top_p": 0.9,               # Setting top_p to 0.9 allows the model to consider a broader set of potential next tokens, promoting creativity while still maintaining some coherence. This helps generate varied and rich text.
@@ -414,6 +430,7 @@ def get_creative_options(messages: List[Dict[str, str]]) -> Dict[str, Any]:
         "repeat_penalty": 1.1,      # 1.0 to 1.2 A lower repeat penalty (around 1.0 to 1.2) allows for some repetition, which can be useful in creative writing, especially for stylistic purposes or thematic emphasis. This range encourages the model to use familiar phrases or motifs without becoming overly repetitive.
         "presence_penalty": 0.2,    # 0.0 to 0.3 Keeping the presence penalty low allows the model to introduce new ideas and concepts freely, which is essential for creativity. This encourages exploration of diverse themes and characters without overly restricting the introduction of new elements.
         "frequency_penalty": 0.2,   # 0.0 to 0.3 A low frequency penalty helps maintain a natural flow in the narrative by allowing commonly used words and phrases to recur without penalty. This is particularly important in creative writing, where certain expressions may need to be revisited for effect or clarity.
+        "mirostat": 1,              # 0 or 1 Enabling Mirostat allows for dynamic control over the perplexity of the generated text, which helps in avoiding both "boredom traps" (excessive repetitions) and "confusion traps" (incoherence). This is particularly useful for applications requiring coherent outputs, such as function calls in an assistant. By maintaining an appropriate level of perplexity, Mirostat can help ensure that the generated text remains relevant and consistent.
         "mirostat_tau": 1.5,        # 1.0 to 1.5 A lower tau value can help maintain some level of coherence while still allowing for creative exploration. This setting lets the model adjust its perplexity dynamically without becoming too erratic.
         "mirostat_eta": 0.7,        # 0.5 to 1.0 A moderate eta value allows for some adaptability in response generation without overly constraining creativity, helping to balance coherence with imaginative output.
         "tfs_z": 0.6,               # 0.5 to 0.7 A slightly higher TFS z value can encourage more exploration in word choice while still keeping some structure in the generated text, which is beneficial for storytelling.
