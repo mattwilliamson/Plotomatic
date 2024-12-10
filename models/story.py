@@ -6,7 +6,7 @@ from IPython.display import display, Markdown
 from pathlib import Path
 
 from .base import BaseModel
-from .dialog import StoryDialogue
+from .story_dialogue import StoryDialogue, SceneDialogue, ActDialogue, ChapterDialogue
 import settings
 
 def get_step_directory(step_number: int) -> str:
@@ -520,6 +520,10 @@ class CoverDesign(BaseModel):
         "", 
         description="Color for title and author text in hex code or color name. Must provide sufficient contrast with background for optimal readability"
     )
+    tagline: Optional[str] = Field(
+        "", 
+        description="Short, catchy phrase that encapsulates the story's main appeal or unique selling point. Used in marketing and promotion"
+    )
     back_cover_tagline: Optional[str] = Field(
         "", 
         description="Short, compelling hook (1-2 sentences) that captures the essence of the story and appears prominently on the back cover"
@@ -539,10 +543,10 @@ class Story(BaseModel):
         None, 
         description="Contact email address for the author, used for notifications and communication"
     )
-    prompt: Optional[str] = Field(
-        "", 
-        description="Original creative prompt or inspiration that sparked the story idea. Can include themes, concepts, or specific elements to incorporate"
-    )
+    # prompt: Optional[str] = Field(
+    #     "", 
+    #     description="Original creative prompt or inspiration that sparked the story idea. Can include themes, concepts, or specific elements to incorporate"
+    # )
     title: Optional[str] = Field(
         "", 
         description="Main title of the story. Should be memorable, relevant to the plot, and capture the story's essence"
@@ -558,10 +562,6 @@ class Story(BaseModel):
     narrative_style: Optional[str] = Field(
         "", 
         description="Author's distinctive writing approach, including tone, voice, and stylistic choices (e.g., 'Minimalist', 'Descriptive', 'Stream of consciousness')"
-    )
-    tagline: Optional[str] = Field(
-        "", 
-        description="Short, catchy phrase that encapsulates the story's main appeal or unique selling point. Used in marketing and promotion"
     )
     time_period: Optional[str] = Field(
         "", 
@@ -655,6 +655,9 @@ class Story(BaseModel):
 
     def get_story_dialogue(self) -> Optional['StoryDialogue']:
         """Get the associated StoryDialogue."""
+        if not self._story_dialogue:
+            self._story_dialogue = StoryDialogue()
+            self.set_story_dialogue(self._story_dialogue)
         return self._story_dialogue
 
     def set_parent_references(self):
@@ -735,10 +738,13 @@ class Story(BaseModel):
         with open(story_path, 'w') as f:
             json.dump(self.model_dump(), f, indent=4)
             
-        # Save dialogue data if it exists
+        # Save dialogue data, create it if it doesn't exist
+        self.get_story_dialogue()
+
         if self._story_dialogue:
             dialogue_path = directory_path / "story_dialogue.json"
             with open(dialogue_path, 'w') as f:
                 json.dump(self._story_dialogue.model_dump(), f, indent=4)
 
     # ... markdown_overview, markdown_full_summary, display, copy, save/load methods ...
+

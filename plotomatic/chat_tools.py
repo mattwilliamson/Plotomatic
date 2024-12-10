@@ -11,7 +11,7 @@ from .tools import ToolManager
 from models.story import Story
 from models.chat import Message, ChatSession
 from plotomatic.git_utils import get_repo, commit_file
-from plotomatic.llm_models import ollama_client, CREATIVE_MODEL
+from plotomatic.llm_models import ollama_client, CREATIVE_MODEL, CREATIVE_SYSTEM_PROMPT
 
 # Create a tool manager instance
 tools = ToolManager()
@@ -139,7 +139,8 @@ Generate creative content that fits with the existing story context. Be incredib
             messages=creative_messages,
             options=get_creative_options(creative_messages),
             stream=True,
-            keep_alive="1h"
+            keep_alive="1h",
+            system=CREATIVE_SYSTEM_PROMPT
         )
         response_text = ""
         for chunk in stream:

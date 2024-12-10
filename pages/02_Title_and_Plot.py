@@ -3,7 +3,7 @@ from plotomatic.llm_models import ollama_client
 from project_manager import ProjectManager
 from models.story import Story
 from models.chat import Message, ChatSession
-from components import view_diffs_and_manage_changes, selected_project_name, project_selector
+from plotomatic.components import view_diffs_and_manage_changes, selected_project_name, project_selector
 from plotomatic.git_utils import get_repo, get_changed_files, commit_file
 from typing import Type
 from pydantic import BaseModel
@@ -12,7 +12,7 @@ from datetime import datetime
 from streamlit import dialog
 import time
 from plotomatic.chat_tools import tools, save_current_state, format_diff
-from plotomatic.llm_models import BASE_MODELS, AGENT_MODEL, CREATIVE_MODEL, create_model, ensure_base_models, ensure_custom_models
+from plotomatic.llm_models import BASE_MODELS, AGENT_MODEL, CREATIVE_MODEL, AGENT_SYSTEM_PROMPT, CREATIVE_SYSTEM_PROMPT, create_model, ensure_base_models
 import logging
 from streamlit.logger import get_logger
 import random
@@ -24,7 +24,7 @@ logger = get_logger('plotomatic')
 chat_name = "title_plot_chat"
 
 # Ensure models exist when the app starts
-ensure_custom_models()
+ensure_base_models()
 
 st.set_page_config(page_title="Story Chatbot", page_icon="📖", layout="wide")
 
@@ -49,6 +49,11 @@ if current_project != st.session_state.last_loaded_project:
 
 # Load story and chat session for current project
 story = pm.load_story()
+
+# If there is no story, redirect to the story creation page
+if not story:
+    st.switch_page("pages/00_Select_Project.py")
+
 chat_session = pm.load_chat(chat_name)
 
 # Initialize session states after potential reload
@@ -231,15 +236,15 @@ def get_chat_options(messages):
         "temperature": 0.4,             # 0.2 to 0.4    - A lower temperature ensures that responses are more deterministic and coherent. This helps the assistant provide clear and reliable answers without unnecessary creativity that could lead to confusion.
         "top_p": 0.5,                   # 0.3 to 0.5    - A smaller top_k value restricts the assistant to a few of the highest probability tokens at each step. This focus on the most likely options helps maintain coherence and ensures that the assistant's responses are aligned with user expectations, particularly important in structured tasks like function calls.
         "top_k": 10,                     # 5 and 10      - A lower top_k focuses on the most probable responses, enhancing clarity while still allowing for some diversity in word choice.
-        # "repeat_penalty": 1.0,          # 0.0 to 0.2    - A very low repeat penalty allows the model to repeat necessary information when relevant, which is crucial for function calls and maintaining context.
-        # "presence_penalty": 0.3,        # 0.0 to 0.3    - Keeping this low ensures that the assistant can refer back to previously mentioned concepts or topics, which is helpful in maintaining a coherent conversation.
-        # "frequency_penalty": 0.3,       # 0.0 to 0.3    - A low frequency penalty allows for the use of common phrases and terms, which can enhance clarity and make the assistant's responses more relatable and understandable.
         "mirostat_tau": 2.0,        # 1.0 to 2.0    - Setting this parameter within this range can help balance coherence and diversity in outputs, allowing for adjustments based on user feedback while keeping responses focused.
         "mirostat_eta": 1.0,        # 0.5 to 1.0    - A moderate learning rate allows the model to adjust its outputs based on previous interactions, enhancing its ability to follow function calls accurately while maintaining coherence.
         "mirostat": 1,              # 0 or 1        - Enabling Mirostat allows for dynamic control over the perplexity of the generated text, which helps in avoiding both "boredom traps" (excessive repetitions) and "confusion traps" (incoherence). This is particularly useful for applications requiring coherent outputs, such as function calls in an assistant. By maintaining an appropriate level of perplexity, Mirostat can help ensure that the generated text remains relevant and consistent.
-        # "min_p": 0.1,               # 0.0 to 0.1    - Setting min_p to a very low value allows for a broader range of responses while still maintaining coherence. This ensures that the assistant can explore options without being overly constrained, which is useful for function calls.
         "tfs_z": 0.3,               # 0.3 to 0.5    - TFS (Top-p Sampling with Temperature) z values in this range help control the diversity of the output while keeping it coherent. A lower value encourages more deterministic outputs, which is essential for an assistant focused on function calls.
         "typical_p": 0.5,           # 0.5 to 0.7    - This range allows the model to generate responses that are typical or expected, enhancing coherence in its outputs. A typical_p value around 0.5 to 0.7 helps ensure that the assistant's responses are relevant and aligned with user queries.
+        # "repeat_penalty": 1.0,          # 0.0 to 0.2    - A very low repeat penalty allows the model to repeat necessary information when relevant, which is crucial for function calls and maintaining context.
+        # "presence_penalty": 0.3,        # 0.0 to 0.3    - Keeping this low ensures that the assistant can refer back to previously mentioned concepts or topics, which is helpful in maintaining a coherent conversation.
+        # "frequency_penalty": 0.3,       # 0.0 to 0.3    - A low frequency penalty allows for the use of common phrases and terms, which can enhance clarity and make the assistant's responses more relatable and understandable.
+        # "min_p": 0.1,               # 0.0 to 0.1    - Setting min_p to a very low value allows for a broader range of responses while still maintaining coherence. This ensures that the assistant can explore options without being overly constrained, which is useful for function calls.
         # "repeat_last_n": 33,        # 10 to 20      - Setting repeat_last_n to a lower value helps prevent excessive repetition in responses, which can detract from coherence. This range allows the model to maintain some context from previous interactions without becoming too repetitive.
         'seed': random.randint(0, 1000000),
     }
@@ -369,7 +374,8 @@ Remember: Quality is more important than speed. Don't hesitate to retry tool cal
             messages= [*full_messages, *tool_outputs],  # Include previous tool outputs
             tools=list(tools.available_functions.values()),
             options=get_chat_options(full_messages),
-            keep_alive="1h"
+            keep_alive="1h", 
+            system=AGENT_SYSTEM_PROMPT
         )
 
         # Log the agent output

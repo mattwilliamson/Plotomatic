@@ -1,7 +1,7 @@
 # pages/1_Start_Project.py
 
 import streamlit as st
-from components import project_selector, view_diffs_and_manage_changes, selected_project_name
+from plotomatic.components import project_selector, view_diffs_and_manage_changes, selected_project_name
 from project_manager import ProjectManager, PROJECT_LIST_KEY, CURRENT_PROJECT_KEY
 from streamlit_extras.switch_page_button import switch_page
 
@@ -18,11 +18,8 @@ def start_project():
     with st.container():
         selected_project_name()
 
-        st.title("Open an Existing Project")
-        st.write(st.session_state[CURRENT_PROJECT_KEY])
-        project_selector()
-
         st.title("Start a New Project")
+        project_selector()
 
         with st.form("create_project_form"):
             new_project_name = st.text_input("Enter New Project Name")
@@ -31,6 +28,7 @@ def start_project():
                 if new_project_name:
                     success = pm.create_project(new_project_name)
                     if success:
+                        st.toast(f"Created new project: {new_project_name} 🎉", icon="✨")
                         st.success(f"New project '{new_project_name}' created.")
                         pm.open_project(new_project_name)
                         set_project(new_project_name)
@@ -38,8 +36,10 @@ def start_project():
                         switch_page("start story")
                         st.rerun()
                     else:
+                        st.toast(f"Project '{new_project_name}' already exists", icon="⚠️")
                         st.error(f"Project '{new_project_name}' already exists.")
                 else:
+                    st.toast("Please enter a project name", icon="❗")
                     st.error("Please enter a project name.")
 
         # Include project selector and diff management

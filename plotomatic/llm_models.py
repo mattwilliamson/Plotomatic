@@ -15,6 +15,8 @@ CREATIVE_MODEL = "plotomatic-agent"
 # AGENT_MODEL = "plotomatic-agent"
 # CREATIVE_MODEL = "plotomatic-creative"
 
+
+
 # Base model names that we can create custom models from
 BASE_MODELS = {
     # AGENT_MODEL: "command-r",
@@ -199,38 +201,38 @@ def ensure_base_models() -> None:
     ) 
 
 
-# Create custom models if they don't exist
-def ensure_custom_models():
-    # Ensure base models exist first
-    # ensure_base_models()
+# # Create custom models if they don't exist
+# def ensure_custom_models():
+#     # Ensure base models exist first
+#     # ensure_base_models()
     
-    # # Create agent model
-    # create_model(
-    #     AGENT_MODEL,
-    #     BASE_MODELS[AGENT_MODEL],
-    #     AGENT_SYSTEM_PROMPT
-    # )
+#     # # Create agent model
+#     # create_model(
+#     #     AGENT_MODEL,
+#     #     BASE_MODELS[AGENT_MODEL],
+#     #     AGENT_SYSTEM_PROMPT
+#     # )
     
-    # # Create creative model
-    # create_model(
-    #     CREATIVE_MODEL,
-    #     BASE_MODELS[CREATIVE_MODEL],
-    #     CREATIVE_SYSTEM_PROMPT
-    # )
+#     # # Create creative model
+#     # create_model(
+#     #     CREATIVE_MODEL,
+#     #     BASE_MODELS[CREATIVE_MODEL],
+#     #     CREATIVE_SYSTEM_PROMPT
+#     # )
 
-    llama_template = get_llama_template()
+#     llama_template = get_llama_template()
     
-    # TODO: manually create these for now assuming llama3.3 for both models
-    create_model(
-        AGENT_MODEL,
-        "llama3.3",
-        AGENT_SYSTEM_PROMPT,
-        llama_template
-    ) 
+#     # TODO: manually create these for now assuming llama3.3 for both models
+#     create_model(
+#         AGENT_MODEL,
+#         "llama3.3",
+#         AGENT_SYSTEM_PROMPT,
+#         llama_template
+#     ) 
 
-    create_model(
-        AGENT_MODEL,
-        "llama3.3",
-        CREATIVE_SYSTEM_PROMPT,
-        llama_template
-    ) 
+#     create_model(
+#         AGENT_MODEL,
+#         "llama3.3",
+#         CREATIVE_SYSTEM_PROMPT,
+#         llama_template
+#     ) 

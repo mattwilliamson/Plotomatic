@@ -3,7 +3,7 @@ from .story import (
     Story, Act, Chapter, Scene, Character, CharacterArc,
     CharacterRelationship, Prop, StoryBeat, Subplot, EmotionalArc
 )
-from .dialog import (
+from .story_dialogue import (
     DialogueLine, SceneDialogue, ChapterDialogue,
     ActDialogue, StoryDialogue
 )

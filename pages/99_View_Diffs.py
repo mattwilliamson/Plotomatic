@@ -35,7 +35,7 @@ def view_diffs():
             else:
                 st.write("No differences found.")
     else:
-        st.write("No changes detected.")
+        st.write("No uncommitted changes.")
 
     commit_message = st.text_input("Commit Message", value="Updated files")
 

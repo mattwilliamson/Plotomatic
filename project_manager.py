@@ -20,6 +20,9 @@ class ProjectManager:
         self.stories_dir.mkdir(parents=True, exist_ok=True)  # Ensure the directory exists
         self.session_file = self.stories_dir / SESSION_FILE
         self._load_session()
+        if 'author_source' not in self.session_settings:
+            self.session_settings['author_source'] = None
+            self._save_session()
 
     def _load_session(self):
         """Load session settings from the session file."""
@@ -40,25 +43,41 @@ class ProjectManager:
         st.session_state[PROJECT_LIST_KEY] = projects
         return projects
 
-    def create_project(self, project_name: str):
-        """Create a new project directory and initialize it."""
+    def create_project(self, project_name: str) -> bool:
+        """Create a new project directory and initialize it.
+        
+        Args:
+            project_name: The name of the project to create
+            
+        Returns:
+            bool: True if the project was created, False if it already existed
+        """
         project_path = self.stories_dir / project_name
-        if not project_path.exists():
-            project_path.mkdir(parents=True, exist_ok=True)
-            repo = create_repo(project_path)
-            Story().save_to_directory(project_path)  # Create an empty story
-            add_file(repo, 'story.json')
-            add_file(repo, 'story_dialogue.json')
-            commit_changes(repo, "Initial commit: Add empty story")
-            return True
-        return False
 
-    def open_project(self, project_name: str):
-        """Set the current project in session settings."""
+        # Switch to the new project
+        self.session_settings[CURRENT_PROJECT_KEY] = project_name
+        self._save_session()
+
+        if project_path.exists():
+            return False
+        
+        project_path.mkdir(parents=True, exist_ok=True)
+        repo = create_repo(project_path)
+        story = Story()
+        story.get_story_dialogue() # Create empty story dialogue
+        story.save_to_directory(project_path)  # Create an empty story
+        add_file(repo, 'story.json')
+        add_file(repo, 'story_dialogue.json')
+        commit_changes(repo, "Initial commit: Add empty story")
+
+        return True
+
+    def open_project(self, project_name: str) -> Optional[Path]:
+        """Set the current project in session settings and return project path."""
         if project_name in self.get_projects():
             self.session_settings[CURRENT_PROJECT_KEY] = project_name
             self._save_session()
-            return project_name
+            return self.stories_dir / project_name  # Return Path object
         return None
 
     def get_current_project(self) -> Optional[str]:
@@ -116,3 +135,56 @@ class ProjectManager:
         chat_file = project_path / f"chat_{chat_name}.json"
         if chat_file.exists():
             chat_file.unlink()  # remove the file
+
+    def set_author_source(self, source: str):
+        """Store the source of the author information."""
+        self.session_settings['author_source'] = source
+        self._save_session()
+
+    def get_author_source(self) -> Optional[str]:
+        """Get the stored author information source."""
+        return self.session_settings.get('author_source')
+
+    def load_json_file(self, project_path: Path, filename: str) -> str:
+        """Load a JSON file and return its contents as a formatted string.
+        
+        Args:
+            project_path: Path to the project directory
+            filename: Name of the JSON file to load
+            
+        Returns:
+            str: Formatted JSON string, or empty string if file doesn't exist
+        """
+        file_path = project_path / filename
+        if not file_path.exists():
+            return '{}'
+        
+        try:
+            with open(file_path, 'r') as f:
+                data = json.load(f)
+                return json.dumps(data, indent=4)
+        except Exception as e:
+            st.error(f"Error loading {filename}: {e}")
+            return '{}'
+
+    def save_json_file(self, project_path: Path, filename: str, content: str) -> bool:
+        """Save a JSON string to a file.
+        
+        Args:
+            project_path: Path to the project directory
+            filename: Name of the JSON file to save
+            content: JSON string to save
+            
+        Returns:
+            bool: True if save was successful, False otherwise
+        """
+        file_path = project_path / filename
+        try:
+            # Validate JSON before saving
+            json.loads(content)  # This will raise an exception if invalid
+            with open(file_path, 'w') as f:
+                f.write(content)
+            return True
+        except Exception as e:
+            st.error(f"Error saving {filename}: {e}")
+            return False

@@ -1,5 +1,9 @@
 # Notes
 
+check out https://www.reddit.com/r/LocalLLaMA/comments/1haiox4/shoutout_to_the_new_llama_33_euryale_v23_the_best/
+
+maybe use single entrypoint instead of multiple pages
+
 can't select different project and update chat. it updates both. need to update all the project manager stuff to use session variables so it updates properly.
 the creative llm doesn't have context and needs to be made generic
 

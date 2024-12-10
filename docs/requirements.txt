@@ -19,3 +19,4 @@ json-repair>=2.0.0
 pydantic
 pydantic[email]
 pygments
+jsonschema2md

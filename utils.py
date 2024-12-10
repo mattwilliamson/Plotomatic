@@ -1,4 +1,4 @@
-from model import *
+from models import *
 from typing import List
 from pydantic import BaseModel
 import torch
