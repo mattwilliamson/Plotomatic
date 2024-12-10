@@ -407,12 +407,16 @@ def get_creative_options(messages: List[Dict[str, str]]) -> Dict[str, Any]:
     return {
         'num_ctx': int(estimated_tokens + num_predict),
         'num_predict': num_predict,
-        'temperature': 0.7,         # Higher temperature for more creative responses
-        "top_p": 0.8,               # Higher top_p for more diverse sampling 
-        "top_k": 35,                # Higher top_k for more diverse sampling
-        "repeat_penalty": 1.1,      # Higher repeat_penalty for less repetition
-        "presence_penalty": 0.2,    # Higher presence_penalty for more diversity
-        "frequency_penalty": 0.2,   # Higher frequency_penalty for more diversity
+        'temperature': 0.9,         # 0.8 to 1.0 A higher temperature increases randomness in the output, allowing for more creative and unexpected ideas. This encourages the model to explore a wider range of vocabulary and narrative possibilities.
+        "top_p": 0.9,               # Setting top_p to 0.9 allows the model to consider a broader set of potential next tokens, promoting creativity while still maintaining some coherence. This helps generate varied and rich text.
+        "top_k": 30,                # 20 to 50 A higher top_k value expands the selection pool of possible next tokens, which enhances creativity by allowing for more diverse word choices and phrases.
+        "repeat_penalty": 1.1,      # 1.0 to 1.2 A lower repeat penalty (around 1.0 to 1.2) allows for some repetition, which can be useful in creative writing, especially for stylistic purposes or thematic emphasis. This range encourages the model to use familiar phrases or motifs without becoming overly repetitive.
+        "presence_penalty": 0.2,    # 0.0 to 0.3 Keeping the presence penalty low allows the model to introduce new ideas and concepts freely, which is essential for creativity. This encourages exploration of diverse themes and characters without overly restricting the introduction of new elements.
+        "frequency_penalty": 0.2,   # 0.0 to 0.3 A low frequency penalty helps maintain a natural flow in the narrative by allowing commonly used words and phrases to recur without penalty. This is particularly important in creative writing, where certain expressions may need to be revisited for effect or clarity.
+        "mirostat_tau": 1.5,        # 1.0 to 1.5 A lower tau value can help maintain some level of coherence while still allowing for creative exploration. This setting lets the model adjust its perplexity dynamically without becoming too erratic.
+        "mirostat_eta": 0.7,        # 0.5 to 1.0 A moderate eta value allows for some adaptability in response generation without overly constraining creativity, helping to balance coherence with imaginative output.
+        "tfs_z": 0.6,               # 0.5 to 0.7 A slightly higher TFS z value can encourage more exploration in word choice while still keeping some structure in the generated text, which is beneficial for storytelling.
+        "typical_p": 0.8,           # 0.7 to 0.9 Increasing typical_p allows the model to generate responses that are more typical of creative writing, enhancing narrative flow and character development while still allowing for unique expressions.
         "seed": random.randint(0, 1000000),
     }
 
