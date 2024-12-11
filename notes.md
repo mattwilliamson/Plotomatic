@@ -1,6 +1,16 @@
 # Notes
 
+Consider adding a version field to the Story model to track iterations.
+
+add grounding for stuff that is important to the user. i.e. requirements field added to the story
+
 check out https://www.reddit.com/r/LocalLLaMA/comments/1haiox4/shoutout_to_the_new_llama_33_euryale_v23_the_best/
+`ollama run hf.co/mradermacher/L3.3-70B-Euryale-v2.3-i1-GGUF:Q4_0` for storytelling
+
+llama3.3 - creative and function https://www.reddit.com/r/LocalLLaMA/comments/1hbaioc/llama_33_70b_finetuning_now_with_90k_context/
+use hf.co/unsloth/Llama-3.3-70B-Instruct-GGUF:Q4_K_M for faster and longer context
+`ollama run hf.co/unsloth/Llama-3.3-70B-Instruct-GGUF:Q4_K_M`
+
 
 maybe use single entrypoint instead of multiple pages
 

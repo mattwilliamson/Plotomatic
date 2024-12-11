@@ -635,6 +635,10 @@ class Story(BaseModel):
         default_factory=CoverDesign, 
         description="Complete visual design specification for the story's cover, including artwork direction, typography, color scheme, and marketing copy"
     )
+    requirements: Optional[List[str]] = Field(
+        default_factory=list,
+        description="List of immutable requirements that guide the story creation process. Can include writing style, character traits, plot points, etc."
+    )
 
     _story_dialogue: Optional['StoryDialogue'] = PrivateAttr(default=None)
     

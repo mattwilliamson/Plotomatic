@@ -3,23 +3,3 @@
 # under `install_requires` in `setup.cfg` is also listed here!
 sphinx>=3.2.1
 # sphinx_rtd_theme
-
-streamlit
-streamlit-extras
-streamlit-local-storage
-streamlit-chat
-streamlit-timeline
-streamlit-react-flow
-dagre
-
-ollama
-jsondiff # Might not be used
-json-repair>=2.0.0
-
-pydantic
-pydantic[email]
-pygments
-jsonschema2md
-
-crewai
-crewai[tools]
