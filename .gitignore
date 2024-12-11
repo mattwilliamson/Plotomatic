@@ -52,3 +52,49 @@ MANIFEST
 .venv*/
 .conda*/
 .python-version
+
+# Additional Python/Environment files
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Additional IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+.vim/
+
+# Additional build/distribution
+dist/
+build/
+*.egg-info/
+
+# Testing and coverage
+.coverage
+coverage.xml
+.pytest_cache/
+htmlcov/
+
+# Streamlit specific
+.streamlit/
+
+# Project specific
+stories/**/chat_*.json
+stories/**/story*.json
+!stories/**/story_template.json
+
+# Misc
+.DS_Store
+*.log
+*.tmp
+.env*
+!.env.example
+
+# Dependencies
+node_modules/

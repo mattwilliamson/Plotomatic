@@ -2,7 +2,7 @@
 
 Transform your story ideas into immersive graphic novels, animations, and audio experiences—all from a single prompt!
 
-![Banner](./app/static/banner.jpg)
+![Banner](./src/plotomatic/static/banner.jpg)
 
 ## :rocket: Write an Entire Graphic Novel with One Prompt!
 
@@ -18,7 +18,7 @@ Here are some examples of what Plot-o-matic can generate:
 Prompt: 
 > A video game: In a futuristic world, a team of rogue robot ninjas must overthrow their corrupt AI overlords to reclaim their freedom and save humanity.
 
-![Robot Ninja](./app/static/kaito.cog.gif)
+![Robot Ninja](./src/plotomatic/static/kaito.cog.gif)
 
 ---
 
@@ -26,7 +26,7 @@ Prompt:
 Prompt:
 > 8-bit Video Game
 
-![8bit game](./app/static/8_bit_fight_svd.gif)
+![8bit game](./src/plotomatic/static/8_bit_fight_svd.gif)
 
 ---
 
@@ -34,7 +34,7 @@ Prompt:
 Prompt:
 > Calm and authoritative, with a hint of warmth.
 
-[Sample Audio :headphones:](./app/static/dr_elara.wav)
+[Sample Audio :headphones:](./src/plotomatic/static/dr_elara.wav)
 
 ---
 
@@ -42,7 +42,7 @@ Prompt:
 Prompt:
 > Tense and suspenseful.
 
-[Sample Music :musical_note:](./app/static/tense_focused.wav)
+[Sample Music :musical_note:](./src/plotomatic/static/tense_focused.wav)
 
 ---
 
@@ -50,7 +50,7 @@ Prompt:
 Prompt:
 > A fantasy live-action movie: A blonde-haired, blue-eyed knight named Matt must journey to the center of the world to forge a magical weapon capable of defeating an ancient dragon and saving the princess and kingdom.
 
-[Sample Video :arrow_forward:](./app/static/princess.mp4)
+[Sample Video :arrow_forward:](./src/plotomatic/static/princess.mp4)
 
 ---
 
@@ -88,11 +88,15 @@ We leverage a suite of AI tools to bring your stories to life:
 ```sh
 conda create -n plotomatic python=3.12
 conda activate plotomatic
-```
 
-```sh
-pip install streamlit emoji
-streamlit run Plotomatic_App.py
+# Install the package in development mode
+cd /path/to/plotomatic-streamlit  # Directory containing pyproject.toml
+pip install -e .                  # Basic installation
+# OR
+pip install -e ".[dev]"          # Install with development dependencies
+
+# Run the Streamlit app
+streamlit run src/plotomatic/Home.py
 ```
 
 Open http://localhost:8501 in your browser.
@@ -178,3 +182,118 @@ As you refine the story prompt or adjust the model's settings, use this notebook
 - Voice description should describe better like: "A youthful male voice with a distinct Latin American accent speaks clearly and energetically. The tone is persuasive and determined, occasionally revealing subtle hints of vulnerability. The speaker's voice has a warm timbre with a slight melodic lilt typical of Latin American Spanish speakers. The speech pattern includes softened consonants and rhythmic intonation. The audio quality is exceptionally high, with a close-up feel that captures the nuances of the voice, including breath control and subtle vocal inflections. The overall delivery is dynamic and engaging, with emphasis on key words to enhance persuasiveness."
 - Give the LLM creative freedom by letting them put in the chapter titles
 - Select different renderers based on the media
+
+## :file_folder: Project Structure
+
+```
+src/
+├── plotomatic/
+│   ├── __init__.py
+│   ├── app.py
+│   ├── Home.py              # Main Streamlit entry point
+│   ├── components/          # Reusable UI components
+│   │   ├── __init__.py
+│   │   ├── project_selector.py
+│   │   ├── diff_viewer.py
+│   │   ├── json_editor_tab.py
+│   │   └── sidebar.py
+│   ├── config/             # Configuration management
+│   │   ├── __init__.py
+│   │   └── settings.py
+│   ├── core/              # Core application logic
+│   │   ├── __init__.py
+│   │   └── tools.py
+│   ├── llm/               # LLM integration
+│   │   ├── __init__.py
+│   │   ├── models.py
+│   │   └── ollama_logging.py
+│   ├── models/            # Pydantic data models
+│   │   ├── __init__.py
+│   │   ├── base.py
+│   │   ├── story.py
+│   │   ├── story_dialogue.py
+│   │   └── chat.py
+│   ├── pages/             # Streamlit pages
+│   │   ├── __init__.py
+│   │   ├── select_project.py
+│   │   └── start_story.py
+│   ├── project_manager/   # Project management
+│   │   ├── __init__.py
+│   │   └── manager.py
+│   ├── static/           # Static assets
+│   │   ├── images/
+│   │   ├── audio/
+│   │   └── video/
+│   ├── tests/            # Test suite
+│   │   ├── __init__.py
+│   │   ├── conftest.py
+│   │   └── pages/
+│   └── utils/            # Utility functions
+│       ├── __init__.py
+│       ├── debug_logger.py
+│       ├── git_utils.py
+│       └── helpers.py
+├── tests/                # Integration tests
+│   └── ...
+├── .gitignore
+├── pyproject.toml        # Project configuration
+├── README.md
+└── requirements.txt
+```
+
+## :gear: Development
+
+### Installation
+
+```sh
+# Create and activate conda environment
+conda create -n plotomatic python=3.12
+conda activate plotomatic
+
+# Install in development mode with all dev dependencies
+pip install -e ".[dev]"
+
+# Install pre-commit hooks
+pre-commit install
+```
+
+### Running Tests
+
+```sh
+# Run all tests
+pytest
+
+# Run tests with coverage report
+pytest --cov=plotomatic
+
+# Run specific test file
+pytest src/plotomatic/tests/pages/test_title_plot.py
+```
+
+### Code Quality
+
+```sh
+# Format code
+black src/plotomatic
+
+# Sort imports
+isort src/plotomatic
+
+# Type checking
+mypy src/plotomatic
+```
+
+### Run Application
+
+```sh
+# Run the Streamlit app
+streamlit run src/plotomatic/Home.py
+```
+
+Open http://localhost:8501 in your browser.
+
+> **Development Mode**: The `-e` flag installs the package in "editable" mode, which means:
+> - You can modify source files and test changes immediately
+> - No need to reinstall after changes
+> - Python will use your working directory files directly
+> - Perfect for development and testing

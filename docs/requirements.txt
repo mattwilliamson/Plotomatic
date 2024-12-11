@@ -20,3 +20,6 @@ pydantic
 pydantic[email]
 pygments
 jsonschema2md
+
+crewai
+crewai[tools]

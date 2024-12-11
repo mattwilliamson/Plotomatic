@@ -1,0 +1,77 @@
+import streamlit as st
+from project_manager import get_project_manager, CURRENT_PROJECT_KEY
+from plotomatic.utils.git_utils import get_repo, get_changed_files, get_diff, commit_changes, discard_changes
+from git import InvalidGitRepositoryError
+
+pm = get_project_manager()
+
+def render_view_diffs_and_manage_changes():
+    st.session_state.view_diffs_and_manage_changes = True
+
+def view_diffs_and_manage_changes(expanded=True):
+    """Reusable diff viewer and change management controls."""
+    if 'view_diffs_and_manage_changes' not in st.session_state:
+        st.session_state.view_diffs_and_manage_changes = False
+
+    if CURRENT_PROJECT_KEY not in st.session_state:
+        st.session_state[CURRENT_PROJECT_KEY] = pm.get_current_project()
+
+    current_project = st.session_state[CURRENT_PROJECT_KEY]
+
+    if not current_project:
+        st.error("No project selected. Please select or create a project first.")
+        return
+
+    project_path = pm.get_current_project_path()
+
+    if not project_path:
+        st.error("Project path not found.")
+        return
+
+    try:
+        repo = get_repo(project_path)
+    except (InvalidGitRepositoryError, FileNotFoundError) as e:
+        st.error(f"Invalid Git repository: {e}")
+        return
+    
+    st.session_state.changed_files = get_changed_files(repo)
+
+    if st.session_state.changed_files:
+        st.session_state.view_diffs_and_manage_changes = True
+    else:
+        st.write("No uncommitted changes.")
+        st.session_state.changed_files = None
+
+    if st.session_state.view_diffs_and_manage_changes:
+        with st.form("diffs_and_changes_form"):
+            if st.session_state.changed_files:
+                with st.expander("🚨 Uncommitted Changes", expanded=expanded):
+                    st.write("Changed files:")
+                    selected_file = st.selectbox("Select a file to view diff", st.session_state.changed_files, key="diff_select")
+                    if selected_file:
+                        diff_text = get_diff(repo, selected_file)
+                        if diff_text:
+                            st.code(diff_text, language='diff')
+                        else:
+                            st.write("⚪ No differences found.")
+            else:
+                st.write("⚪ No differences found.")
+
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                if st.form_submit_button("💾 Commit Changes"):
+                    commit_changes(repo, "Updated files")
+                    st.toast("Changes committed successfully 💾", icon="✅")
+                    st.session_state.view_diffs_and_manage_changes = False
+                    st.session_state.changed_files = get_changed_files(repo)
+                    st.rerun()
+            with col2:
+                if st.form_submit_button("🗑️ Discard Changes"):
+                    discard_changes(repo)
+                    st.toast("Changes discarded 🗑️", icon="↩️")
+                    st.session_state.view_diffs_and_manage_changes = False
+                    st.session_state.changed_files = get_changed_files(repo)
+                    st.rerun()
+
+            with col3:
+                st.text(" ") 
