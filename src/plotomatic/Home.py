@@ -2,8 +2,6 @@
 import streamlit as st
 import emoji
 from pathlib import Path
-from plotomatic.components import render_sidebar
-from plotomatic.config import load_config
 
 # Set page config
 st.set_page_config(
@@ -11,12 +9,6 @@ st.set_page_config(
     page_icon="📚",
     layout="wide"
 )
-
-# Load configuration
-config = load_config()
-
-# Render sidebar
-render_sidebar()
 
 st.title("Plotomatic")
 
@@ -29,10 +21,7 @@ try:
         markdown_content = file.read()
 
     # Update static file paths to point to the new location
-    markdown_content = markdown_content.replace(
-        "./app/static/", 
-        "./src/plotomatic/static/"
-    )
+    markdown_content = markdown_content.replace("./src/plotomatic/static/", "./app/static/")
 
     # Emojis
     markdown_content = emoji.emojize(markdown_content)

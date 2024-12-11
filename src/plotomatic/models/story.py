@@ -7,11 +7,11 @@ from pathlib import Path
 
 from .base import BaseModel
 from .story_dialogue import StoryDialogue, SceneDialogue, ActDialogue, ChapterDialogue
-import settings
+from plotomatic.config.settings import STORY_DIR
 
 def get_step_directory(step_number: int) -> str:
     """Get the directory path for a given step number."""
-    step_dir = os.path.join(settings.STORY_DIR, f"step_{step_number}")
+    step_dir = os.path.join(STORY_DIR, f"step_{step_number}")
     os.makedirs(step_dir, exist_ok=True)
     return step_dir
 

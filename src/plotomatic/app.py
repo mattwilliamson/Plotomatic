@@ -1,6 +1,4 @@
 import streamlit as st
-from plotomatic.components import render_sidebar
-from plotomatic.config import load_config
 
 def main():
     st.set_page_config(
@@ -9,11 +7,8 @@ def main():
         layout="wide"
     )
     
-    # Load configuration
-    config = load_config()
     
-    # Render sidebar
-    render_sidebar()
+    
     
     # Main content area
     st.title("Plotomatic")
