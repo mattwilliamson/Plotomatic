@@ -637,7 +637,7 @@ class Story(BaseModel):
     )
     requirements: Optional[List[str]] = Field(
         default_factory=list,
-        description="List of immutable requirements that guide the story creation process. Can include writing style, character traits, plot points, etc."
+        description="List of user provided requirements that guide the story creation process. Can include writing style, character traits, plot points, etc"
     )
 
     _story_dialogue: Optional['StoryDialogue'] = PrivateAttr(default=None)
