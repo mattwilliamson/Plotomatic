@@ -1,6 +1,6 @@
 import streamlit as st
 from plotomatic.components import project_selector, view_diffs_and_manage_changes, selected_project_name
-from project_manager import get_project_manager, PROJECT_LIST_KEY, CURRENT_PROJECT_KEY
+from plotomatic.project_manager import get_project_manager, PROJECT_LIST_KEY, CURRENT_PROJECT_KEY
 from streamlit_extras.switch_page_button import switch_page
 
 

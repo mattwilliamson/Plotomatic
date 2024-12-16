@@ -1,5 +1,5 @@
 import streamlit as st
-from project_manager import get_project_manager, CURRENT_PROJECT_KEY, PROJECT_LIST_KEY
+from plotomatic.project_manager import get_project_manager, CURRENT_PROJECT_KEY, PROJECT_LIST_KEY
 from streamlit.logger import get_logger
 
 logger = get_logger(__name__)

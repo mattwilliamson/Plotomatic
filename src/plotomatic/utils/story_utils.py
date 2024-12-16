@@ -1,4 +1,4 @@
-from models import *
+from plotomatic.models import *
 from typing import List
 from pydantic import BaseModel
 import torch
@@ -11,8 +11,6 @@ import time
 import ipywidgets as widgets
 from IPython.display import display, clear_output, Markdown
 from pathlib import Path
-import settings
-import os
 
 def chat_message_to_dict(message: ChatMessage) -> dict:
     # Use model_dump to get the dictionary representation and adjust the role

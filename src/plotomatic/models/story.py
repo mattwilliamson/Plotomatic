@@ -547,30 +547,6 @@ class Story(BaseModel):
     #     "", 
     #     description="Original creative prompt or inspiration that sparked the story idea. Can include themes, concepts, or specific elements to incorporate"
     # )
-    title: Optional[str] = Field(
-        "", 
-        description="Main title of the story. Should be memorable, relevant to the plot, and capture the story's essence"
-    )
-    has_video: Optional[bool] = Field(
-        False, 
-        description="Indicates if the story includes animated sequences or video elements. Affects production and presentation planning"
-    )
-    has_images: Optional[bool] = Field(
-        False, 
-        description="Indicates if the story includes illustrations, photographs, or other static visual elements"
-    )
-    narrative_style: Optional[str] = Field(
-        "", 
-        description="Author's distinctive writing approach, including tone, voice, and stylistic choices (e.g., 'Minimalist', 'Descriptive', 'Stream of consciousness')"
-    )
-    time_period: Optional[str] = Field(
-        "", 
-        description="Historical or fictional era when the story takes place. Influences setting details, technology level, and social context"
-    )
-    location: Optional[str] = Field(
-        "", 
-        description="Primary geographical or fictional setting where the story unfolds. Includes specific places, environments, or world-building elements"
-    )
     genre: Optional[str] = Field(
         "", 
         description="Primary and secondary genre categories that define the story's conventions and reader expectations (e.g., 'Fantasy/Romance', 'Hard Sci-fi')"
@@ -583,9 +559,25 @@ class Story(BaseModel):
         "", 
         description="Comprehensive summary of the main storyline, including major plot points, character arcs, and narrative structure"
     )
+    title: Optional[str] = Field(
+        "", 
+        description="Main title of the story. Should be memorable, relevant to the plot, and capture the story's essence"
+    )
     narrative_perspective: Optional[str] = Field(
         "", 
         description="Point of view used to tell the story (e.g., 'First-person present', 'Third-person limited', 'Multiple viewpoints')"
+    )
+    narrative_style: Optional[str] = Field(
+        "", 
+        description="Author's distinctive writing approach, including tone, voice, and stylistic choices (e.g., 'Minimalist', 'Descriptive', 'Stream of consciousness')"
+    )
+    time_period: Optional[str] = Field(
+        "", 
+        description="Historical or fictional era when the story takes place. Influences setting details, technology level, and social context"
+    )
+    location: Optional[str] = Field(
+        "", 
+        description="Primary geographical or fictional setting where the story unfolds. Includes specific places, environments, or world-building elements"
     )
     conflict_type: Optional[str] = Field(
         "", 
@@ -627,17 +619,17 @@ class Story(BaseModel):
         "", 
         description="Hidden information, plot twists, or background details known only to the author that influence character decisions and plot development"
     )
-    visual_style: Optional[str] = Field(
-        "", 
-        description="Overall aesthetic approach for visual elements, defining the look and feel of illustrations, animations, or adaptations"
-    )
-    cover_design: Optional[CoverDesign] = Field(
-        default_factory=CoverDesign, 
-        description="Complete visual design specification for the story's cover, including artwork direction, typography, color scheme, and marketing copy"
-    )
     requirements: Optional[List[str]] = Field(
         default_factory=list,
         description="List of user provided requirements that guide the story creation process. Can include writing style, character traits, plot points, etc"
+    )
+    # visual_style: Optional[str] = Field(
+    #     "", 
+    #     description="Overall aesthetic approach for visual elements, defining the look and feel of illustrations, animations, or adaptations"
+    # )
+    cover_design: Optional[CoverDesign] = Field(
+        default_factory=CoverDesign, 
+        description="Complete visual design specification for the story's cover, including artwork direction, typography, color scheme, and marketing copy"
     )
 
     _story_dialogue: Optional['StoryDialogue'] = PrivateAttr(default=None)

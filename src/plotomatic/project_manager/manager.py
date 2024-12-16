@@ -3,8 +3,8 @@
 import os
 import json
 from pathlib import Path
-from models.story import Story
-from models.chat import ChatSession
+from plotomatic.models.story import Story
+from plotomatic.models.chat import ChatSession
 from typing import Optional
 from plotomatic.utils.git_utils import create_repo, add_file, commit_changes
 import streamlit as st
@@ -140,12 +140,13 @@ class ProjectManager:
         """Load a chat session by name from the current project."""
         project_path = self.get_current_project_path()
         if not project_path:
-            return ChatSession(project=self.get_current_project())
+            return ChatSession(project=self.get_current_project() or "")
         chat_file = project_path / f"chat_{chat_name}.json"
-        session = ChatSession.load_from_file(chat_file)
-        if session is None:
-            session = ChatSession(project=self.get_current_project())
-        return session
+        if chat_file.exists():
+            with open(chat_file, 'r') as f:
+                data = json.load(f)
+                return ChatSession(**data)
+        return ChatSession(project=self.get_current_project() or "")
 
     def save_chat(self, chat_name: str, chat_session: ChatSession):
         """Save a chat session by name to the current project."""
@@ -153,7 +154,8 @@ class ProjectManager:
         if not project_path:
             raise ValueError("No project loaded. Cannot save chat.")
         chat_file = project_path / f"chat_{chat_name}.json"
-        chat_session.save_to_file(chat_file)
+        with open(chat_file, 'w') as f:
+            json.dump(chat_session.model_dump(), f, indent=4)
 
     def clear_chat(self, chat_name: str):
         """Clear the chat session by name."""

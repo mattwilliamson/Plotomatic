@@ -4,7 +4,8 @@ from pydantic import BaseModel, Field
 
 class ToolCall(BaseModel):
     """Represents a tool call made by the assistant."""
-    function: Dict[str, Any] = Field(..., description="Function details including name and arguments")
+    name: str = Field(..., description="Name of the function to call")
+    arguments: Dict[str, Any] = Field(..., description="Arguments to pass to the function")
 
 class Message(BaseModel):
     role: str = Field("", description="Role of the message sender")

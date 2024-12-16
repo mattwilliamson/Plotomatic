@@ -74,5 +74,4 @@ class ToolManager:
     def should_show_output(self, name: str) -> bool:
         """Check if tool output should be shown in chat."""
         metadata = self.get_metadata(name)
-        return metadata.get('show_output', True) if metadata else True
- 
+        return metadata.get('show_output', True) if metadata else True 

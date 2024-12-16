@@ -1,5 +1,7 @@
 # Notes
 
+use TRELLIS for extracting 3d assets from images
+
 Consider adding a version field to the Story model to track iterations.
 
 add grounding for stuff that is important to the user. i.e. requirements field added to the story
