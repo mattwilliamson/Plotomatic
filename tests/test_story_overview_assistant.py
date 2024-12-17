@@ -5,6 +5,7 @@ from plotomatic.assistant.story_overview_assistant import StoryOverviewAssistant
 from plotomatic.assistant.states import AssistantState
 from plotomatic.models.story import Story
 from plotomatic.models.chat import ChatSession
+from conftest import CachingTransport
 
 def test_story_overview_assistant_full_flow(temp_project_dir, ollama_cache_dir, monkeypatch):
     """Test the full flow using real Story objects and cached Ollama calls"""
