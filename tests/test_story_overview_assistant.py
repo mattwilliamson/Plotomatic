@@ -1,5 +1,6 @@
-import json
+import os
 from datetime import datetime
+import traceback
 
 from plotomatic.assistant.story_overview_assistant import StoryOverviewAssistant
 from plotomatic.assistant.states import AssistantState
@@ -7,8 +8,71 @@ from plotomatic.models.story import Story
 from plotomatic.models.chat import ChatSession
 from conftest import CachingTransport
 
+class TestStep:
+    step_counter = 0  # Class variable to track steps
+
+    def __init__(self, description, should_run=True, assistant=None):
+        self.description = description
+        self.should_run = should_run
+        self.assistant = assistant
+        TestStep.step_counter += 1
+        self.step_number = TestStep.step_counter
+
+    def __enter__(self):
+        print("\n\n\n\n")
+        print("#" * 100)
+        print(f"\nSTEP {self.step_number} START: '{self.description}'")
+        print(f"Assistant state start: {self.assistant.state}")
+        if self.should_run:
+            self.assistant.run()
+
+        print("\nChat Session Messages:")
+        print(self.assistant.chat_session.model_dump_json(indent=2))
+
+        print("\nPrepended Messages:")
+        for msg in self.assistant.prepended_messages:
+            print(f"\n{msg.role}: {msg.content}")
+            
+        print(f"\nTool Calls: {self.assistant.tool_calls}")
+
+        print(f"Story: {self.assistant.story.model_dump_json(indent=2)}")
+    
+
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        print("\nLast message:")
+        if len(self.assistant.chat_session.messages) > 0:
+            print(self.assistant.chat_session.messages[-1])
+        print(f"\nAssistant state end: {self.assistant.state}")
+
+        # Add detailed assistant info printing on failure
+        if exc_type is not None:
+            print("\n" + "!" * 100)
+            print("TEST FAILED! Assistant state dump:")
+            print("!" * 100)
+
+            print("\nTraceback:")
+            traceback.print_exception(exc_type, exc_val, exc_tb)
+
+            print("\n" + "!" * 100)
+
+        print(f"\nSTEP {self.step_number} END: '{self.description}'")
+        print("#" * 100)
+        print("\n\n\n\n")
+
+        return False
+
 def test_story_overview_assistant_full_flow(temp_project_dir, ollama_cache_dir, monkeypatch):
     """Test the full flow using real Story objects and cached Ollama calls"""
+    
+    # Check if we should delete the cache
+    should_delete_cache = os.environ.get('DELETE_OLLAMA_CACHE', '').lower() in ('true', '1', 'yes')
+    if should_delete_cache and ollama_cache_dir.exists():
+        import shutil
+        shutil.rmtree(ollama_cache_dir)
+        ollama_cache_dir.mkdir(parents=True)
+
     # Set up project structure
     project_path = temp_project_dir
     
@@ -21,13 +85,17 @@ def test_story_overview_assistant_full_flow(temp_project_dir, ollama_cache_dir, 
         modified_at=datetime.now().isoformat()
     )
 
-    # Save initial story
-    story_file = project_path / "story.json"
-    with open(story_file, "w") as f:
-        json.dump(story.model_dump(), f)
+    # Save initial story using Story's built-in method
+    story.save_to_directory(project_path)
 
-    # Initialize assistant
-    assistant = StoryOverviewAssistant.load_for_project(project_path)
+    # Initialize assistant with deterministic settings
+    assistant = StoryOverviewAssistant.load_for_project(
+        project_path,
+        agent_temperature=0.0,
+        creative_temperature=0.0,
+        agent_seed=0,
+        creative_seed=0
+    )
     assistant.story = story
 
     # Create initial chat session
@@ -39,41 +107,93 @@ def test_story_overview_assistant_full_flow(temp_project_dir, ollama_cache_dir, 
     # Patch Ollama client to use caching transport
     monkeypatch.setattr('httpx.HTTPTransport', lambda: CachingTransport(ollama_cache_dir))
 
-    # First run - should greet and ask about empty title
-    assistant.run()
-    
-    assert len(assistant.chat_session.messages) == 1
-    assert assistant.chat_session.messages[0].role == "assistant"
-    assert "title is currently empty" in assistant.chat_session.messages[0].content
-    assert assistant.state == AssistantState.WAITING_USER_INPUT
-
-    # Comment out remaining test steps for now
-    """
-    # User requests title help
-    assistant.send_message("Yes, please help me with a title. I want something epic.")
-    assert len(assistant.chat_session.messages) == 2
-    assert assistant.chat_session.messages[1].role == "user"
+    # Check initial state which is llm generating output to greet user
     assert assistant.state == AssistantState.GENERATING_OUTPUT
 
-    # Run assistant to process request
-    assistant.run()
-    
-    # Verify the story was updated
-    assert assistant.story.title == "The Epic Quest"
-    
-    # Verify the changes were saved
-    with open(story_file) as f:
-        saved_story = Story(**json.load(f))
-        assert saved_story.title == "The Epic Quest"
+    # Round 1
 
-    # Verify final state
-    assert assistant.state == AssistantState.WAITING_USER_INPUT
+    with TestStep("First run should greet and ask what kind of story you want to write", assistant=assistant):
+        assert len(assistant.chat_session.messages) == 1
+        m = assistant.chat_session.messages[-1]
+        assert m.role == "assistant"
+        assert "hello" in m.content.lower()
+        assert "tell me what kind of story you're interested in creating" in m.content.lower()
+        assert assistant.state == AssistantState.WAITING_USER_INPUT
     
-    # Check that messages were saved
-    state_file = project_path / "story_overview_state.json"
-    assert state_file.exists()
-    with open(state_file) as f:
-        saved_state = json.load(f)
-        assert len(saved_state["chat_session"]["messages"]) >= 3  # Initial + user + response
-    """
+    with TestStep("User requests science fiction", assistant=assistant):
+        assistant.send_message("How about science fiction")
+        assert len(assistant.chat_session.messages) == 2
+        m = assistant.chat_session.messages[-1]
+        assert m.role == "user"
+        assert "How about science fiction" in m.content
+        assert assistant.state == AssistantState.GENERATING_OUTPUT
 
+    with TestStep("LLM returns set_property tool", assistant=assistant):
+        assert len(assistant.prepended_messages) == 2
+        m = assistant.prepended_messages[1]
+        assert "Empty Fields That Need Attention:\n- author" in m.content
+        assert assistant.tool_calls is not None
+        assert len(assistant.tool_calls) == 1
+        assert assistant.tool_calls[0].name == "set_property"
+        assert assistant.tool_calls[0].arguments == {"property_name": "genre", "value": "Science Fiction"}
+        assert assistant.state == AssistantState.PROCESSING_TOOL_CALLS
+
+    with TestStep("LLM Calls set_property tool", assistant=assistant):
+        assert len(assistant.chat_session.messages) == 3
+        m = assistant.chat_session.messages[-1]
+        assert m.role == "tool"
+        assert "**Set `genre`** to: `'Science Fiction'`" in m.content
+        # TODO: Check that the show_user = False
+        assert assistant.state == AssistantState.PROCESSING_TOOL_OUTPUTS
+
+    with TestStep("Call LLM With Tool Output that set_property tool returns", assistant=assistant):
+        assert len(assistant.chat_session.messages) == 4
+        m = assistant.chat_session.messages[-1]
+        assert m.role == "assistant"
+        assert len(assistant.tool_calls) == 0
+        assert "science fiction" in m.content.lower()
+        # assert "what kind of setting are you envisioning" in m.content.lower()
+        assert "We've set the genre of our story to Science Fiction" in m.content
+        assert assistant.state == AssistantState.WAITING_USER_INPUT
+        assert assistant.story.genre.lower() == "science fiction"
+
+    # Round 2
+
+    with TestStep("User requests random story", assistant=assistant):
+        assistant.send_message("Just give me a completely random story")
+        assert len(assistant.chat_session.messages) == 5
+        m = assistant.chat_session.messages[-1]
+        assert m.role == "user"
+        assert assistant.state == AssistantState.GENERATING_OUTPUT
+
+    with TestStep("LLM returns creative_write tool calls", assistant=assistant):
+        assert len(assistant.chat_session.messages) == 5
+        m = assistant.chat_session.messages[1]
+        assert assistant.tool_calls is not None
+        assert len(assistant.tool_calls) == 1
+        assert assistant.tool_calls[0].name == "creative_write"
+        assert assistant.tool_calls[0].arguments == {
+            "prompt": "Write a completely random story", 
+            "system_context": "", 
+            "story_context": ""
+        }
+        assert assistant.state == AssistantState.PROCESSING_TOOL_CALLS
+
+    with TestStep("LLM Calls creative_write tool", assistant=assistant):
+        assert len(assistant.chat_session.messages) == 6
+        m = assistant.chat_session.messages[-1]
+        assert m.role == "tool"
+        assert "In the depths of a distant galaxy" in m.content
+        assert len(m.content) > 100
+        # TODO: Check that the show_user = False
+        assert assistant.state == AssistantState.PROCESSING_TOOL_OUTPUTS
+
+    with TestStep("Call LLM With Tool Output that creative_write tool returns", assistant=assistant):
+        assert len(assistant.chat_session.messages) == 7
+        m = assistant.chat_session.messages[-1]
+        assert m.role == "assistant"
+        assert len(assistant.tool_calls) == 0
+        assert "science fiction" in m.content.lower()
+        assert "here's a completely random science fiction story" in m.content.lower()
+        assert assistant.state == AssistantState.WAITING_USER_INPUT
+        assert assistant.story.genre.lower() == "science fiction"

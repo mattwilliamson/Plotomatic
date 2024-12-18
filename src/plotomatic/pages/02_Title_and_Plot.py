@@ -5,6 +5,7 @@ from plotomatic.components import view_diffs_and_manage_changes, selected_projec
 from plotomatic.assistant.story_overview_assistant import StoryOverviewAssistant
 from streamlit.logger import get_logger
 import time
+from plotomatic.assistant.states import AssistantState
 
 # Get a logger instance
 logger = get_logger('plotomatic')
@@ -41,6 +42,21 @@ def get_thinking_emoji():
     emojis = ["💭", "🤔", "🧠", "💡", "🧐"]
     return emojis[int(time.time()) % len(emojis)]
 
+def get_tool_status_emoji(state: AssistantState, is_current: bool = False) -> str:
+    """Returns an emoji based on the tool's execution state.
+    
+    Args:
+        state (AssistantState): The current state
+        is_current (bool): Whether this is the currently executing tool
+    """
+    if is_current:
+        return "⚡"  # Currently executing
+    elif state == AssistantState.PROCESSING_TOOL_CALLS:
+        return "⏳"  # Waiting to execute
+    elif state == AssistantState.PROCESSING_TOOL_OUTPUTS:
+        return "✅"  # Done
+    return "🔄"  # Default
+
 def chat_agent(messages):
     project_path = pm.get_current_project_path()
     if not project_path:
@@ -53,36 +69,93 @@ def chat_agent(messages):
     
     # Update assistant's chat session with current messages
     assistant.chat_session.messages = [Message(**m) for m in messages]
-    assistant.save_state()
     
     # Get the last user message
     last_message = messages[-1]
     if last_message["role"] == "user":
-        # Send the message to the assistant
-        assistant.send_message(last_message["content"])
+        # Create or load current interaction
+        if not chat_session.current_interaction:
+            chat_session.current_interaction = {
+                "user_message": last_message["content"],
+                "tool_calls": [],
+                "states": [],
+                "final_response": None
+            }
         
-        # Run the assistant's processing loop
-        assistant.run()
+        # Send the message to the assistant if we haven't already
+        if not chat_session.current_interaction["states"]:
+            assistant.send_message(last_message["content"])
         
-        # Save any story changes
-        if assistant.story != story:
-            pm.save_story(assistant.story)
+        # Get current state and add to states if new
+        current_state = assistant.state
+        if not chat_session.current_interaction["states"] or chat_session.current_interaction["states"][-1] != current_state:
+            chat_session.current_interaction["states"].append(current_state)
         
-        # Get the assistant's response and add it to messages
-        response = assistant.get_last_response()
-        if response:
-            messages.append({
-                "role": "assistant",
-                "content": response["content"],
-                "tool_calls": response.get("tool_calls", [])
-            })
+        # Run one iteration if not waiting for user
+        if current_state != AssistantState.WAITING_USER_INPUT:
+            # Run one iteration
+            assistant.run()
             
-            # Save the updated chat session
-            chat_session = ChatSession(messages=[Message(**m) for m in messages])
+            # Check for streaming content
+            stream = assistant.get_current_stream()
+            if stream:
+                with st.chat_message("assistant"):
+                    content = st.write_stream(stream)
+                    # Store the streamed content
+                    if content:
+                        messages.append({
+                            "role": "assistant", 
+                            "content": content,
+                            "show_user": True
+                        })
+                        # Save chat session
+                        chat_session = ChatSession(messages=[Message(**m) for m in messages])
+                        pm.save_chat(chat_name, chat_session)
+            
+            # If we have new tool calls, record them
+            if assistant.tool_calls:
+                for tool_call in assistant.tool_calls:
+                    tool_info = {
+                        "name": tool_call.name,
+                        "emoji": assistant.get_tool_emoji(tool_call.name),
+                        "arguments": tool_call.arguments,
+                        "state": current_state
+                    }
+                    if tool_info not in chat_session.current_interaction["tool_calls"]:
+                        chat_session.current_interaction["tool_calls"].append(tool_info)
+            
+            # Save any story changes
+            if assistant.story != story:
+                pm.save_story(assistant.story)
+            
+            # Save current state
             pm.save_chat(chat_name, chat_session)
             
-            # Trigger a rerun to update the UI
+            # Trigger a rerun to continue processing
             st.rerun()
+        
+        # If we're done processing, add the final response
+        if current_state == AssistantState.WAITING_USER_INPUT:
+            response = assistant.get_last_response()
+            if response and not assistant.get_current_stream():  # Only if not streaming
+                chat_session.current_interaction["final_response"] = response["content"]
+                
+                # Add the interaction record to messages
+                messages.append({
+                    "role": "assistant",
+                    "content": response["content"],
+                    "interaction": chat_session.current_interaction
+                })
+                
+                # Clear current interaction
+                chat_session.current_interaction = None
+                
+                # Save the updated chat session
+                chat_session = ChatSession(messages=[Message(**m) for m in messages])
+                pm.save_chat(chat_name, chat_session)
+                
+                # Trigger a rerun to update the UI
+                st.rerun()
 
 def process_message():
     if prompt := st.session_state.chat_input:
@@ -129,44 +202,53 @@ with chat_tab:
 
     chat_container = st.container(border=True)
     with chat_container:
-        # Display all messages
+        # Display all messages that should be shown
         for msg in messages:
-            with st.chat_message(msg["role"]):
-                st.markdown(msg["content"])
-                
-                if msg.get("tool_calls"):
-                    for tool_call in msg["tool_calls"]:
-                        if tool_call["function"]["name"] == "show_user_options":
-                            args = tool_call["function"]["arguments"]
-                            st.markdown(f"**{args['prompt']}**")
-                            
-                            cols = st.columns(max(1, len(args['choices'])))
-                            for i, choice in enumerate(args['choices']):
-                                with cols[i]:
-                                    if st.button(str(choice), use_container_width=True):
-                                        messages.append({
-                                            "role": "user",
-                                            "content": str(choice)
-                                        })
-                                        chat_session = ChatSession(messages=[Message(**m) for m in messages])
-                                        pm.save_chat(chat_name, chat_session)
-                                        chat_agent(messages)
+            if msg.get("show_user", False):  # Default to False if not specified
+                with st.chat_message(msg["role"]):
+                    st.markdown(msg["content"])
+                    
+                    # If this message has an interaction record, show the tool calls
+                    if msg.get("interaction"):
+                        interaction = msg["interaction"]
+                        if interaction["tool_calls"]:
+                            with st.expander("🔧 Tool Calls"):
+                                for tool in interaction["tool_calls"]:
+                                    # Check if this is the currently executing tool
+                                    is_current = (
+                                        chat_session.current_interaction and 
+                                        assistant.get_current_tool() and
+                                        assistant.get_current_tool().name == tool["name"]
+                                    )
+                                    status_emoji = get_tool_status_emoji(tool["state"], is_current)
+                                    
+                                    # Show current execution status if available
+                                    status_text = assistant.get_current_tool_status() if is_current else ""
+                                    st.markdown(f"{tool['emoji']} {tool['name']}: {status_emoji} {status_text}")
+                                    
+                                    with st.status(f"Arguments", expanded=False):
+                                        st.json(tool["arguments"])
 
-        # Show thinking status if the last message was from the user
-        if messages and messages[-1]["role"] == "user":
-            with st.status(f"{get_thinking_emoji()} Thinking...", expanded=True, state="running") as status:
+        # Show thinking status if processing
+        if chat_session.current_interaction:
+            with st.status(f"{get_thinking_emoji()} Processing", expanded=True) as status:
                 st.write("Processing your message...")
-        else:
-            # Show ready status
-            with st.status("Ready for your message", state="complete") as status:
-                pass
+                # Show current tool calls
+                for tool in chat_session.current_interaction["tool_calls"]:
+                    # Check if this is the currently executing tool
+                    is_current = (
+                        assistant.get_current_tool() and
+                        assistant.get_current_tool().name == tool["name"]
+                    )
+                    status_emoji = get_tool_status_emoji(tool["state"], is_current)
+                    st.markdown(f"{tool['emoji']} {tool['name']}: {status_emoji}")
 
         # Chat input
         st.chat_input(
             "Ask a question",
             key="chat_input",
             on_submit=process_message,
-            disabled=messages and messages[-1]["role"] == "user"  # Disable input while processing
+            disabled=chat_session.current_interaction is not None  # Disable while processing
         )
 
 # Diffs Tab

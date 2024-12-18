@@ -1,5 +1,7 @@
 # Notes
 
+run a compact over the chat history to save context
+
 use TRELLIS for extracting 3d assets from images
 
 Consider adding a version field to the Story model to track iterations.
