@@ -194,6 +194,58 @@ def test_story_overview_assistant_full_flow(temp_project_dir, ollama_cache_dir, 
         assert m.role == "assistant"
         assert len(assistant.tool_calls) == 0
         assert "science fiction" in m.content.lower()
-        assert "here's a completely random science fiction story" in m.content.lower()
+        assert "decided" in m.content.lower()
         assert assistant.state == AssistantState.WAITING_USER_INPUT
         assert assistant.story.genre.lower() == "science fiction"
+
+    # Round 3
+
+    with TestStep("User accepts the generated story", assistant=assistant):
+        assistant.send_message("That looks great. let's start there.")
+        assert len(assistant.chat_session.messages) == 8
+        m = assistant.chat_session.messages[-1]
+        assert m.role == "user"
+        assert assistant.state == AssistantState.GENERATING_OUTPUT
+
+    # Tool calls to set the story overview and other properties
+    with TestStep("LLM returns set_property tool calls", assistant=assistant):
+        assert len(assistant.chat_session.messages) == 8
+        m = assistant.chat_session.messages[1]
+        assert assistant.tool_calls is not None
+        assert len(assistant.tool_calls) == 1
+        assert assistant.tool_calls[0].name == "set_property"
+        assert assistant.tool_calls[0].arguments["property_name"] == "plot_overview"
+        # Make sure the value is more than 50 characters
+        assert len(assistant.tool_calls[0].arguments["value"]) > 50
+        assert assistant.state == AssistantState.PROCESSING_TOOL_CALLS
+
+    with TestStep("LLM Calls set_property tool", assistant=assistant):
+        assert len(assistant.chat_session.messages) == 9
+        m = assistant.chat_session.messages[-1]
+        assert m.role == "tool"
+        assert "set_property" in m.content
+        assert "plot_overview" in m.content
+        assert assistant.state == AssistantState.PROCESSING_TOOL_OUTPUTS
+
+
+    with TestStep("Call LLM With Tool Output that set_property tool returns", assistant=assistant):
+        assert len(assistant.chat_session.messages) == 10
+        m = assistant.chat_session.messages[-1]
+        assert m.role == "assistant"
+        assert len(assistant.tool_calls) == 0
+        assert "science fiction" in m.content.lower()
+        assert "this gives us a solid foundation" in m.content.lower()
+        assert assistant.state == AssistantState.WAITING_USER_INPUT
+        assert assistant.story.genre.lower() == "science fiction"
+        # Add checks for plot_overview
+        assert assistant.story.plot_overview is not None
+        assert len(assistant.story.plot_overview) > 50
+
+    # Round 4
+
+    with TestStep("User requests to add a character", assistant=assistant):
+        assistant.send_message("Add a character")
+        assert len(assistant.chat_session.messages) == 11
+        m = assistant.chat_session.messages[-1]
+        assert m.role == "user"
+        assert assistant.state == AssistantState.GENERATING_OUTPUT
