@@ -250,3 +250,14 @@ def test_story_overview_assistant_full_flow(temp_project_dir, ollama_cache_dir, 
         assert m.role == "user"
         assert assistant.state == AssistantState.GENERATING_OUTPUT
 
+    # Tool calls to set the story overview and other properties
+    with TestStep("LLM returns set_property tool calls", assistant=assistant):
+        assert len(assistant.chat_session.messages) == 8
+        m = assistant.chat_session.messages[1]
+        assert assistant.tool_calls is not None
+        assert len(assistant.tool_calls) == 1
+        assert assistant.tool_calls[0].name == "set_property"
+        assert assistant.tool_calls[0].arguments["property_name"] == "plot_overview"
+        # Make sure the value is more than 50 characters
+        assert len(assistant.tool_calls[0].arguments["value"]) > 50
+        assert assistant.state == AssistantState.PROCESSING_TOOL_CALLS
