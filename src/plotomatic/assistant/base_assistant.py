@@ -249,6 +249,15 @@ class BaseChatAssistant:
 
         # Check for tool calls in dict response
         if response['message'].get('tool_calls'):
+            # # Add assistant message if it wasn't added above
+            # if not response['message'].get('content'):
+            #     self.chat_session.messages.append(Message(
+            #         role="assistant", 
+            #         content=response['message']['content'],
+            #         timestamp=datetime.now().isoformat(),
+            #         show_user=True
+            #     ))
+            
             self.tool_calls = [
                 ToolCall(
                     name=tc['function']['name'],
@@ -286,7 +295,7 @@ class BaseChatAssistant:
                     tool_result = "<streaming content>"
                 
                 metadata = self.get_tool_metadata(function_name)
-                result = f"Tool output for {function_name}:\n{tool_result}\n\nTell the user the result and ask them if they like it. If they do, set any properties that are needed to make the story match the result."
+                result = f"Tool output for {function_name}:\n{tool_result}"
                 self.chat_session.messages.append(Message(
                     role="tool",
                     content=result,
@@ -319,7 +328,13 @@ class BaseChatAssistant:
 
         # For a shared system prompt, prepend it to the messages:
         system_message = Message(role=ROLE_SYSTEM, content=self.system_prompt)
-        full_messages = [system_message.model_dump()] + [msg.model_dump() for msg in self.chat_session.messages]
+        extra_messages = [Message(
+            role="system",
+            content=f"Check the following output and set any properties that are needed to make the story match the result, asking the user first unless they already gave permission.",
+            timestamp=datetime.now().isoformat(),
+            show_user=False
+        ).model_dump()]
+        full_messages = [system_message.model_dump()] + extra_messages +[msg.model_dump() for msg in self.chat_session.messages]
 
         num_predict = 2000
         options = {
