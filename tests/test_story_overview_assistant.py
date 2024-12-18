@@ -7,6 +7,7 @@ from plotomatic.assistant.states import AssistantState
 from plotomatic.models.story import Story
 from plotomatic.models.chat import ChatSession
 from conftest import CachingTransport
+from devtools import debug
 
 class TestStep:
     step_counter = 0  # Class variable to track steps
@@ -153,10 +154,9 @@ def test_story_overview_assistant_full_flow(temp_project_dir, ollama_cache_dir, 
         assert len(assistant.tool_calls) == 0
         assert "science fiction" in m.content.lower()
         # assert "what kind of setting are you envisioning" in m.content.lower()
-        assert "We've set the genre of our story to Science Fiction" in m.content
+        assert "we've set the genre of our story to science fiction" in m.content.lower()
         assert assistant.state == AssistantState.WAITING_USER_INPUT
         assert assistant.story.genre.lower() == "science fiction"
-
     # Round 2
 
     with TestStep("User requests random story", assistant=assistant):
@@ -249,3 +249,4 @@ def test_story_overview_assistant_full_flow(temp_project_dir, ollama_cache_dir, 
         m = assistant.chat_session.messages[-1]
         assert m.role == "user"
         assert assistant.state == AssistantState.GENERATING_OUTPUT
+

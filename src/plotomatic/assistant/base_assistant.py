@@ -327,7 +327,7 @@ class BaseChatAssistant:
             'num_predict': num_predict,
             "temperature": self.agent_temperature,  # Use agent temperature
             "mirostat": 1,
-            'seed': random.randint(0, 1000000),
+            'seed': self.agent_seed if self.agent_seed is not None else random.randint(0, 1000000),
         }
 
         response = ollama_client.chat(
