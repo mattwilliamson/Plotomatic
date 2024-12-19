@@ -1,5 +1,13 @@
 # Notes
 
+adda tool to check if the story is consistent and the authot is real and the plot_overview is comprehensive enough
+share the ollama client with the base class. have default options and just enable overrides for each ollama client call. 
+add caching into temp files just for the tests
+caching
+add type to field descriptions
+stream creative_write to unit test screen
+add undo and redo
+add another method to append to a property list
 run a compact over the chat history to save context
 
 use TRELLIS for extracting 3d assets from images

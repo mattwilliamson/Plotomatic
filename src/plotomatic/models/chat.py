@@ -18,10 +18,11 @@ class Message(BaseModel):
     content: str = Field("", description="Content of the message")
     show_user: Optional[bool] = Field(False, description="Whether to show the user in the UI")
     timestamp: str = Field(default_factory=lambda: datetime.now().isoformat(), description="Timestamp of the message")
-    tool_calls: Optional[List[ToolCall]] = Field(None, description="Tool calls made in this message")
+    tool_calls: Optional[List[Dict[str, Any]]] = Field(None, description="Tool calls made in this message")
     ephemeral: bool = False  # Flag to mark temporary messages
     allow_tool_calls: bool = True  # Flag to control whether tools can be called for this message
     interaction: Optional[Dict[str, Any]] = Field(None, description="Record of the interaction including tool calls and states")
+    tool_name: Optional[str] = Field(None, description="Name of the tool that generated this message")
 
 class ChatSession(BaseModel):
     project: str = Field("", description="Project name")

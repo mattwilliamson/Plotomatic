@@ -50,6 +50,17 @@ class BaseChatAssistant:
     AGENT_SEED = None  # Default to random seed
     CREATIVE_SEED = None  # Default to random seed
 
+    # Default LLM options
+    DEFAULT_OPTIONS = {
+        'num_ctx': 10000,
+        'num_predict': 2000,
+        'temperature': 0.5,  # Default agent temperature
+        # 'mirostat': 1,
+    }
+
+    # Class-level client
+    _ollama_client: Optional[ollama.Client] = None
+
     def __init__(
         self,
         storage_path: str = "assistant_state.json",
@@ -59,6 +70,10 @@ class BaseChatAssistant:
         agent_seed: Optional[int] = None,  # Add seed parameters
         creative_seed: Optional[int] = None,
     ):
+        # Initialize shared client if not exists
+        if BaseChatAssistant._ollama_client is None:
+            BaseChatAssistant._ollama_client = ollama.Client(transport=LoggingTransport())
+
         self.storage_path = storage_path
 
         self.system_prompt = system_prompt
@@ -90,7 +105,7 @@ class BaseChatAssistant:
 
         # Define the default available tools as instance methods
         self._default_tools = {
-            'set_property': self.set_property,
+            'set_properties': self.set_properties,
             'creative_write': self.creative_write
         }
         
@@ -208,30 +223,30 @@ class BaseChatAssistant:
         Override this in subclasses to add dynamic content."""
         return self.prepended_messages
 
+    def _get_llm_options(self, temperature: Optional[float] = None, seed: Optional[int] = None) -> dict:
+        """Get LLM options with optional overrides."""
+        options = self.DEFAULT_OPTIONS.copy()
+        if temperature is not None:
+            options['temperature'] = temperature
+        if seed is not None:
+            options['seed'] = seed
+        return options
+
     def _call_llm(self):
         """Calls the LLM via Ollama."""
-        ollama_client = ollama.Client(transport=LoggingTransport())
-
         # Create a temporary list of messages for this LLM call
-        # Get all prepended messages (system prompts etc)
         messages_for_llm = [msg.model_dump() for msg in self.get_prepended_messages()]
-        # Add the actual chat history
         messages_for_llm.extend([msg.model_dump() for msg in self.chat_session.messages])
 
-        # Adjust num_predict or other parameters as needed
-        num_predict = 2000
-
-        options = {
-            'num_ctx': 10000,
-            'num_predict': num_predict,
-            "temperature": self.agent_temperature,  # Use agent temperature
-            "mirostat": 1,
-            'seed': self.agent_seed if self.agent_seed is not None else random.randint(0, 1000000),
-        }
+        # Get options with agent temperature and seed
+        options = self._get_llm_options(
+            temperature=self.agent_temperature,
+            seed=self.agent_seed if self.agent_seed is not None else random.randint(0, 1000000)
+        )
 
         kwargs = {
             'model': self.MODEL,
-            'messages': messages_for_llm,  # Use the temporary message list
+            'messages': messages_for_llm,
             'options': options,
             'keep_alive': "1h",
         }
@@ -241,39 +256,44 @@ class BaseChatAssistant:
         if self.available_tools and (not last_message or last_message.allow_tool_calls):
             kwargs['tools'] = list(self.available_tools.values())
 
-        response = ollama_client.chat(**kwargs)
+        response = self._ollama_client.chat(**kwargs)
 
         # Handle dict response from Ollama
-        if response['message']['content']:
-            # Only add the response to the actual chat history
+        if response['message']['content'] or response['message'].get('tool_calls'):
+            # Format tool calls if present
+            tool_calls = None
+            if response['message'].get('tool_calls'):
+                tool_calls = [
+                    {
+                        "function": {
+                            "name": tc['function']['name'],
+                            "arguments": tc['function']['arguments']
+                        }
+                    }
+                    for tc in response['message']['tool_calls']
+                ]
+
+            # Add the assistant's message to chat history with any tool calls
             self.chat_session.messages.append(Message(
                 role="assistant",
-                content=response['message']['content'],
+                content=response['message'].get('content', ''),
                 timestamp=datetime.now().isoformat(),
-                show_user=True  # Always show assistant messages
+                show_user=True,  # Always show assistant messages
+                tool_calls=tool_calls  # Include tool calls in the message
             ))
 
-        # Check for tool calls in dict response
-        if response['message'].get('tool_calls'):
-            # Add assistant message if it wasn't added above
-            if not response['message'].get('content'):
-                self.chat_session.messages.append(Message(
-                    role="assistant", 
-                    content=response['message']['content'],
-                    timestamp=datetime.now().isoformat(),
-                    show_user=True
-                ))
-            
-            self.tool_calls = [
-                ToolCall(
-                    name=tc['function']['name'],
-                    arguments=tc['function']['arguments']
-                )
-                for tc in response['message']['tool_calls']
-            ]
-            self.state = self.STATE_PROCESSING_TOOL_CALLS
-        else:
-            self.state = self.STATE_WAITING_USER_INPUT
+            # Set tool calls and state for processing
+            if tool_calls:
+                self.tool_calls = [
+                    ToolCall(
+                        name=tc['function']['name'],
+                        arguments=tc['function']['arguments']
+                    )
+                    for tc in response['message']['tool_calls']
+                ]
+                self.state = self.STATE_PROCESSING_TOOL_CALLS
+            else:
+                self.state = self.STATE_WAITING_USER_INPUT
 
     def _execute_tool_calls(self):
         """Execute the first tool call in the queue."""
@@ -302,19 +322,20 @@ class BaseChatAssistant:
                 
                 metadata = self.get_tool_metadata(function_name)
                 result = f"Tool output for {function_name}:\n{tool_result}"
-                self.chat_session.messages.append(Message(
-                    role="system",
-                    content="Here is the tool output. Ask the user if they like it and if they do, set the property to that value. For long strings, like plot_overview, use the full text. Don't abridge it.",
-                    timestamp=datetime.now().isoformat(),
-                    show_user=metadata.show_output,
-                    ephemeral=False
-                ))
+                # self.chat_session.messages.append(Message(
+                #     role="system",
+                #     content="Ask the user if they like this if they haven't already given permission, and if they do consent, set the properties to those values. For long strings, like plot_overview, use the full text. Don't abridge it.",
+                #     timestamp=datetime.now().isoformat(),
+                #     show_user=metadata.show_output,
+                #     ephemeral=False
+                # ))
                 self.chat_session.messages.append(Message(
                     role="tool",
                     content=result,
                     timestamp=datetime.now().isoformat(),
                     show_user=metadata.show_output,
-                    ephemeral=False
+                    ephemeral=False,
+                    tool_name=function_name  # Add tool name to message
                 ))
             else:
                 self.chat_session.messages.append(Message(
@@ -333,11 +354,8 @@ class BaseChatAssistant:
             self.state = self.STATE_PROCESSING_TOOL_OUTPUTS
 
     def _process_tool_outputs(self):
-        """
-        After we have tool outputs in messages, we call LLM again to integrate those results.
-        Then we see if the LLM wants more tools or just final output.
-        """
-        # Get the last tool call's metadata
+        """Process tool outputs using shared client."""
+        # Get the last tool message's metadata
         last_tool_message = next((msg for msg in reversed(self.chat_session.messages) 
                                 if msg.role == ROLE_TOOL), None)
         if last_tool_message and hasattr(last_tool_message, 'tool_name'):
@@ -346,34 +364,49 @@ class BaseChatAssistant:
                 self.state = self.STATE_QUESTIONING_TOOL_OUTPUT
                 return
 
-        ollama_client = ollama.Client(transport=LoggingTransport())
+        # Get prepended messages and extend with chat session messages
+        full_messages = [msg.model_dump() for msg in self.get_prepended_messages()]
+        full_messages.extend([msg.model_dump() for msg in self.chat_session.messages])
 
-        # For a shared system prompt, prepend it to the messages:
-        system_message = Message(role=ROLE_SYSTEM, content=self.system_prompt)
-        full_messages = [system_message.model_dump()] + [msg.model_dump() for msg in self.chat_session.messages]
+        # Get options with agent temperature and seed
+        options = self._get_llm_options(
+            temperature=self.agent_temperature,
+            seed=self.agent_seed if self.agent_seed is not None else random.randint(0, 1000000)
+        )
 
-        num_predict = 2000
-        options = {
-            'num_ctx': 10000,
-            'num_predict': num_predict,
-            "temperature": self.agent_temperature,  # Use agent temperature
-            "mirostat": 1,
-            'seed': self.agent_seed if self.agent_seed is not None else random.randint(0, 1000000),
-        }
-
-        response = ollama_client.chat(
-            self.MODEL,
-            messages=full_messages,
+        response = self._ollama_client.chat(
+            model=self.MODEL,
+            messages=full_messages,  # Use the combined messages
             tools=list(self.available_tools.values()),
             options=options,
             keep_alive="1h",
         )
 
         if response['message'].get('tool_calls'):
+            tool_calls = [
+                {
+                    "function": {
+                        "name": tc['function']['name'],
+                        "arguments": tc['function']['arguments']
+                    }
+                }
+                for tc in response['message']['tool_calls']
+            ]
+            
+            # Add the assistant's message to chat history with tool calls
+            self.chat_session.messages.append(Message(
+                role="assistant",
+                content=response['message'].get('content', ''),
+                timestamp=datetime.now().isoformat(),
+                show_user=True,
+                tool_calls=tool_calls
+            ))
+
+            # Set tool calls for processing
             self.tool_calls = [
                 ToolCall(
                     name=tc['function']['name'],
-                    arguments=tc['function']['arguments']  # Just pass the dict directly
+                    arguments=tc['function']['arguments']
                 )
                 for tc in response['message']['tool_calls']
             ]
@@ -405,7 +438,7 @@ class BaseChatAssistant:
             'num_ctx': 10000,
             'num_predict': 2000,
             "temperature": self.agent_temperature,
-            "mirostat": 1,
+            # "mirostat": 1,
             'seed': self.agent_seed if self.agent_seed is not None else random.randint(0, 1000000),
         }
 
@@ -542,13 +575,12 @@ class BaseChatAssistant:
             return func
         return decorator
 
-    @tool(emoji="✏️", description="Sets a property value in the story")
-    def set_property(self, property_name: str, value: str) -> str:
-        """Sets the specified property of the story to the given value. If the user gives you any useful information, set the property to that value. If a tool gives you any useful information, ask the user if they like it and if they do, set the property to that value. For long strings, like plot_overview, use the full text.
+    @tool(emoji="✏️", description="Sets multiple property values in the story")
+    def set_properties(self, properties: dict) -> str:
+        """Sets multiple properties of the story to the given values. If the user gives you any useful information, set the properties to those values. If a tool gives you any useful information, ask the user if they like it and if they do, set the properties to those values. For long strings, like plot_overview, use the full text.
         
         Args:
-            property_name (str): The name of the property to set (must be a valid story attribute)
-            value (str): The value to set the property to
+            properties (dict): Dictionary mapping property names to their values
             
         Returns:
             str: A message describing what was updated
@@ -557,51 +589,104 @@ class BaseChatAssistant:
             return "Error: No story object available"
         
         story = self.story
-        if hasattr(story, property_name):
-            # Get current value for comparison
-            old_value = getattr(story, property_name)
-            
-            # Only save state if we're actually changing the value
-            if old_value != value:
-                try:
-                    # Set the new value
-                    setattr(story, property_name, value)
-                    
-                    # Re-validate the story model
-                    story = Story(**story.model_dump())
-                    self.story = story
-                    
-                    # Set success status for UI
-                    self.set_status('success', f'Successfully updated property `{property_name}`')
-                    
-                    if old_value:
-                        return f"**Updated `{property_name}`**"
-                    else:
-                        return f"**Set `{property_name}`**"
-                except Exception as e:
-                    self.set_status('error', f'Failed to update {property_name}: {str(e)}')
-                    return f"Error setting property {property_name}. \n\n{e}"
-            else:
-                self.set_status('info', f'Property {property_name} already has this value')
-                return f"Property {property_name} already has that value."
-        else:
-            self.set_status('error', f'Property {property_name} does not exist')
-            return f"Property '{property_name}' does not exist in the story."
-
-    @tool(emoji="✍️", description="Generates creative content", show_output=False, needs_questioning=True)
-    def creative_write(self, prompt: str, system_context: str = "", story_context: str = "") -> str:
-        """A creative writer will write about the prompt you provide. No context is passed to the writer, so be sure to include all relevant information. For example if you have a genre, you should ask to write about something in that specific genre. Take into account any requests the user has made.
-
-        Args:
-            prompt (str): Tells the writer what to write about.
-            system_context (str, optional): Additional system-level context/instructions. Defaults to "".
-            story_context (str, optional): Story-specific context. Defaults to "". The writer will be unaware of any context that is not passed into these two arguments, so be sure to include all relevant information.
-
-        Returns:
-            str: The generated creative content.
-        """
-        ollama_client = ollama.Client(transport=LoggingTransport())
+        updates = []
+        errors = []
         
+        for property_name, value in properties.items():
+            if hasattr(story, property_name):
+                # Get current value for comparison
+                old_value = getattr(story, property_name)
+                
+                # If the property is a list type and value isn't already a list,
+                # try to JSON decode the value
+                if isinstance(old_value, list) and not isinstance(value, list):
+                    try:
+                        value = json.loads(value)
+                    except json.JSONDecodeError:
+                        # If JSON decoding fails, treat it as a single-item list
+                        value = [value]
+                
+                # Only save state if we're actually changing the value
+                if old_value != value:
+                    try:
+                        # Set the new value
+                        setattr(story, property_name, value)
+                        
+                        # Track successful update
+                        if old_value:
+                            updates.append(f"Updated `{property_name}`")
+                        else:
+                            updates.append(f"Set `{property_name}`")
+                            
+                    except Exception as e:
+                        errors.append(f"Failed to update {property_name}: {str(e)}")
+                else:
+                    updates.append(f"Property {property_name} already has that value")
+            else:
+                errors.append(f"Property '{property_name}' does not exist")
+
+        try:
+            # Re-validate the story model after all updates
+            story = Story(**story.model_dump())
+            self.story = story
+            
+            if updates:
+                self.set_status('success', 'Successfully updated properties')
+            
+            # Call LLM to analyze for other potential properties
+            ollama_client = ollama.Client(transport=LoggingTransport())
+            
+            analysis_prompt = f"""You are an expert story critic. You are given a story and properties that were just set as the user updates the story. Based on the current story state, what other properties could we extrapolate and update to match the overall story? For example:
+
+- If plot_overview was set, look for locations, time periods, or themes
+- If genre was set, look for subgenres or themes
+- If title was set, look for themes or genre hints
+- Don't make up new properties, only use the ones that are already established in the story.
+- If plot_overview is blank, don't make up one, another assistant will do that.
+
+Current story context:
+{self._format_story_state()}
+
+Analyze the story and provide a list of properties by exact field name and their corresponding values that need to be updated to match the overall story.
+
+- Only respond with a list of properties and their suggested values, don't include thoughts or explanations.
+- Don't make up new properties, only use the ones that are already established in the story.
+- Don't make up an author name, unless explicitly asked.
+- If all the properties look good, just say "No suggestions"
+
+"""
+            analysis_user_prompt = f"""The user just updated these properties: {', '.join(property_name for property_name in properties.keys())}"""
+
+            analysis_response = ollama_client.chat(
+                model=self.MODEL,
+                messages=[
+                    {"role": "system", "content": analysis_prompt},
+                    {"role": "user", "content": analysis_user_prompt}
+                ],
+                options = {
+                    'num_ctx': 10000,
+                    'num_predict': 5000,
+                    "temperature": self.agent_temperature,
+                    # "mirostat": 1,
+                    'seed': self.agent_seed if self.agent_seed is not None else random.randint(0, 1000000),
+                }
+            )
+
+            suggestions = analysis_response['message']['content']
+            
+            # Only include suggestions section if there are actual suggestions
+            suggestions_text = f"\n\nSuggestions to present to the user:\n\n{suggestions}" if suggestions and "No suggestions" not in suggestions else ""
+            
+            return f"**Updates:**\n" + "\n".join(updates) + (f"\n\n**Errors:**\n" + "\n".join(errors) if errors else "") + suggestions_text
+
+        except Exception as e:
+            self.set_status('error', f'Failed to update properties: {str(e)}')
+            return f"Error updating properties: {str(e)}"
+
+    # @tool(emoji="✍️", description="Generates creative content", show_output=False, needs_questioning=True)
+    @tool(emoji="✍️", description="Generates creative content", show_output=False, needs_questioning=False)
+    def creative_write(self, prompt: str, system_context: str = "", story_context: str = "") -> str:
+        """Creative writing tool using shared client."""
         messages = []
         
         # Add default Plotomatic system context
@@ -622,16 +707,14 @@ Current Story Context:
         messages.append({"role": "system", "content": full_system_context})
         messages.append({"role": "user", "content": "Based on the story context: " + prompt})
         
-        options = {
-            'num_ctx': 10000,
-            'num_predict': 5000,
-            "temperature": self.creative_temperature,  # Use creative temperature
-            "mirostat": 1,
-            'seed': self.creative_seed if self.creative_seed is not None else random.randint(0, 1000000),
-        }
+        # Get options with creative temperature and seed
+        options = self._get_llm_options(
+            temperature=self.creative_temperature,
+            seed=self.creative_seed if self.creative_seed is not None else random.randint(0, 1000000)
+        )
         
         # Stream the response
-        stream = ollama_client.chat(
+        stream = self._ollama_client.chat(
             model=self.MODEL,
             messages=messages,
             options=options,

@@ -26,10 +26,10 @@ def temp_storage_path(tmp_path):
     return str(tmp_path / "test_base_assistant_state.json")
 
 @pytest.fixture
-def base_assistant(temp_storage_path):
+def base_assistant(temp_storage_path, mock_ollama_client):
     """
     Creates a fresh instance of BaseChatAssistant with a temporary storage path.
-    Uses deterministic settings for testing.
+    Uses deterministic settings and caching client for testing.
     """
     assistant = BaseChatAssistant(
         storage_path=temp_storage_path,
@@ -49,7 +49,7 @@ def test_base_assistant_initial_state(base_assistant):
     assert base_assistant.tool_calls == []
     assert base_assistant.quick_responses == []
     assert base_assistant.system_prompt in base_assistant.BASE_SYSTEM_PROMPT
-    assert 'set_property' in base_assistant.available_tools
+    assert 'set_properties' in base_assistant.available_tools
     assert 'creative_write' in base_assistant.available_tools
 
 def test_run_no_tool_calls(base_assistant, mock_ollama_chat):
@@ -357,19 +357,20 @@ def test_questioning_state_for_creative_write(base_assistant, mock_ollama_chat):
     assert any(m.role == ROLE_TOOL and 'Generated creative content' in m.content for m in messages)
     assert any(m.role == ROLE_ASSISTANT and 'How do you feel about this content?' in m.content for m in messages)
 
-def test_no_questioning_for_set_property(base_assistant, mock_ollama_chat):
-    """Test that set_property tool skips questioning state"""
+def test_no_questioning_for_set_properties(base_assistant, mock_ollama_chat):
+    """Test that set_properties tool skips questioning state"""
     
-    # First response: set_property tool call
+    # First response: set_properties tool call
     mock_ollama_chat.return_value = {
         'message': {
             'content': None,
             'tool_calls': [{
                 'function': {
-                    'name': 'set_property',
+                    'name': 'set_properties',
                     'arguments': {
-                        'property_name': 'title',
-                        'value': 'Test Title'
+                        'properties': {
+                            'title': 'Test Title'
+                        }
                     }
                 }
             }]
@@ -383,7 +384,7 @@ def test_no_questioning_for_set_property(base_assistant, mock_ollama_chat):
     # Second response: tool execution result
     mock_ollama_chat.return_value = {
         'message': {
-            'content': 'Property updated',
+            'content': 'Properties updated',
             'tool_calls': None
         }
     }
@@ -397,7 +398,7 @@ def test_no_questioning_for_set_property(base_assistant, mock_ollama_chat):
     # Verify messages flow
     messages = base_assistant.chat_session.messages
     assert any(m.role == ROLE_TOOL and 'Set `title`' in m.content for m in messages)
-    assert any(m.role == ROLE_ASSISTANT and 'Property updated' in m.content for m in messages)
+    assert any(m.role == ROLE_ASSISTANT and 'Properties updated' in m.content for m in messages)
 
 def test_tool_metadata_needs_questioning(base_assistant):
     """Test that tool metadata correctly tracks needs_questioning flag"""
@@ -406,9 +407,9 @@ def test_tool_metadata_needs_questioning(base_assistant):
     creative_write_metadata = base_assistant.get_tool_metadata('creative_write')
     assert creative_write_metadata.needs_questioning is True
     
-    # Check set_property has needs_questioning=False
-    set_property_metadata = base_assistant.get_tool_metadata('set_property')
-    assert set_property_metadata.needs_questioning is False
+    # Check set_properties has needs_questioning=False
+    set_properties_metadata = base_assistant.get_tool_metadata('set_properties')
+    assert set_properties_metadata.needs_questioning is False
     
     # Test custom tool with needs_questioning
     @base_assistant.tool(needs_questioning=True)
