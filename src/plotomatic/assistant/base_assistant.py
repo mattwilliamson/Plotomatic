@@ -37,6 +37,7 @@ class BaseChatAssistant:
     STATE_WAITING_USER_INPUT = AssistantState.WAITING_USER_INPUT
     STATE_PROCESSING_TOOL_CALLS = AssistantState.PROCESSING_TOOL_CALLS
     STATE_PROCESSING_TOOL_OUTPUTS = AssistantState.PROCESSING_TOOL_OUTPUTS
+    STATE_QUESTIONING_TOOL_OUTPUT = AssistantState.QUESTIONING_TOOL_OUTPUT
 
     # Add class variable to track current instance
     _current_instance = None
@@ -180,6 +181,11 @@ class BaseChatAssistant:
             self._process_tool_outputs()
             self.save_state()
 
+        elif self.state == self.STATE_QUESTIONING_TOOL_OUTPUT:
+            self.clear_quick_responses()
+            self._question_tool_output()
+            self.save_state()
+
         elif self.state == self.STATE_WAITING_USER_INPUT:
             # No-op: just waiting for user input
             pass
@@ -249,14 +255,14 @@ class BaseChatAssistant:
 
         # Check for tool calls in dict response
         if response['message'].get('tool_calls'):
-            # # Add assistant message if it wasn't added above
-            # if not response['message'].get('content'):
-            #     self.chat_session.messages.append(Message(
-            #         role="assistant", 
-            #         content=response['message']['content'],
-            #         timestamp=datetime.now().isoformat(),
-            #         show_user=True
-            #     ))
+            # Add assistant message if it wasn't added above
+            if not response['message'].get('content'):
+                self.chat_session.messages.append(Message(
+                    role="assistant", 
+                    content=response['message']['content'],
+                    timestamp=datetime.now().isoformat(),
+                    show_user=True
+                ))
             
             self.tool_calls = [
                 ToolCall(
@@ -297,6 +303,13 @@ class BaseChatAssistant:
                 metadata = self.get_tool_metadata(function_name)
                 result = f"Tool output for {function_name}:\n{tool_result}"
                 self.chat_session.messages.append(Message(
+                    role="system",
+                    content="Here is the tool output. Ask the user if they like it and if they do, set the property to that value. For long strings, like plot_overview, use the full text. Don't abridge it.",
+                    timestamp=datetime.now().isoformat(),
+                    show_user=metadata.show_output,
+                    ephemeral=False
+                ))
+                self.chat_session.messages.append(Message(
                     role="tool",
                     content=result,
                     timestamp=datetime.now().isoformat(),
@@ -324,17 +337,20 @@ class BaseChatAssistant:
         After we have tool outputs in messages, we call LLM again to integrate those results.
         Then we see if the LLM wants more tools or just final output.
         """
+        # Get the last tool call's metadata
+        last_tool_message = next((msg for msg in reversed(self.chat_session.messages) 
+                                if msg.role == ROLE_TOOL), None)
+        if last_tool_message and hasattr(last_tool_message, 'tool_name'):
+            tool_metadata = self.get_tool_metadata(last_tool_message.tool_name)
+            if tool_metadata.needs_questioning:
+                self.state = self.STATE_QUESTIONING_TOOL_OUTPUT
+                return
+
         ollama_client = ollama.Client(transport=LoggingTransport())
 
         # For a shared system prompt, prepend it to the messages:
         system_message = Message(role=ROLE_SYSTEM, content=self.system_prompt)
-        extra_messages = [Message(
-            role="system",
-            content=f"Check the following output and set any properties that are needed to make the story match the result, asking the user first unless they already gave permission.",
-            timestamp=datetime.now().isoformat(),
-            show_user=False
-        ).model_dump()]
-        full_messages = [system_message.model_dump()] + extra_messages +[msg.model_dump() for msg in self.chat_session.messages]
+        full_messages = [system_message.model_dump()] + [msg.model_dump() for msg in self.chat_session.messages]
 
         num_predict = 2000
         options = {
@@ -370,6 +386,43 @@ class BaseChatAssistant:
                     timestamp=datetime.now().isoformat()
                 ))
             self.state = self.STATE_WAITING_USER_INPUT
+
+    def _question_tool_output(self):
+        """
+        Ask questions about the tool output before presenting to user.
+        """
+        ollama_client = ollama.Client(transport=LoggingTransport())
+
+        # Add a system message specifically for questioning the output
+        questioning_prompt = """Review the previous tool output and ask relevant questions to ensure it meets the user's needs. If there is any useful information in the output, ask the user if they like it. If they do, set any properties that are needed to make the story match the result."""
+
+        messages = [
+            Message(role=ROLE_SYSTEM, content=questioning_prompt).model_dump(),
+            *[msg.model_dump() for msg in self.chat_session.messages]
+        ]
+
+        options = {
+            'num_ctx': 10000,
+            'num_predict': 2000,
+            "temperature": self.agent_temperature,
+            "mirostat": 1,
+            'seed': self.agent_seed if self.agent_seed is not None else random.randint(0, 1000000),
+        }
+
+        response = ollama_client.chat(
+            self.MODEL,
+            messages=messages,
+            options=options,
+            keep_alive="1h",
+        )
+
+        if response['message']['content']:
+            self.chat_session.messages.append(Message(
+                role="assistant",
+                content=response['message']['content'],
+                timestamp=datetime.now().isoformat()
+            ))
+        self.state = self.STATE_WAITING_USER_INPUT
 
     def register_tools(self, tools: Dict[str, Callable]):
         """Register multiple tools at once.
@@ -467,13 +520,14 @@ class BaseChatAssistant:
         ))
 
     @staticmethod
-    def tool(emoji: str = "🔧", description: str = "", show_output: bool = True):
+    def tool(emoji: str = "🔧", description: str = "", show_output: bool = True, needs_questioning: bool = False):
         """Decorator to mark assistant methods as tools and store their metadata.
         
         Args:
             emoji (str): Emoji icon for the tool
             description (str): Tool description for documentation
             show_output (bool): Whether to show the tool output in chat
+            needs_questioning (bool): Whether the tool output should be questioned before presenting to user
         """
         def decorator(func):
             # Store metadata on the function object
@@ -481,7 +535,8 @@ class BaseChatAssistant:
                 name=func.__name__,
                 emoji=emoji,
                 description=description or func.__doc__,
-                show_output=show_output
+                show_output=show_output,
+                needs_questioning=needs_questioning
             )
             func._tool_metadata = metadata
             return func
@@ -489,7 +544,7 @@ class BaseChatAssistant:
 
     @tool(emoji="✏️", description="Sets a property value in the story")
     def set_property(self, property_name: str, value: str) -> str:
-        """Sets the specified property of the story to the given value. If the user gives you any useful information, set the property to that value. If a tool gives you any useful information, ask the user if they like it and if they do, set the property to that value.
+        """Sets the specified property of the story to the given value. If the user gives you any useful information, set the property to that value. If a tool gives you any useful information, ask the user if they like it and if they do, set the property to that value. For long strings, like plot_overview, use the full text.
         
         Args:
             property_name (str): The name of the property to set (must be a valid story attribute)
@@ -520,20 +575,20 @@ class BaseChatAssistant:
                     self.set_status('success', f'Successfully updated property `{property_name}`')
                     
                     if old_value:
-                        return f"**Updated `{property_name}`** from `{repr(old_value)}` to: `{repr(value)}`\n\n---\n\n"
+                        return f"**Updated `{property_name}`**"
                     else:
-                        return f"**Set `{property_name}`** to: `{repr(value)}`\n\n---\n\n"
+                        return f"**Set `{property_name}`**"
                 except Exception as e:
                     self.set_status('error', f'Failed to update {property_name}: {str(e)}')
-                    return f"Error setting property {property_name} to {value}. \n\n{e}"
+                    return f"Error setting property {property_name}. \n\n{e}"
             else:
                 self.set_status('info', f'Property {property_name} already has this value')
-                return f"Property {property_name} already has value: `{value}`"
+                return f"Property {property_name} already has that value."
         else:
             self.set_status('error', f'Property {property_name} does not exist')
             return f"Property '{property_name}' does not exist in the story."
 
-    @tool(emoji="✍️", description="Generates creative content", show_output=False)
+    @tool(emoji="✍️", description="Generates creative content", show_output=False, needs_questioning=True)
     def creative_write(self, prompt: str, system_context: str = "", story_context: str = "") -> str:
         """A creative writer will write about the prompt you provide. No context is passed to the writer, so be sure to include all relevant information. For example if you have a genre, you should ask to write about something in that specific genre. Take into account any requests the user has made.
 

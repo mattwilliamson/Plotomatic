@@ -76,6 +76,7 @@ Important Rules:
 - The author field should not be made up unless the user explicitly asks for it
 - Any time you have information that can be used to set a property, you should set that property, whether from a tool call or user input
 - Any time you see any hard requirements from the user, append it to the requirements field. Be sure to include all current requirements as well. An example of a hard requirement is no explicit content or no violence or a specific character is requested.
+- You are not responsible for creating characters or acts, you are only responsible for setting top level properties. Characters and acts are created in separate assistants. However, for a small number of main characters, you can set them here in the plot_overview.
 """
 
     @classmethod
@@ -292,3 +293,53 @@ Important Rules:
         
         # Return None if no assistant message found
         return None
+
+    @BaseChatAssistant.tool(emoji="✏️", description="Sets a property value in the story")
+    def set_property(self, property_name: str, value: str) -> str:
+        """Sets the specified property of the story to the given value. If the user gives you any useful information, set the property to that value. If a tool gives you any useful information, ask the user if they like it and if they do, set the property to that value. For long strings, like plot_overview, use the full text.
+        
+        Args:
+            property_name (str): The name of the property to set (must be a valid story attribute)
+            value (str): The value to set the property to
+            
+        Returns:
+            str: A message describing what was updated
+        """
+        if not hasattr(self, 'story'):
+            return "Error: No story object available"
+        
+        # Skip fields that should be handled by other assistants
+        if property_name in self.SKIP_FIELDS:
+            return f"Error: {property_name} is handled by a different assistant"
+        
+        story = self.story
+        if hasattr(story, property_name):
+            # Get current value for comparison
+            old_value = getattr(story, property_name)
+            
+            # Only save state if we're actually changing the value
+            if old_value != value:
+                try:
+                    # Set the new value
+                    setattr(story, property_name, value)
+                    
+                    # Re-validate the story model
+                    story = Story(**story.model_dump())
+                    self.story = story
+                    
+                    # Set success status for UI
+                    self.set_status('success', f'Successfully updated property `{property_name}`')
+                    
+                    if old_value:
+                        return f"**Updated `{property_name}`**"
+                    else:
+                        return f"**Set `{property_name}`**"
+                except Exception as e:
+                    self.set_status('error', f'Failed to update {property_name}: {str(e)}')
+                    return f"Error setting property {property_name}. \n\n{e}"
+            else:
+                self.set_status('info', f'Property {property_name} already has this value')
+                return f"Property {property_name} already has that value."
+        else:
+            self.set_status('error', f'Property {property_name} does not exist')
+            return f"Property '{property_name}' does not exist in the story."

@@ -6,7 +6,7 @@ from unittest.mock import patch, MagicMock
 
 from plotomatic.assistant.base_assistant import BaseChatAssistant
 from plotomatic.assistant.states import AssistantState
-from plotomatic.models.chat import Message, ChatSession, ToolCall
+from plotomatic.models.chat import Message, ChatSession, ToolCall, ROLE_SYSTEM, ROLE_TOOL, ROLE_ASSISTANT
 
 @pytest.fixture
 def mock_ollama_chat():
@@ -299,3 +299,169 @@ def test_temperature_and_seed_settings():
     assert test_assistant.creative_temperature == 0.0
     assert test_assistant.agent_seed == 0
     assert test_assistant.creative_seed == 0
+
+def test_questioning_state_for_creative_write(base_assistant, mock_ollama_chat):
+    """Test that creative_write tool triggers questioning state"""
+    
+    # First response: creative write tool call
+    mock_ollama_chat.return_value = {
+        'message': {
+            'content': None,
+            'tool_calls': [{
+                'function': {
+                    'name': 'creative_write',
+                    'arguments': {
+                        'prompt': 'Write a story',
+                        'system_context': '',
+                        'story_context': ''
+                    }
+                }
+            }]
+        }
+    }
+    
+    # Initial run to get tool call
+    base_assistant.run()
+    assert base_assistant.state == AssistantState.PROCESSING_TOOL_CALLS
+    
+    # Second response: tool execution result
+    mock_ollama_chat.return_value = {
+        'message': {
+            'content': 'Generated creative content',
+            'tool_calls': None
+        }
+    }
+    
+    # Run to execute tool
+    base_assistant.run()
+    
+    # Should transition to questioning state since creative_write needs_questioning=True
+    assert base_assistant.state == AssistantState.QUESTIONING_TOOL_OUTPUT
+    
+    # Third response: questioning about the output
+    mock_ollama_chat.return_value = {
+        'message': {
+            'content': 'How do you feel about this content? Is the style and tone what you were looking for?',
+            'tool_calls': None
+        }
+    }
+    
+    # Run to process questioning
+    base_assistant.run()
+    
+    # Should now be waiting for user input
+    assert base_assistant.state == AssistantState.WAITING_USER_INPUT
+    
+    # Verify messages flow
+    messages = base_assistant.chat_session.messages
+    assert any(m.role == ROLE_TOOL and 'Generated creative content' in m.content for m in messages)
+    assert any(m.role == ROLE_ASSISTANT and 'How do you feel about this content?' in m.content for m in messages)
+
+def test_no_questioning_for_set_property(base_assistant, mock_ollama_chat):
+    """Test that set_property tool skips questioning state"""
+    
+    # First response: set_property tool call
+    mock_ollama_chat.return_value = {
+        'message': {
+            'content': None,
+            'tool_calls': [{
+                'function': {
+                    'name': 'set_property',
+                    'arguments': {
+                        'property_name': 'title',
+                        'value': 'Test Title'
+                    }
+                }
+            }]
+        }
+    }
+    
+    # Initial run to get tool call
+    base_assistant.run()
+    assert base_assistant.state == AssistantState.PROCESSING_TOOL_CALLS
+    
+    # Second response: tool execution result
+    mock_ollama_chat.return_value = {
+        'message': {
+            'content': 'Property updated',
+            'tool_calls': None
+        }
+    }
+    
+    # Run to execute tool
+    base_assistant.run()
+    
+    # Should skip questioning and go straight to waiting
+    assert base_assistant.state == AssistantState.WAITING_USER_INPUT
+    
+    # Verify messages flow
+    messages = base_assistant.chat_session.messages
+    assert any(m.role == ROLE_TOOL and 'Set `title`' in m.content for m in messages)
+    assert any(m.role == ROLE_ASSISTANT and 'Property updated' in m.content for m in messages)
+
+def test_tool_metadata_needs_questioning(base_assistant):
+    """Test that tool metadata correctly tracks needs_questioning flag"""
+    
+    # Check creative_write has needs_questioning=True
+    creative_write_metadata = base_assistant.get_tool_metadata('creative_write')
+    assert creative_write_metadata.needs_questioning is True
+    
+    # Check set_property has needs_questioning=False
+    set_property_metadata = base_assistant.get_tool_metadata('set_property')
+    assert set_property_metadata.needs_questioning is False
+    
+    # Test custom tool with needs_questioning
+    @base_assistant.tool(needs_questioning=True)
+    def custom_tool():
+        """Test tool"""
+        return "test"
+        
+    base_assistant.register_tool(custom_tool)
+    custom_metadata = base_assistant.get_tool_metadata('custom_tool')
+    assert custom_metadata.needs_questioning is True
+
+def test_questioning_prompt_content(base_assistant, mock_ollama_chat):
+    """Test that questioning state uses appropriate prompt"""
+    
+    # Setup: Get to questioning state via creative_write
+    mock_ollama_chat.return_value = {
+        'message': {
+            'content': None,
+            'tool_calls': [{
+                'function': {
+                    'name': 'creative_write',
+                    'arguments': {
+                        'prompt': 'Write a story',
+                        'system_context': '',
+                        'story_context': ''
+                    }
+                }
+            }]
+        }
+    }
+    
+    base_assistant.run()  # Get tool call
+    
+    mock_ollama_chat.return_value = {
+        'message': {
+            'content': 'Generated content',
+            'tool_calls': None
+        }
+    }
+    
+    base_assistant.run()  # Execute tool -> questioning state
+    assert base_assistant.state == AssistantState.QUESTIONING_TOOL_OUTPUT
+    
+    # Capture the call to ollama.chat in questioning state
+    base_assistant.run()
+    
+    # Get the last call to mock_ollama_chat
+    last_call = mock_ollama_chat.call_args
+    messages = last_call[1]['messages']
+    
+    # Verify system message contains expected questioning prompts
+    system_message = next(m for m in messages if m['role'] == 'system')
+    assert 'Review the previous tool output' in system_message['content']
+    assert 'style and tone' in system_message['content']
+    assert 'key elements' in system_message['content']
+    assert 'length and detail' in system_message['content']

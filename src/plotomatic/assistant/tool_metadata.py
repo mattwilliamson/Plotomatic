@@ -17,4 +17,8 @@ class ToolMetadata(BaseModel):
     )
     name: str = Field(
         description="Name of the tool function"
+    )
+    needs_questioning: bool = Field(
+        default=False,
+        description="Whether the tool output should be questioned before presenting to user"
     ) 
