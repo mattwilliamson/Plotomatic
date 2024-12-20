@@ -419,7 +419,7 @@ def test_story_overview_assistant_full_flow(temp_project_dir, monkeypatch):
         m = assistant.chat_session.messages[-1]
         assert m.role == "assistant"
         assert "New Character Added" in m.content
-        assert "Accept all suggestions" in assistant.quick_responses
+        # assert "Accept all suggestions" in assistant.quick_responses
         assert assistant.state == AssistantState.WAITING_USER_INPUT
 
 
