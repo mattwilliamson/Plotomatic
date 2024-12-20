@@ -1,7 +1,7 @@
 from .base import BaseModel
 from .story import (
     Story, Act, Chapter, Scene, Character, CharacterArc,
-    CharacterRelationship, Prop, StoryBeat, Subplot, EmotionalArc
+    CharacterRelationship, Prop
 )
 from .story_dialogue import (
     DialogueLine, SceneDialogue, ChapterDialogue,
@@ -13,7 +13,7 @@ __all__ = [
     'BaseModel',
     'Story', 'Act', 'Chapter', 'Scene',
     'Character', 'CharacterArc', 'CharacterRelationship',
-    'Prop', 'StoryBeat', 'Subplot', 'EmotionalArc',
+    'Prop',
     'DialogueLine', 'SceneDialogue', 'ChapterDialogue',
     'ActDialogue', 'StoryDialogue',
     'Message', 'ChatSession'

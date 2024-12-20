@@ -363,46 +363,6 @@ class Chapter(BaseModel):
                 markdown += scene.markdown_summary()
         return markdown
 
-class StoryBeat(BaseModel):
-    """Represents a significant moment or turning point in the story."""
-    name: Optional[str] = Field(
-        "", 
-        description='Descriptive title for this plot point (e.g., "Inciting Incident", "Midpoint Reversal", "Climactic Battle"). Identifies its role in story structure'
-    )
-    description: Optional[str] = Field(
-        "", 
-        description="Detailed explanation of what happens at this point and why it's significant to the overall narrative"
-    )
-    scene: Optional[str] = Field(
-        "", 
-        description="Reference to the specific scene where this beat occurs. Helps track dramatic structure across the story"
-    )
-
-class Subplot(BaseModel):
-    """Represents a subplot that runs alongside the main plot of the story."""
-    title: Optional[str] = Field(
-        "", 
-        description="Distinctive name for this secondary storyline that reflects its theme or central conflict"
-    )
-    description: Optional[str] = Field(
-        "", 
-        description="Comprehensive overview of the subplot, including its arc, resolution, and how it enhances the main story"
-    )
-    related_characters: Optional[List[str]] = Field(
-        default_factory=list, 
-        description="Characters primarily involved in this subplot. Helps track character engagement across different story threads"
-    )
-
-class EmotionalArc(BaseModel):
-    """Represents an emotional stage or shift within the story."""
-    stage: Optional[str] = Field(
-        "", 
-        description='Name of the emotional phase (e.g., "Hope", "Despair", "Triumph"). Maps the story\'s emotional journey'
-    )
-    description: Optional[str] = Field(
-        "", 
-        description="Detailed explanation of this emotional state, its impact on characters, and how it affects audience engagement"
-    )
 
 class Act(BaseModel):
     """Represents an act within the story, containing multiple chapters and props."""
@@ -599,15 +559,15 @@ class Story(BaseModel):
         default_factory=list, 
         description="Significant objects, items, or artifacts that play important roles in the story. Includes physical descriptions and narrative purpose"
     )
-    story_beats: Optional[List[StoryBeat]] = Field(
+    story_beats: Optional[List[str]] = Field(
         default_factory=list, 
-        description="Sequential list of major plot points and turning points that drive the story forward. Maps the story's dramatic structure and pacing"
+        description="Sequential list of major plot points and turning points that drive the story forward. Maps the story's dramatic structure and pacing. These are specific and detailed and describe what happens in the story."
     )
-    subplots: Optional[List[Subplot]] = Field(
+    subplots: Optional[List[str]] = Field(
         default_factory=list, 
-        description="Secondary storylines that weave through the main plot, adding complexity and depth. Often explore supporting characters or parallel themes"
+        description="Secondary storylines that weave through the main plot, adding complexity and depth. Often explore supporting characters or parallel themes. These are specific and detailed."
     )
-    emotional_arc: Optional[List[EmotionalArc]] = Field(
+    emotional_arc: Optional[List[str]] = Field(
         default_factory=list, 
         description="Progression of emotional states and tonal shifts throughout the story. Charts how the audience should feel at each stage of the narrative"
     )
@@ -615,13 +575,13 @@ class Story(BaseModel):
         default_factory=list, 
         description="Major structural divisions of the story, each with its own dramatic purpose, conflict, and resolution. Typically follows traditional act structure (e.g., three-act, five-act)"
     )
-    secret_knowledge: Optional[str] = Field(
-        "", 
-        description="Hidden information, plot twists, or background details known only to the author that influence character decisions and plot development"
+    secret_knowledge: Optional[List[str]] = Field(
+        default_factory=list, 
+        description="Hidden information, plot twists, or background details known only to the author that influence character decisions and plot development. These are exact and specific, not vague or abstract."
     )
     requirements: Optional[List[str]] = Field(
         default_factory=list,
-        description="List of user provided requirements that guide the story creation process. Can include writing style, character traits, plot points, etc"
+        description="List of user provided requirements that guide the story creation process. Can include writing style, character traits, plot points, etc. These must be user provided."
     )
     # visual_style: Optional[str] = Field(
     #     "", 

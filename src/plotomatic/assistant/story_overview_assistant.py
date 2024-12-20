@@ -36,9 +36,10 @@ class StoryOverviewAssistant(BaseChatAssistant):
         'cover_design',      # Complex object
         '_story_dialogue',   # Internal state
         'author_email',      # Optional field
-        'secret_knowledge',  # Optional field
-        'emotional_arc',     # Complex object
-        'subplots',          # Complex object
+        # 'secret_knowledge',  # Optional field
+        # 'emotional_arc',     # Complex object
+        # 'subplots',          # Complex object
+        # 'story_beats',       # Complex object
     }
 
     # A system prompt specialized for story overview

@@ -1,5 +1,12 @@
 # Notes
 
+Markdown
+When done, run review tool first to check if it is good. If good set flag on story that we can continue
+Quick replies. Maybe run an llm after response when waiting for input or add special syntax to response and parse it out.
+
+delete old tool calls from the chat history
+limit chat history
+
 adda tool to check if the story is consistent and the authot is real and the plot_overview is comprehensive enough
 share the ollama client with the base class. have default options and just enable overrides for each ollama client call. 
 add caching into temp files just for the tests

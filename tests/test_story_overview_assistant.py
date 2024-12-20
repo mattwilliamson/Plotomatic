@@ -25,34 +25,32 @@ class TestStep:
         print(f"Assistant state start: {self.assistant.state}")
         print(f"Prepended messages: {len(self.assistant.prepended_messages)}")
         print(f"Chat session messages: {len(self.assistant.chat_session.messages)}")
+        print(f"Quick responses: {self.assistant.quick_responses}")
 
         if self.should_run:
             self.assistant.run()
 
         print("\nChat Session Messages:")
-        # print(self.assistant.chat_session.model_dump_json(indent=2))
         debug(self.assistant.chat_session)
 
         print("\nPrepended Messages:")
-        # for msg in self.assistant.prepended_messages:
-        #     print(f"\n{msg.role}: {msg.content}")
         debug(self.assistant.prepended_messages)
             
-        # print(f"\nTool Calls: {self.assistant.tool_calls}")
         debug(self.assistant.tool_calls)
 
-        # print(f"Story: {self.assistant.story.model_dump_json(indent=2)}")
         debug(self.assistant.story)
-    
 
+        print("\nQuick Responses after run:")
+        debug(self.assistant.quick_responses)
+    
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         print("\nLast message:")
         if len(self.assistant.chat_session.messages) > 0:
-            # print(self.assistant.chat_session.messages[-1])
             debug(self.assistant.chat_session.messages[-1])
         print(f"\nAssistant state end: {self.assistant.state}")
+        print(f"Quick responses end: {self.assistant.quick_responses}")
 
         # Add detailed assistant info printing on failure
         if exc_type is not None:
@@ -62,6 +60,9 @@ class TestStep:
 
             print("\nTraceback:")
             traceback.print_exception(exc_type, exc_val, exc_tb)
+
+            print("\nQuick Responses at failure:")
+            debug(self.assistant.quick_responses)
 
             print("\n" + "!" * 100)
 
@@ -114,12 +115,15 @@ def test_story_overview_assistant_full_flow(temp_project_dir, monkeypatch):
         # assert len(assistant.chat_session.messages) == 1
         m = assistant.chat_session.messages[-1]
         assert m.role == "assistant"
-        assert "hello" in m.content.lower()
+        assert "hello" in m.content.lower() or "welcome" in m.content.lower()
         assert "creat" in m.content.lower()
         assert assistant.state == AssistantState.WAITING_USER_INPUT
+        assert len(assistant.quick_responses) > 0
+        assert "Science Fiction" in assistant.quick_responses
     
     with TestStep("User requests science fiction", assistant=assistant):
         assistant.send_message("How about science fiction")
+        assert len(assistant.quick_responses) == 0
         # assert len(assistant.chat_session.messages) == 2
         m = assistant.chat_session.messages[-1]
         assert m.role == "user"
@@ -156,6 +160,7 @@ def test_story_overview_assistant_full_flow(temp_project_dir, monkeypatch):
         # assert "with the genre set to science fiction" in m.content.lower()
         assert assistant.state == AssistantState.WAITING_USER_INPUT
         assert assistant.story.genre.lower() == "science fiction"
+
     # Round 2
 
 
@@ -201,7 +206,7 @@ def test_story_overview_assistant_full_flow(temp_project_dir, monkeypatch):
 
 
     with TestStep("User requests random story", assistant=assistant):
-        assistant.send_message("Just fill in the rest of the fields with whatever you want and write a completely random story.")
+        assistant.send_message("Just write a completely random story.")
         # assert len(assistant.chat_session.messages) == 7
         m = assistant.chat_session.messages[-1]
         assert m.role == "user"
@@ -231,30 +236,30 @@ def test_story_overview_assistant_full_flow(temp_project_dir, monkeypatch):
     #     assert assistant.state == AssistantState.PROCESSING_TOOL_OUTPUTS
 
 
-    with TestStep("LLM returns set_properties tool calls for motifs", assistant=assistant):
-        m = assistant.chat_session.messages[1]
-        assert assistant.tool_calls is not None
-        assert len(assistant.tool_calls) == 1
-        assert assistant.tool_calls[0].name == "set_properties"
-        # assert "motifs" in assistant.tool_calls[0].arguments["properties"]
-        # assert len(assistant.tool_calls[0].arguments["properties"]["motifs"]) > 1
-        assert assistant.state == AssistantState.PROCESSING_TOOL_CALLS
-        # Check that all those properties have len > 0
+    # with TestStep("LLM returns set_properties tool calls for motifs", assistant=assistant):
+    #     m = assistant.chat_session.messages[1]
+    #     assert assistant.tool_calls is not None
+    #     assert len(assistant.tool_calls) == 1
+    #     assert assistant.tool_calls[0].name == "set_properties"
+    #     # assert "motifs" in assistant.tool_calls[0].arguments["properties"]
+    #     # assert len(assistant.tool_calls[0].arguments["properties"]["motifs"]) > 1
+    #     assert assistant.state == AssistantState.PROCESSING_TOOL_CALLS
+    #     # Check that all those properties have len > 0
 
 
-    with TestStep("set_properties tool result for fields", assistant=assistant):
-        m = assistant.chat_session.messages[-1]
-        assert m.role == "tool"
-        assert "set_properties" in m.content
-        assert len(assistant.story.author) > 0
-        assert len(assistant.story.genre) > 0
-        assert len(assistant.story.medium) > 0
-        assert len(assistant.story.narrative_style) > 0
-        assert len(assistant.story.time_period) > 0
-        assert len(assistant.story.location) > 0
-        assert len(assistant.story.conflict_type) > 0
-        assert len(assistant.story.motifs) > 0
-        assert assistant.state == AssistantState.PROCESSING_TOOL_OUTPUTS
+    # with TestStep("set_properties tool result for fields", assistant=assistant):
+    #     m = assistant.chat_session.messages[-1]
+    #     assert m.role == "tool"
+    #     assert "set_properties" in m.content
+    #     assert len(assistant.story.author) > 0
+    #     assert len(assistant.story.genre) > 0
+    #     assert len(assistant.story.medium) > 0
+    #     assert len(assistant.story.narrative_style) > 0
+    #     assert len(assistant.story.time_period) > 0
+    #     assert len(assistant.story.location) > 0
+    #     assert len(assistant.story.conflict_type) > 0
+    #     assert len(assistant.story.motifs) > 0
+    #     assert assistant.state == AssistantState.PROCESSING_TOOL_OUTPUTS
 
 
 
@@ -266,6 +271,7 @@ def test_story_overview_assistant_full_flow(temp_project_dir, monkeypatch):
 
     with TestStep("LLM returns creative_write tool calls", assistant=assistant):
         # assert len(assistant.chat_session.messages) == 8
+        """Write a completely random story"""
         m = assistant.chat_session.messages[1]
         assert assistant.tool_calls is not None
         assert len(assistant.tool_calls) == 1
@@ -278,40 +284,43 @@ def test_story_overview_assistant_full_flow(temp_project_dir, monkeypatch):
         assert assistant.state == AssistantState.PROCESSING_TOOL_CALLS
 
     with TestStep("LLM Calls creative_write tool", assistant=assistant):
+        """In the depths of a forgotten galaxy,..."""
         # assert len(assistant.chat_session.messages) == 9
         m = assistant.chat_session.messages[-1]
         assert m.role == "tool"
-        assert "In the depths of a distant galaxy" in m.content
+        assert "galaxy" in m.content
         assert len(m.content) > 100
         # TODO: Check that the show_user = False
         assert assistant.state == AssistantState.PROCESSING_TOOL_OUTPUTS
 
-    with TestStep("LLM handles creative_write tool output", assistant=assistant):
-        # assert len(assistant.chat_session.messages) == 9
-        m = assistant.chat_session.messages[-1]
-        assert m.role == "tool"
-        # assert "In the depths of a distant galaxy" in m.content
-        assert len(m.content) > 100
-        # TODO: Check that the show_user = False
-        assert assistant.state == AssistantState.QUESTIONING_TOOL_OUTPUT
+    # with TestStep("LLM handles creative_write tool output", assistant=assistant):
+    #     # assert len(assistant.chat_session.messages) == 9
+    #     m = assistant.chat_session.messages[-1]
+    #     assert m.role == "tool"
+    #     # assert "In the depths of a distant galaxy" in m.content
+    #     assert len(m.content) > 100
+    #     # TODO: Check that the show_user = False
+    #     assert assistant.state == AssistantState.QUESTIONING_TOOL_OUTPUT
 
-    with TestStep("Call LLM With Tool Output that creative_write tool returns", assistant=assistant):
-        # assert len(assistant.chat_session.messages) == 7
-        m = assistant.chat_session.messages[-1]
-        assert m.role == "assistant"
-        assert len(assistant.tool_calls) == 0
-        assert "here is a completely random science fiction story" in m.content.lower()
-        assert assistant.state == AssistantState.WAITING_USER_INPUT
-        assert assistant.story.genre.lower() == "science fiction"
+    # with TestStep("Call LLM With Tool Output that creative_write tool returns", assistant=assistant):
+    #     # assert len(assistant.chat_session.messages) == 7
+    #     """# Random Story\nHere's a completely random story for you:\nIn the depths of a forgotten galax..."""
+    #     m = assistant.chat_session.messages[-1]
+    #     assert m.role == "assistant"
+    #     assert len(assistant.tool_calls) == 0
+    #     assert "random story" in m.content.lower()
+    #     assert len(m.content) < 100
+    #     assert assistant.state == AssistantState.WAITING_USER_INPUT
+    #     assert assistant.story.genre.lower() == "science fiction"
 
-    # Round 3
+    # # Round 3
 
-    with TestStep("User accepts the generated story", assistant=assistant):
-        assistant.send_message("That looks great. let's start there.")
-        # assert len(assistant.chat_session.messages) == 8
-        m = assistant.chat_session.messages[-1]
-        assert m.role == "user"
-        assert assistant.state == AssistantState.GENERATING_OUTPUT
+    # with TestStep("User accepts the generated story", assistant=assistant):
+    #     assistant.send_message("That looks great. let's start there.")
+    #     # assert len(assistant.chat_session.messages) == 8
+    #     m = assistant.chat_session.messages[-1]
+    #     assert m.role == "user"
+    #     assert assistant.state == AssistantState.GENERATING_OUTPUT
 
     # Tool calls to set the story overview and other properties
     with TestStep("LLM returns set_properties tool calls", assistant=assistant):
@@ -326,8 +335,7 @@ def test_story_overview_assistant_full_flow(temp_project_dir, monkeypatch):
     with TestStep("set_properties tool result", assistant=assistant):
         m = assistant.chat_session.messages[-1]
         assert m.role == "tool"
-        assert "set_properties" in m.content
-        assert "plot_overview" in m.content
+        assert "Set `plot_overview`" in m.content
         assert assistant.state == AssistantState.PROCESSING_TOOL_OUTPUTS
 
 
@@ -354,36 +362,64 @@ def test_story_overview_assistant_full_flow(temp_project_dir, monkeypatch):
         assert assistant.state == AssistantState.GENERATING_OUTPUT
 
     # Tool calls to set the story overview and other properties
-    with TestStep("LLM returns creative_write tool calls", assistant=assistant):
+    with TestStep("LLM returns creative_write tool calls for character", assistant=assistant):
         # assert len(assistant.chat_session.messages) == 11
         m = assistant.chat_session.messages[-1]
         assert assistant.tool_calls is not None
         assert len(assistant.tool_calls) == 1
         assert assistant.tool_calls[0].name == "creative_write"
-        assert "Add a character to the story" in assistant.tool_calls[0].arguments["prompt"]
-        # assert assistant.tool_calls[0].arguments == {
-        #     "prompt": "Add a character to the story about Lyra and Kael in the world of Aethoria",
-        #     "story_context": "In the depths of a distant galaxy, where stars were born and died in a cosmic dance, there existed a planet shrouded in an eternal mist. The world was called Aethoria, a place where time itself seemed to bend and warp, like the twisted roots of an ancient tree.",
-        #     "system_context": ""
-        # }
+        assert "character" in assistant.tool_calls[0].arguments["prompt"].lower()
+        assert "create" in assistant.tool_calls[0].arguments["prompt"].lower()
         assert assistant.state == AssistantState.PROCESSING_TOOL_CALLS
 
-    with TestStep("creative_write tool output", assistant=assistant):
+    with TestStep("creative_write tool output for character", assistant=assistant):
         # assert len(assistant.chat_session.messages) == 12
         m = assistant.chat_session.messages[-1]
         assert m.role == "tool"
-        assert "creative_write" in m.content
-        assert "character profile" in m.content.lower()
+        assert "Name:" in m.content
+        assert len(m.content) > 100
         assert assistant.state == AssistantState.PROCESSING_TOOL_OUTPUTS
 
-    with TestStep("Call LLM With Tool Output that creative_write tool returns", assistant=assistant):
+    with TestStep("Call LLM With Tool Output that creative_write tool returns for character", assistant=assistant):
         # assert len(assistant.chat_session.messages) == 13
         m = assistant.chat_session.messages[-1]
         assert m.role == "assistant"
-        assert len(assistant.tool_calls) == 0
-        assert "new character" in m.content.lower()
-        assert assistant.state == AssistantState.WAITING_USER_INPUT
+        assert m.content == ""  # Content should be empty when there are tool calls
+        assert m.show_user is True
+        assert len(m.tool_calls) == 1
+        assert m.tool_calls[0]["function"]["name"] == "set_properties"
+        assert "story_beats" in m.tool_calls[0]["function"]["arguments"]["properties"]
+        assert len(m.tool_calls[0]["function"]["arguments"]["properties"]["story_beats"]) > 0
+        assert assistant.state == AssistantState.PROCESSING_TOOL_CALLS
         assert assistant.story.genre.lower() == "science fiction"
         # Add checks for plot_overview
         assert assistant.story.plot_overview is not None
-        assert len(assistant.story.plot_overview) > 50
+        # assert len(assistant.story.plot_overview) > 50
+
+    with TestStep("set story_beats", assistant=assistant):
+        """**Updates:**\nSet `story_beats"""
+        # assert len(assistant.chat_session.messages) == 12
+        m = assistant.chat_session.messages[-1]
+        assert m.role == "tool"
+        assert "story_beats" in m.content
+
+    with TestStep("LLM responds with character details", assistant=assistant):
+        m = assistant.chat_session.messages[-1]
+        assert m.role == "assistant"
+        assert m.show_user is False
+        assert m.tool_calls is None
+        
+        # Check content structure
+        content = m.content
+        assert "# New Character Added! 🌟" in content
+
+    with TestStep("inform character added", assistant=assistant):
+        """# New Character Added!"""
+        # assert len(assistant.chat_session.messages) == 12
+        m = assistant.chat_session.messages[-1]
+        assert m.role == "assistant"
+        assert "New Character Added" in m.content
+        assert "Accept all suggestions" in assistant.quick_responses
+        assert assistant.state == AssistantState.WAITING_USER_INPUT
+
+

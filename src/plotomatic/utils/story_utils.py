@@ -288,19 +288,9 @@ blank_story = Story(
             purpose="",
         ),
     ],
-    subplots=[Subplot(
-        key_events=[""],
-    )],
-    emotional_arc=[
-        EmotionalArc(
-            key_moments=[""],
-        ),
-    ],
-    story_beats=[
-        StoryBeat(
-            key_actions=[""],
-        ),
-    ],
+    subplots=[""],
+    emotional_arc=[""],
+    story_beats=[""],
 )
 
 blank_story_dialog = StoryDialogue(

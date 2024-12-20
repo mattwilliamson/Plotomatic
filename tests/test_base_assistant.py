@@ -1,468 +1,342 @@
-# tests/test_base_assistant.py
-
-import json
 import pytest
-from unittest.mock import patch, MagicMock
+from datetime import datetime
+from pathlib import Path
+import json
+import os
 
 from plotomatic.assistant.base_assistant import BaseChatAssistant
+from plotomatic.models.chat import (
+    Message, 
+    ChatSession, 
+    ToolCall, 
+    ROLE_SYSTEM,
+    ROLE_USER,
+    ROLE_ASSISTANT,
+    ROLE_TOOL
+)
 from plotomatic.assistant.states import AssistantState
-from plotomatic.models.chat import Message, ChatSession, ToolCall, ROLE_SYSTEM, ROLE_TOOL, ROLE_ASSISTANT
+from plotomatic.models import Story
 
 @pytest.fixture
-def mock_ollama_chat():
-    """
-    A pytest fixture to mock the ollama.Client.chat call.
-    We can configure different responses (tool calls, no tool calls, etc.) via yield.
-    """
-    with patch("ollama.Client.chat", autospec=True) as mock_chat:
-        yield mock_chat
-
-@pytest.fixture
-def temp_storage_path(tmp_path):
-    """
-    A pytest fixture providing a temporary file path to store the assistant state.
-    Ensures we don't pollute real file system with test data.
-    """
-    return str(tmp_path / "test_base_assistant_state.json")
-
-@pytest.fixture
-def base_assistant(temp_storage_path, mock_ollama_client):
-    """
-    Creates a fresh instance of BaseChatAssistant with a temporary storage path.
-    Uses deterministic settings and caching client for testing.
-    """
-    assistant = BaseChatAssistant(
-        storage_path=temp_storage_path,
-        agent_temperature=0.0,  # Deterministic for testing
-        creative_temperature=0.0,  # Deterministic for testing
-        agent_seed=0,  # Fixed seed for testing
-        creative_seed=0,  # Fixed seed for testing
-    )
+def clean_assistant(tmp_path):
+    """Fixture to provide a clean BaseChatAssistant instance for each test."""
+    # Create a temporary storage path
+    storage_path = tmp_path / "test_assistant.json"
+    
+    # Remove any existing storage file
+    if storage_path.exists():
+        storage_path.unlink()
+        
+    # Create new assistant with clean state
+    assistant = BaseChatAssistant(storage_path=str(storage_path))
+    
+    # Clear any existing messages
+    assistant.chat_session = ChatSession(project="", messages=[])
+    
     return assistant
 
-def test_base_assistant_initial_state(base_assistant):
-    """
-    Test that the BaseChatAssistant initializes with correct default values.
-    """
-    assert base_assistant.state == base_assistant.STATE_GENERATING_OUTPUT
-    assert len(base_assistant.chat_session.messages) == 0
-    assert base_assistant.tool_calls == []
-    assert base_assistant.quick_responses == []
-    assert base_assistant.system_prompt in base_assistant.BASE_SYSTEM_PROMPT
-    assert 'set_properties' in base_assistant.available_tools
-    assert 'creative_write' in base_assistant.available_tools
-
-def test_run_no_tool_calls(base_assistant, mock_ollama_chat):
-    """
-    Test the run method when the LLM does not request any tool calls.
-    """
-    # Simulate Ollama's dict response structure
-    mock_resp = {
-        'message': {
-            'content': 'Hello from the base LLM.',
-            'tool_calls': None
-        }
-    }
-    mock_ollama_chat.return_value = mock_resp
-
-    base_assistant.run()
-
-    # We expect one assistant message appended
-    assert len(base_assistant.chat_session.messages) == 1
-    assert base_assistant.chat_session.messages[0].role == "assistant"
-    assert base_assistant.chat_session.messages[0].content == "Hello from the base LLM."
-    assert base_assistant.state == base_assistant.STATE_WAITING_USER_INPUT
-
-def test_send_message_transitions(base_assistant, mock_ollama_chat):
-    """
-    Test sending a user message, verifying state transitions and final LLM output.
-    """
-    # 1) Initial run to produce a greeting or initial output
-    mock_resp = {
-        'message': {
-            'content': 'Initial greeting from LLM.',
-            'tool_calls': None
-        }
-    }
-    mock_ollama_chat.return_value = mock_resp
-
-    base_assistant.run()
-    assert base_assistant.state == AssistantState.WAITING_USER_INPUT
-
-    # 2) Simulate user sending a message
-    base_assistant.send_message("User's question about the story.")
-    assert base_assistant.chat_session.messages[-1].role == "user"
-    assert base_assistant.chat_session.messages[-1].content == "User's question about the story."
-    assert base_assistant.state == AssistantState.GENERATING_OUTPUT
-
-    # 3) Run again - LLM responds
-    mock_resp = {
-        'message': {
-            'content': "LLM's answer to the user's question.",
-            'tool_calls': None
-        }
-    }
-    mock_ollama_chat.return_value = mock_resp
-    base_assistant.run()
-
-    # Verify final message from assistant
-    assert base_assistant.chat_session.messages[-1].role == "assistant"
-    assert base_assistant.chat_session.messages[-1].content == "LLM's answer to the user's question."
-    assert base_assistant.state == AssistantState.WAITING_USER_INPUT
-
-def test_run_with_tool_calls(base_assistant, mock_ollama_chat):
-    """Test run method when the LLM requests a tool call."""
-    # Register a fake tool function
-    def fake_tool(x: int) -> int:
-        """A dummy tool that just returns x+1."""
-        return x + 1
-    base_assistant.register_tool(fake_tool)  # Register function directly
-
-    # Step 1: Simulate the LLM returning a message that includes a tool call
-    mock_resp = {
-        'message': {
-            'content': None,
-            'tool_calls': [{
-                'function': {
-                    'name': 'fake_tool',
-                    'arguments': {"x": 99}
-                }
-            }]
-        }
-    }
-    mock_ollama_chat.return_value = mock_resp
-
-    # The assistant is initially in GENERATING_OUTPUT, so run
-    base_assistant.run()
-
-    # We expect state = PROCESSING_TOOL_CALLS, and no new assistant messages
-    assert base_assistant.state == AssistantState.PROCESSING_TOOL_CALLS
-    assert len(base_assistant.chat_session.messages) == 0
-
-    # Step 2: Now run again to process the tool call
-    base_assistant.run()
-    # The tool call execution adds two messages: start and result
-    assert len(base_assistant.chat_session.messages) == 2
+def test_init_default(clean_assistant):
+    """Test default initialization of BaseChatAssistant."""
+    assistant = clean_assistant
     
-    # Check execution start message
-    assert base_assistant.chat_session.messages[0].role == "tool"
-    assert base_assistant.chat_session.messages[0].content == "Executing fake_tool..."
+    assert assistant.state == AssistantState.GENERATING_OUTPUT
+    assert isinstance(assistant.chat_session, ChatSession)
+    assert len(assistant.chat_session.messages) == 0
+    assert len(assistant.tool_calls) == 0
+    assert len(assistant.quick_responses) == 0
+    assert assistant.agent_temperature == 0.5
+    assert assistant.creative_temperature == 0.8
+
+def test_init_with_custom_params(tmp_path):
+    """Test initialization with custom parameters."""
+    storage_path = tmp_path / "custom_storage.json"
+    assistant = BaseChatAssistant(
+        storage_path=str(storage_path),
+        system_prompt="Custom prompt",
+        agent_temperature=0.7,
+        creative_temperature=0.9,
+        agent_seed=42,
+        creative_seed=123
+    )
     
-    # Check result message
-    assert base_assistant.chat_session.messages[1].role == "tool"
-    assert base_assistant.chat_session.messages[1].content == "100"
+    assert assistant.storage_path == str(storage_path)
+    assert assistant.system_prompt == "Custom prompt"
+    assert assistant.agent_temperature == 0.7
+    assert assistant.creative_temperature == 0.9
+    assert assistant.agent_seed == 42
+    assert assistant.creative_seed == 123
+
+def test_send_message(clean_assistant):
+    """Test sending a message to the assistant."""
+    assistant = clean_assistant
     
-    assert base_assistant.state == AssistantState.PROCESSING_TOOL_OUTPUTS
+    assistant.send_message("Hello")
+    
+    assert len(assistant.chat_session.messages) == 1
+    msg = assistant.chat_session.messages[0]
+    assert msg.role == "user"
+    assert msg.content == "Hello"
+    assert msg.show_user is True
+    assert assistant.state == AssistantState.GENERATING_OUTPUT
 
-    # Mock final response after tool execution
-    mock_ollama_chat.return_value = {
-        'message': {
-            'content': "Tool execution complete",
-            'tool_calls': None
-        }
-    }
+def test_quick_responses(clean_assistant):
+    """Test quick response management."""
+    assistant = clean_assistant
+    
+    # Test setting quick responses
+    responses = ["Yes", "No", "Maybe"]
+    assistant.set_quick_responses(responses)
+    assert assistant.quick_responses == responses
+    
+    # Test clearing quick responses
+    assistant.clear_quick_responses()
+    assert len(assistant.quick_responses) == 0
 
-    # Step 3: Process the tool output
-    base_assistant.run()
-    assert base_assistant.state == AssistantState.WAITING_USER_INPUT
+def test_tool_registration(clean_assistant):
+    """Test tool registration functionality."""
+    assistant = clean_assistant
+    
+    # Test function to register
+    @BaseChatAssistant.tool(emoji="🔧", description="Test tool")
+    def test_tool(x: int) -> str:
+        return f"Result: {x}"
+    
+    # Register the tool
+    assistant.register_tool(test_tool)
+    
+    assert "test_tool" in assistant.available_tools
+    metadata = assistant.get_tool_metadata("test_tool")
+    assert metadata.emoji == "🔧"
+    assert metadata.description == "Test tool"
 
-def test_current_tool_tracking(base_assistant, mock_ollama_chat):
-    """Test that the assistant properly tracks the currently executing tool."""
+def test_tool_registration_by_name(clean_assistant):
+    """Test registering built-in tools by name."""
+    assistant = clean_assistant
+    
+    # Register built-in tool
+    assistant.register_tool("set_properties")
+    
+    assert "set_properties" in assistant.available_tools
+    metadata = assistant.get_tool_metadata("set_properties")
+    assert metadata.emoji == "✏️"
+
+def test_state_persistence(tmp_path):
+    """Test saving and loading assistant state."""
+    storage_path = tmp_path / "test_storage.json"
+    
+    # Create assistant and add some state
+    assistant = BaseChatAssistant(storage_path=str(storage_path))
+    assistant.chat_session = ChatSession(project="", messages=[])  # Start clean
+    assistant.send_message("Test message")
+    assistant.set_quick_responses(["Yes", "No"])
+    assistant.save_state()
+    
+    # Create new assistant with same storage path
+    new_assistant = BaseChatAssistant(storage_path=str(storage_path))
+    
+    # Check if state was restored
+    assert len(new_assistant.chat_session.messages) == 1
+    assert new_assistant.chat_session.messages[0].content == "Test message"
+    assert new_assistant.quick_responses == ["Yes", "No"]
+
+def test_ephemeral_messages(clean_assistant):
+    """Test adding ephemeral messages."""
+    assistant = clean_assistant
+    
+    assistant.add_ephemeral_message("system", "Temporary instruction")
+    
+    assert len(assistant.chat_session.messages) == 1
+    msg = assistant.chat_session.messages[0]
+    assert msg.role == "system"
+    assert msg.content == "Temporary instruction"
+    assert msg.ephemeral is True
+    assert msg.show_user is False
+
+def test_status_management(clean_assistant):
+    """Test status message management."""
+    assistant = clean_assistant
+    
+    # Set status
+    assistant.set_status("success", "Operation completed")
+    status = assistant.get_and_clear_status()
+    
+    assert status == ("success", "Operation completed")
+    assert assistant.get_and_clear_status() is None  # Status should be cleared
+
+def test_get_current_instance(clean_assistant):
+    """Test getting current assistant instance."""
+    assistant = clean_assistant
+    
+    current = BaseChatAssistant.get_current()
+    assert current is assistant
+
+    with pytest.raises(RuntimeError):
+        BaseChatAssistant._current_instance = None
+        BaseChatAssistant.get_current()
+
+def test_llm_options(clean_assistant):
+    """Test LLM options generation."""
+    assistant = clean_assistant
+    assistant.agent_temperature = 0.7
+    assistant.agent_seed = 42
+    
+    options = assistant._get_llm_options(temperature=0.8, seed=123)
+    
+    assert options['temperature'] == 0.8
+    assert options['seed'] == 123
+    assert options['num_ctx'] == 12000
+    assert options['num_predict'] == 2000
+
+def test_tool_execution(clean_assistant):
+    """Test tool execution flow."""
+    assistant = clean_assistant
     
     # Register a test tool
-    def test_tool(x: int) -> int:
-        return x + 1
-    base_assistant.register_tool("test_tool", test_tool)
+    @BaseChatAssistant.tool(emoji="🔧", description="Test tool")
+    def test_tool(x: int) -> str:
+        return f"Result: {x}"
     
-    # Simulate LLM returning a tool call
-    mock_ollama_chat.return_value = {
+    assistant.register_tool(test_tool)
+    
+    # Add a message with tool call
+    assistant.chat_session.messages.append(Message(
+        role="assistant",
+        content="Let me help you with that.",
+        tool_calls=[{
+            "function": {
+                "name": "test_tool",
+                "arguments": {"x": 42}
+            }
+        }]
+    ))
+    
+    # Process tool calls using proper ToolCall model
+    assistant.tool_calls = [
+        ToolCall(
+            name="test_tool",
+            arguments={"x": 42}
+        )
+    ]
+    assistant.state = AssistantState.PROCESSING_TOOL_CALLS
+    assistant._execute_tool_calls()
+    
+    # Check tool execution results
+    assert len(assistant.chat_session.messages) > 0
+    last_msg = assistant.chat_session.messages[-1]
+    assert last_msg.role == "tool"
+    assert "Result: 42" in last_msg.content
+
+def test_parse_quick_responses(clean_assistant):
+    """Test parsing quick responses from message content."""
+    assistant = clean_assistant
+    
+    # Test basic quick responses
+    content = "Here's my response\n\n---\n- Option 1\n- Option 2"
+    cleaned, responses = assistant._parse_quick_responses(content)
+    assert cleaned == "Here's my response"
+    assert responses == ["Option 1", "Option 2"]
+    
+    # Test with multiple horizontal rules
+    content = "Part 1\n---\nPart 2\n---\n- Option 1\n- Option 2"
+    cleaned, responses = assistant._parse_quick_responses(content)
+    assert cleaned == "Part 1\n---\nPart 2"
+    assert responses == ["Option 1", "Option 2"]
+    
+    # Test with no quick responses
+    content = "Just a regular message"
+    cleaned, responses = assistant._parse_quick_responses(content)
+    assert cleaned == "Just a regular message"
+    assert responses == []
+    
+    # Test with horizontal rule but no valid list
+    content = "Message\n---\nNot a list"
+    cleaned, responses = assistant._parse_quick_responses(content)
+    assert cleaned == "Message"
+    assert responses == []
+
+def test_llm_quick_responses(clean_assistant, monkeypatch):
+    """Test LLM response handling with quick responses."""
+    assistant = clean_assistant
+    
+    # Mock ollama response with quick responses
+    mock_response = {
         'message': {
-            'content': None,
+            'content': "Here's my response\n\n---\n- Yes\n- No\n- Maybe",
+            'tool_calls': None
+        }
+    }
+    
+    def mock_chat(*args, **kwargs):
+        return mock_response
+    
+    # Patch the ollama client
+    monkeypatch.setattr(assistant._ollama_client, 'chat', mock_chat)
+    
+    # Call LLM
+    assistant._call_llm()
+    
+    # Check that message was cleaned and quick responses were set
+    assert len(assistant.chat_session.messages) == 1
+    assert assistant.chat_session.messages[0].content == "Here's my response"
+    assert assistant.quick_responses == ["Yes", "No", "Maybe"]
+    assert assistant.state == AssistantState.WAITING_USER_INPUT
+
+def test_llm_response_with_tool_calls_and_quick_responses(clean_assistant, monkeypatch):
+    """Test LLM response handling with both tool calls and quick responses."""
+    assistant = clean_assistant
+    
+    # Mock ollama response with both tool calls and quick responses
+    mock_response = {
+        'message': {
+            'content': "Let me help with that\n\n---\n- Proceed\n- Cancel",
             'tool_calls': [{
                 'function': {
                     'name': 'test_tool',
-                    'arguments': {"x": 1}
+                    'arguments': {'x': 42}
                 }
             }]
         }
     }
     
-    # Initial state - no current tool
-    assert base_assistant.get_current_tool() is None
+    def mock_chat(*args, **kwargs):
+        return mock_response
     
-    # Run to get tool calls
-    base_assistant.run()
-    assert base_assistant.state == AssistantState.PROCESSING_TOOL_CALLS
-    assert base_assistant.get_current_tool() is None  # Still None before execution
+    # Patch the ollama client
+    monkeypatch.setattr(assistant._ollama_client, 'chat', mock_chat)
     
-    # Run to execute tool
-    base_assistant.run()
-    # Tool should be done now, so current_tool should be None again
-    assert base_assistant.get_current_tool() is None
-    assert base_assistant.state == AssistantState.PROCESSING_TOOL_OUTPUTS
+    # Call LLM
+    assistant._call_llm()
+    
+    # Check that both message was cleaned and tool calls were processed
+    assert len(assistant.chat_session.messages) == 1
+    assert assistant.chat_session.messages[0].content == "Let me help with that"
+    assert assistant.quick_responses == ["Proceed", "Cancel"]
+    assert len(assistant.tool_calls) == 1
+    assert assistant.tool_calls[0].name == "test_tool"
+    assert assistant.state == AssistantState.PROCESSING_TOOL_CALLS
 
-def test_tool_execution_status_in_messages(base_assistant, mock_ollama_chat):
-    """Test that tool execution status is properly reflected in messages."""
+def test_custom_system_prompt_preserves_quick_responses(tmp_path):
+    """Test that custom system prompts still include quick response instructions."""
+    storage_path = tmp_path / "test_assistant.json"
+    custom_prompt = "You are a custom assistant."
     
-    # Register test tools
-    def tool1(x: int) -> int:
-        # Add a check for current tool during execution
-        current = base_assistant.get_current_tool()
-        assert current is not None
-        assert current.name == "tool1"
-        return x + 1
-        
-    def tool2(y: int) -> int:
-        # Add a check for current tool during execution
-        current = base_assistant.get_current_tool()
-        assert current is not None
-        assert current.name == "tool2"
-        return y * 2
-        
-    base_assistant.register_tool(tool1)  # Register function directly
-    base_assistant.register_tool(tool2)  # Register function directly
-    
-    # First response: return tool calls
-    mock_ollama_chat.return_value = {
-        'message': {
-            'content': None,
-            'tool_calls': [
-                {
-                    'function': {
-                        'name': 'tool1',
-                        'arguments': {"x": 1}
-                    }
-                },
-                {
-                    'function': {
-                        'name': 'tool2',
-                        'arguments': {"y": 2}
-                    }
-                }
-            ]
-        }
-    }
-    
-    # Run to get tool calls
-    base_assistant.run()
-    assert len(base_assistant.tool_calls) == 2
-    assert base_assistant.get_current_tool() is None  # No tool executing yet
-    
-    # Run to execute first tool
-    base_assistant.run()
-    # Tool1 execution is checked inside the tool function
-    assert base_assistant.get_current_tool() is None  # Tool1 finished
-    
-    # Run to execute second tool
-    base_assistant.run()
-    # Tool2 execution is checked inside the tool function
-    assert base_assistant.get_current_tool() is None  # Tool2 finished
-    
-    # Mock final response after tool execution
-    mock_ollama_chat.return_value = {
-        'message': {
-            'content': "All tools executed successfully",
-            'tool_calls': None
-        }
-    }
-    
-    # Final run to process outputs
-    base_assistant.run()
-    assert base_assistant.get_current_tool() is None
-    assert base_assistant.state == AssistantState.WAITING_USER_INPUT  # Now in waiting state
-    
-    # Verify all messages are present
-    messages = base_assistant.chat_session.messages
-    assert len(messages) >= 4  # At least 4 messages (2 tool starts, 2 tool results)
-    assert any(m.content == "Executing tool1..." for m in messages)
-    assert any(m.content == "2" for m in messages)  # tool1 result
-    assert any(m.content == "Executing tool2..." for m in messages)
-    assert any(m.content == "4" for m in messages)  # tool2 result
-
-def test_temperature_and_seed_settings():
-    """Test that temperature and seed settings can be configured."""
-    # Test defaults
-    assistant = BaseChatAssistant()
-    assert assistant.agent_temperature == BaseChatAssistant.AGENT_TEMPERATURE
-    assert assistant.creative_temperature == BaseChatAssistant.CREATIVE_TEMPERATURE
-    assert assistant.agent_seed == BaseChatAssistant.AGENT_SEED
-    assert assistant.creative_seed == BaseChatAssistant.CREATIVE_SEED
-    
-    # Test override all settings
-    test_assistant = BaseChatAssistant(
-        agent_temperature=0.0,
-        creative_temperature=0.0,
-        agent_seed=0,
-        creative_seed=0
+    assistant = BaseChatAssistant(
+        storage_path=str(storage_path),
+        system_prompt=custom_prompt
     )
-    assert test_assistant.agent_temperature == 0.0
-    assert test_assistant.creative_temperature == 0.0
-    assert test_assistant.agent_seed == 0
-    assert test_assistant.creative_seed == 0
-
-def test_questioning_state_for_creative_write(base_assistant, mock_ollama_chat):
-    """Test that creative_write tool triggers questioning state"""
     
-    # First response: creative write tool call
-    mock_ollama_chat.return_value = {
-        'message': {
-            'content': None,
-            'tool_calls': [{
-                'function': {
-                    'name': 'creative_write',
-                    'arguments': {
-                        'prompt': 'Write a story',
-                        'system_context': '',
-                        'story_context': ''
-                    }
-                }
-            }]
-        }
-    }
+    # Get the system message
+    system_message = next(msg for msg in assistant.get_prepended_messages() 
+                         if msg.role == ROLE_SYSTEM)
     
-    # Initial run to get tool call
-    base_assistant.run()
-    assert base_assistant.state == AssistantState.PROCESSING_TOOL_CALLS
+    # Should use custom prompt
+    assert system_message.content == custom_prompt
     
-    # Second response: tool execution result
-    mock_ollama_chat.return_value = {
-        'message': {
-            'content': 'Generated creative content',
-            'tool_calls': None
-        }
-    }
+    # Create assistant without custom prompt
+    default_assistant = BaseChatAssistant(storage_path=str(storage_path))
+    system_message = next(msg for msg in default_assistant.get_prepended_messages() 
+                         if msg.role == ROLE_SYSTEM)
     
-    # Run to execute tool
-    base_assistant.run()
-    
-    # Should transition to questioning state since creative_write needs_questioning=True
-    assert base_assistant.state == AssistantState.QUESTIONING_TOOL_OUTPUT
-    
-    # Third response: questioning about the output
-    mock_ollama_chat.return_value = {
-        'message': {
-            'content': 'How do you feel about this content? Is the style and tone what you were looking for?',
-            'tool_calls': None
-        }
-    }
-    
-    # Run to process questioning
-    base_assistant.run()
-    
-    # Should now be waiting for user input
-    assert base_assistant.state == AssistantState.WAITING_USER_INPUT
-    
-    # Verify messages flow
-    messages = base_assistant.chat_session.messages
-    assert any(m.role == ROLE_TOOL and 'Generated creative content' in m.content for m in messages)
-    assert any(m.role == ROLE_ASSISTANT and 'How do you feel about this content?' in m.content for m in messages)
-
-def test_no_questioning_for_set_properties(base_assistant, mock_ollama_chat):
-    """Test that set_properties tool skips questioning state"""
-    
-    # First response: set_properties tool call
-    mock_ollama_chat.return_value = {
-        'message': {
-            'content': None,
-            'tool_calls': [{
-                'function': {
-                    'name': 'set_properties',
-                    'arguments': {
-                        'properties': {
-                            'title': 'Test Title'
-                        }
-                    }
-                }
-            }]
-        }
-    }
-    
-    # Initial run to get tool call
-    base_assistant.run()
-    assert base_assistant.state == AssistantState.PROCESSING_TOOL_CALLS
-    
-    # Second response: tool execution result
-    mock_ollama_chat.return_value = {
-        'message': {
-            'content': 'Properties updated',
-            'tool_calls': None
-        }
-    }
-    
-    # Run to execute tool
-    base_assistant.run()
-    
-    # Should skip questioning and go straight to waiting
-    assert base_assistant.state == AssistantState.WAITING_USER_INPUT
-    
-    # Verify messages flow
-    messages = base_assistant.chat_session.messages
-    assert any(m.role == ROLE_TOOL and 'Set `title`' in m.content for m in messages)
-    assert any(m.role == ROLE_ASSISTANT and 'Properties updated' in m.content for m in messages)
-
-def test_tool_metadata_needs_questioning(base_assistant):
-    """Test that tool metadata correctly tracks needs_questioning flag"""
-    
-    # Check creative_write has needs_questioning=True
-    creative_write_metadata = base_assistant.get_tool_metadata('creative_write')
-    assert creative_write_metadata.needs_questioning is True
-    
-    # Check set_properties has needs_questioning=False
-    set_properties_metadata = base_assistant.get_tool_metadata('set_properties')
-    assert set_properties_metadata.needs_questioning is False
-    
-    # Test custom tool with needs_questioning
-    @base_assistant.tool(needs_questioning=True)
-    def custom_tool():
-        """Test tool"""
-        return "test"
-        
-    base_assistant.register_tool(custom_tool)
-    custom_metadata = base_assistant.get_tool_metadata('custom_tool')
-    assert custom_metadata.needs_questioning is True
-
-def test_questioning_prompt_content(base_assistant, mock_ollama_chat):
-    """Test that questioning state uses appropriate prompt"""
-    
-    # Setup: Get to questioning state via creative_write
-    mock_ollama_chat.return_value = {
-        'message': {
-            'content': None,
-            'tool_calls': [{
-                'function': {
-                    'name': 'creative_write',
-                    'arguments': {
-                        'prompt': 'Write a story',
-                        'system_context': '',
-                        'story_context': ''
-                    }
-                }
-            }]
-        }
-    }
-    
-    base_assistant.run()  # Get tool call
-    
-    mock_ollama_chat.return_value = {
-        'message': {
-            'content': 'Generated content',
-            'tool_calls': None
-        }
-    }
-    
-    base_assistant.run()  # Execute tool -> questioning state
-    assert base_assistant.state == AssistantState.QUESTIONING_TOOL_OUTPUT
-    
-    # Capture the call to ollama.chat in questioning state
-    base_assistant.run()
-    
-    # Get the last call to mock_ollama_chat
-    last_call = mock_ollama_chat.call_args
-    messages = last_call[1]['messages']
-    
-    # Verify system message contains expected questioning prompts
-    system_message = next(m for m in messages if m['role'] == 'system')
-    assert 'Review the previous tool output' in system_message['content']
-    assert 'style and tone' in system_message['content']
-    assert 'key elements' in system_message['content']
-    assert 'length and detail' in system_message['content']
+    # Should include quick response instructions
+    assert "quick response options" in system_message.content
+    assert "markdown list" in system_message.content

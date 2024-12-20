@@ -6,6 +6,7 @@ import os
 from typing import List, Dict, Optional, Tuple, Callable, Any, Union
 from datetime import datetime
 from functools import wraps
+import re
 
 import ollama
 from .ollama_logging import LoggingTransport
@@ -26,8 +27,21 @@ class BaseChatAssistant:
     """
 
     BASE_SYSTEM_PROMPT = (
-        "You are Plotomatic. A helpful assistant that helps a user write a story. "
-        # "Be proactive and offer to be creative and help the user fill out the story. "
+        "You are Plotomatic. A helpful assistant that helps a user write a story. Communicate with the user in markdown. Feel free to use emojis, but not when saving properties. Make sure you do tool calls in the tool_calls response, not the content response.\n\n"
+        # "After calling creative_write, check if you need to revise any fields, like plot_overview, genre, etc.\n\n"
+        "You may present the user with quick response options, but ONLY when there are specific, actionable choices. "
+        "The primary interface is the chat where users can type anything they want. Quick responses are just shortcuts "
+        "for common, specific actions.\n\n"
+        "**Rules for quick responses:**\n"
+        "- Only include them when there are clear, specific choices\n"
+        "- Never include open-ended options like 'Other' or 'Something else'\n"
+        "- Freely add an option to select something random\n"
+        "- Don't try to list every possibility - let users type their own response instead\n\n"
+        "If you want to display quick responses, add them as a markdown list at the end of your message, separated by "
+        "a horizontal rule. For example:\n\n"
+        "---\n"
+        "- Yes, that sounds good\n"
+        "- No, I don't like that"
     )
 
     MODEL = "llama3.3"  # Replace DEFAULT_OLLAMA_MODEL with this
@@ -52,7 +66,7 @@ class BaseChatAssistant:
 
     # Default LLM options
     DEFAULT_OPTIONS = {
-        'num_ctx': 10000,
+        'num_ctx': 12000,
         'num_predict': 2000,
         'temperature': 0.5,  # Default agent temperature
         # 'mirostat': 1,
@@ -166,6 +180,9 @@ class BaseChatAssistant:
 
     def send_message(self, message: str):
         """Send a user message to the assistant."""
+        # Clear quick responses when user sends a new message
+        self.clear_quick_responses()
+        
         self.chat_session.messages.append(Message(
             role="user",
             content=message,
@@ -213,7 +230,7 @@ class BaseChatAssistant:
         self.prepended_messages = [
             Message(
                 role=ROLE_SYSTEM,
-                content=self.system_prompt,
+                content=self.system_prompt or self.BASE_SYSTEM_PROMPT,
                 allow_tool_calls=True
             )
         ]
@@ -231,6 +248,43 @@ class BaseChatAssistant:
         if seed is not None:
             options['seed'] = seed
         return options
+
+    def _parse_quick_responses(self, content: str) -> Tuple[str, List[str]]:
+        """Parse quick responses from message content.
+        
+        Quick responses are specified as a markdown list at the end of the message,
+        separated by a horizontal rule (---).
+        
+        Args:
+            content (str): The message content
+            
+        Returns:
+            Tuple[str, List[str]]: (cleaned_content, quick_responses)
+        """
+        # Split on horizontal rule and take the last section
+        sections = content.split('\n---\n')
+        
+        # If no horizontal rule or only one section, return original content
+        if len(sections) <= 1:
+            return content.strip(), []
+        
+        # Get potential quick responses section
+        quick_responses_section = sections[-1].strip()
+        
+        # Parse markdown list items (lines starting with -)
+        quick_responses = []
+        for line in quick_responses_section.split('\n'):
+            line = line.strip()
+            if line.startswith('- '):
+                quick_responses.append(line[2:].strip())
+                
+        # If no valid quick responses found, return first section only
+        if not quick_responses:
+            return sections[0].strip(), []
+            
+        # Get main content (everything before the last section) and strip whitespace
+        main_content = '\n---\n'.join(sections[:-1]).strip()
+        return main_content, quick_responses
 
     def _call_llm(self):
         """Calls the LLM via Ollama."""
@@ -260,6 +314,16 @@ class BaseChatAssistant:
 
         # Handle dict response from Ollama
         if response['message']['content'] or response['message'].get('tool_calls'):
+            content = response['message'].get('content', '')
+            
+            # Parse quick responses if present
+            cleaned_content = content
+            quick_responses = []
+            if content:
+                cleaned_content, quick_responses = self._parse_quick_responses(content)
+                if quick_responses:
+                    self.quick_responses = quick_responses  # Set quick responses directly
+            
             # Format tool calls if present
             tool_calls = None
             if response['message'].get('tool_calls'):
@@ -276,7 +340,7 @@ class BaseChatAssistant:
             # Add the assistant's message to chat history with any tool calls
             self.chat_session.messages.append(Message(
                 role="assistant",
-                content=response['message'].get('content', ''),
+                content=cleaned_content,  # Use cleaned content without quick responses
                 timestamp=datetime.now().isoformat(),
                 show_user=True,  # Always show assistant messages
                 tool_calls=tool_calls  # Include tool calls in the message
@@ -321,7 +385,6 @@ class BaseChatAssistant:
                     tool_result = "<streaming content>"
                 
                 metadata = self.get_tool_metadata(function_name)
-                result = f"Tool output for {function_name}:\n{tool_result}"
                 # self.chat_session.messages.append(Message(
                 #     role="system",
                 #     content="Ask the user if they like this if they haven't already given permission, and if they do consent, set the properties to those values. For long strings, like plot_overview, use the full text. Don't abridge it.",
@@ -331,7 +394,7 @@ class BaseChatAssistant:
                 # ))
                 self.chat_session.messages.append(Message(
                     role="tool",
-                    content=result,
+                    content=tool_result,
                     timestamp=datetime.now().isoformat(),
                     show_user=metadata.show_output,
                     ephemeral=False,
@@ -435,7 +498,7 @@ class BaseChatAssistant:
         ]
 
         options = {
-            'num_ctx': 10000,
+            'num_ctx': 12000,
             'num_predict': 2000,
             "temperature": self.agent_temperature,
             # "mirostat": 1,
@@ -578,12 +641,16 @@ class BaseChatAssistant:
     @tool(emoji="✏️", description="Sets multiple property values in the story")
     def set_properties(self, properties: dict) -> str:
         """Sets multiple properties of the story to the given values. If the user gives you any useful information, set the properties to those values. If a tool gives you any useful information, ask the user if they like it and if they do, set the properties to those values. For long strings, like plot_overview, use the full text.
+
+        Don't set author or requirements without the user's input. These are reserved for the user to explicitly tell you to set.
+
+        Don't pass keys that you don't want to change. Skip any that don't need to be updated.
         
         Args:
             properties (dict): Dictionary mapping property names to their values
             
         Returns:
-            str: A message describing what was updated
+            str: A message describing what was updated and any suggestions for other properties to update
         """
         if not hasattr(self, 'story'):
             return "Error: No story object available"
@@ -664,7 +731,7 @@ Analyze the story and provide a list of properties by exact field name and their
                     {"role": "user", "content": analysis_user_prompt}
                 ],
                 options = {
-                    'num_ctx': 10000,
+                    'num_ctx': 12000,
                     'num_predict': 5000,
                     "temperature": self.agent_temperature,
                     # "mirostat": 1,
@@ -683,10 +750,16 @@ Analyze the story and provide a list of properties by exact field name and their
             self.set_status('error', f'Failed to update properties: {str(e)}')
             return f"Error updating properties: {str(e)}"
 
-    # @tool(emoji="✍️", description="Generates creative content", show_output=False, needs_questioning=True)
-    @tool(emoji="✍️", description="Generates creative content", show_output=False, needs_questioning=False)
-    def creative_write(self, prompt: str, system_context: str = "", story_context: str = "") -> str:
-        """Creative writing tool using shared client."""
+    @tool(emoji="✍️", description="Generates creative content", show_output=True, needs_questioning=False)
+    def creative_write(self, prompt: str="") -> str:
+        """Generates creative content based on the provided prompt. Use this whenever you need to make something creative, like come up with an idea for a plot, character, or setting or if the user asks you to make something up.
+
+        Args:
+            prompt (str): The writing prompt that specifies what content to generate.
+
+        Returns:
+            str: The generated creative content.
+        """
         messages = []
         
         # Add default Plotomatic system context
@@ -694,6 +767,7 @@ Analyze the story and provide a list of properties by exact field name and their
 Your goal is to help writers develop their stories by generating creative, engaging, and coherent content.
 Write in a clear, descriptive style that brings scenes and characters to life.
 Focus on showing rather than telling, and maintain consistency with the provided story context.
+The user will give you a prompt, and you will write about it.
 
 Current Story Context:
 {self.story.model_dump_json(indent=2)}
@@ -701,11 +775,9 @@ Current Story Context:
         
         # Combine default context with user-provided context
         full_system_context = plotomatic_context
-        if system_context:
-            full_system_context += "\n" + system_context
         
         messages.append({"role": "system", "content": full_system_context})
-        messages.append({"role": "user", "content": "Based on the story context: " + prompt})
+        messages.append({"role": "user", "content": prompt})
         
         # Get options with creative temperature and seed
         options = self._get_llm_options(
